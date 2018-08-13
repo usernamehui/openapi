@@ -199,7 +199,7 @@
 				arrive_time = #{arriveTime,jdbcType=VARCHAR},
 			</if>
 		</set>
-		WHERE code = #{code,jdbcType=INTEGER}
+		WHERE code = #{code,jdbcType=VARCHAR}
 	</update>
 	
 	
