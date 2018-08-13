@@ -376,9 +376,6 @@
 			<if test="lastUpdateTime != null">
 				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
 			</if>
-			<if test="reservationTime != null">
-				reservation_time = #{reservationTime,jdbcType=VARCHAR},
-			</if>
 			<if test="evaluation != null">
 				evaluation = #{evaluation,jdbcType=VARCHAR},
 			</if>
@@ -1183,4 +1180,38 @@
 		model.`code` = #{code,jdbcType=VARCHAR}
 		AND model.`status` = 1
 	</select>
+	
+	<update id="updateHandWorkOrder" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		UPDATE hand_work_order
+		<set>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="reservation != null">
+				reservation = #{reservation,jdbcType=INTEGER},
+			</if>
+			<if test="reservationTime != null">
+				reservation_time = #{reservationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				expect_time = #{expectTime,jdbcType=VARCHAR},
+			</if>
+			<if test="arriveTime != null">
+				arrive_time = #{arriveTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=INTEGER}
+	</update>
 </mapper>
