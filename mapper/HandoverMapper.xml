@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.HandoverDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Handover"
+		id="handoverMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR" />
+		<result column="duty_code" property="dutyCode" jdbcType="VARCHAR" />
+		<result column="in_code" property="inCode" jdbcType="VARCHAR" />
+		<result column="in_value" property="inValue" jdbcType="VARCHAR" />
+		<result column="in_unit" property="inUnit" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+		<result column="health" property="health" jdbcType="INTEGER" />
+		<result column="common" property="common" jdbcType="VARCHAR" />
+		<result column="use_time" property="useTime" jdbcType="VARCHAR" />
+		<result column="now_annual_time" property="nowAnnualTime" jdbcType="VARCHAR" />
+		<result column="next_annual_time" property="nextAnnualTime" jdbcType="VARCHAR" />
+		<result column="annual_person" property="annualPerson" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Handover"
+		resultMap="handoverMap">
+		select (select name from items where code = in_code and trans_code=#{transCode,jdbcType=VARCHAR}) in_code,
+		in_value,health,h.common,d.code ,
+		FROM_UNIXTIME((am.`now_annual_time`)/1000,'%Y-%m-%d')  AS nowAnnualTime,
+		FROM_UNIXTIME((am.`next_annual_time`)/1000,'%Y-%m-%d')  AS nextAnnualTime,
+		FROM_UNIXTIME((am.`use_time`)/1000,'%Y-%m-%d')  AS useTime,
+		am.`annual_person` AS annualPerson
+		from handover h 
+		inner join duty d on h.duty_code=d.code 
+		JOIN annual_message am ON am.`items_code`=h.`in_code` where d.status = 1  
+		and d.trans_code = #{transCode,jdbcType=VARCHAR}
+		<if test='beginTime != null and endTime != null and beginTime != "" and endTime != ""'>
+			and #{beginTime} &lt;= d.create_time and d.create_time &lt; #{endTime}
+		</if>
+		<if test="dutyCode != null and dutyCode != ''">
+			and duty_code = #{dutyCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Handover">
+		insert into handover 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="dutyCode != null">
+				duty_code,
+			</if>
+			<if test="inCode != null">
+				in_code,
+			</if>
+			<if test="inValue != null">
+				in_value,
+			</if>
+			<if test="inUnit != null">
+				in_unit,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="health != null">
+				health,
+			</if>
+			<if test="common != null">
+				common
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dutyCode != null">
+				#{dutyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="inCode != null">
+				#{inCode,jdbcType=VARCHAR},
+			</if>
+			<if test="inValue != null">
+				#{inValue,jdbcType=VARCHAR},
+			</if>
+			<if test="inUnit != null">
+				#{inUnit,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="health != null">
+				#{health,jdbcType=INTEGER},
+			</if>
+			<if test="common != null">
+				#{common,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+</mapper>

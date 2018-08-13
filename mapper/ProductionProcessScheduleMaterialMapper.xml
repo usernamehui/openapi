@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 生产排程原料表 -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProductionProcessScheduleMaterialDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="schedule_id" jdbcType="VARCHAR" property="scheduleId" />
+        <result column="material_id" jdbcType="VARCHAR" property="materialId" />
+        <result column="material_no" jdbcType="VARCHAR" property="materialNo" />
+        <result column="material_name" jdbcType="VARCHAR" property="materialName" />
+        <result column="thickness" jdbcType="VARCHAR" property="thickness" />
+        <result column="width" jdbcType="VARCHAR" property="width" />
+        <result column="length" jdbcType="VARCHAR" property="length" />
+        <result column="weight" jdbcType="VARCHAR" property="weight" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, schedule_id, material_id, material_name, thickness, width, length, weight, status, create_time, material_no
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial">
+        INSERT INTO production_process_schedule_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			        <if test="scheduleId != null">
+            schedule_id,
+        </if>
+        <if test="materialId != null">
+            material_id,
+        </if>
+         <if test="materialNo != null">
+            material_no,
+        </if>
+        <if test="materialName != null">
+            material_name,
+        </if>
+        <if test="thickness != null">
+            thickness,
+        </if>
+        <if test="width != null">
+            width,
+        </if>
+        <if test="length != null">
+            length,
+        </if>
+        <if test="weight != null">
+            weight,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createTime != null">
+            create_time,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			        <if test="scheduleId != null">
+            #{scheduleId,jdbcType=VARCHAR},
+        </if>
+        <if test="materialId != null">
+            #{materialId,jdbcType=VARCHAR},
+        </if>
+         <if test="materialNo != null">
+             #{materialNo,jdbcType=VARCHAR},
+        </if>
+        <if test="materialName != null">
+            #{materialName,jdbcType=VARCHAR},
+        </if>
+        <if test="thickness != null">
+            #{thickness,jdbcType=VARCHAR},
+        </if>
+        <if test="width != null">
+            #{width,jdbcType=VARCHAR},
+        </if>
+        <if test="length != null">
+            #{length,jdbcType=VARCHAR},
+        </if>
+        <if test="weight != null">
+            #{weight,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial">
+        UPDATE production_process_schedule_material
+        <set>
+		        <if test="scheduleId != null">
+            schedule_id = #{scheduleId,jdbcType=VARCHAR},
+        </if>
+        <if test="materialId != null">
+            material_id = #{materialId,jdbcType=VARCHAR},
+        </if>
+         <if test="materialNo != null">
+            material_no = #{materialNo,jdbcType=VARCHAR},
+        </if>
+        <if test="materialName != null">
+            material_name = #{materialName,jdbcType=VARCHAR},
+        </if>
+        <if test="thickness != null">
+            thickness = #{thickness,jdbcType=VARCHAR},
+        </if>
+        <if test="width != null">
+            width = #{width,jdbcType=VARCHAR},
+        </if>
+        <if test="length != null">
+            length = #{length,jdbcType=VARCHAR},
+        </if>
+        <if test="weight != null">
+            weight = #{weight,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=VARCHAR},
+        </if>
+
+        </set>
+        WHERE code = #{code,jdbcType=INTEGER}
+    </update>
+    
+    <update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial">
+		UPDATE production_process_schedule_material
+		SET
+		status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM production_process_schedule_material
+        WHERE status = 1
+    </select>
+    
+    <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessScheduleMaterial" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM production_process_schedule_material
+        WHERE  code = #{code,jdbcType=VARCHAR}
+        AND status = 1
+    </select>
+    
+     <select id="selectEntityByScheduleId"  resultMap="BaseResultMap">
+       	SELECT 
+ 		model.schedule_id, model.material_id, model.material_no, 
+ 		model.thickness, model.width, model.length, model.material_name, model.weight
+ 		FROM production_process_schedule_material model
+		WHERE 
+			model.status = 1
+		AND 
+			model.schedule_id = #{scheduleId,jdbcType=VARCHAR}
+		ORDER BY create_time  DESC
+		LIMIT 1
+    </select>
+    
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into production_process_schedule_material (
+                        schedule_id, material_id, material_name, thickness, width, length, weight, status, create_time
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.scheduleId,jdbcType=VARCHAR}, 
+        #{item.materialId,jdbcType=VARCHAR}, 
+        #{item.materialName,jdbcType=VARCHAR}, 
+        #{item.thickness,jdbcType=VARCHAR}, 
+        #{item.width,jdbcType=VARCHAR}, 
+        #{item.length,jdbcType=VARCHAR}, 
+        #{item.weight,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=VARCHAR}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM production_process_schedule_material WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+ 	
+ 	
+ 	
+</mapper>

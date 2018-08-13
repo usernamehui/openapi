@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 行业附加属性表 -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.SysIndustryAttributeDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.SysIndustryAttribute">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="industry_code" jdbcType="VARCHAR" property="industryCode" />
+        <result column="custom_tag" jdbcType="VARCHAR" property="customTag" />
+        <result column="is_require" jdbcType="INTEGER" property="isRequire" />
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="last_update_time" jdbcType="VARCHAR" property="lastUpdateTime" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, industry_code, custom_tag, is_require, code, status, create_time, last_update_time
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.SysIndustryAttribute">
+        INSERT INTO sys_industry_attribute
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			        <if test="industryCode != null">
+            industry_code,
+        </if>
+        <if test="customTag != null">
+            custom_tag,
+        </if>
+        <if test="isRequire != null">
+            is_require,
+        </if>
+        <if test="code != null">
+            code,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createTime != null">
+            create_time,
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			        <if test="industryCode != null">
+            #{industryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="customTag != null">
+            #{customTag,jdbcType=VARCHAR},
+        </if>
+        <if test="isRequire != null">
+            #{isRequire,jdbcType=INTEGER},
+        </if>
+        <if test="code != null">
+            #{code,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysIndustryAttribute">
+        UPDATE sys_industry_attribute
+        <set>
+		        <if test="industryCode != null">
+            industry_code = #{industryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="customTag != null">
+            custom_tag = #{customTag,jdbcType=VARCHAR},
+        </if>
+        <if test="isRequire != null">
+            is_require = #{isRequire,jdbcType=INTEGER},
+        </if>
+        <if test="code != null">
+            code = #{code,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+
+        </set>
+        WHERE code = #{code,jdbcType=INTEGER}
+    </update>
+    
+    <update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysIndustryAttribute">
+		UPDATE sys_industry_attribute
+		SET
+		status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysIndustryAttribute" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM sys_industry_attribute
+        WHERE status = 1
+    </select>
+    
+    <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysIndustryAttribute" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM sys_industry_attribute
+        WHERE  code = #{code,jdbcType=VARCHAR}
+        AND status = 1
+    </select>
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into sys_industry_attribute (
+                        industry_code, custom_tag, is_require, code, status, create_time, last_update_time
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.industryCode,jdbcType=VARCHAR}, 
+        #{item.customTag,jdbcType=VARCHAR}, 
+        #{item.isRequire,jdbcType=INTEGER}, 
+        #{item.code,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=VARCHAR}, 
+        #{item.lastUpdateTime,jdbcType=VARCHAR}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM sys_industry_attribute WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+ 
+</mapper>

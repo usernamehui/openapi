@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProductionProcessTechnologyDao">
+	<resultMap id="BaseResultMap"
+		type="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="process_code" property="processCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="index" property="index" jdbcType="INTEGER" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="start_point" property="startPoint" jdbcType="VARCHAR" />
+		<result column="run_point" property="runPoint" jdbcType="VARCHAR" />
+		<result column="end_point" property="endPoint" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="idcode_point" property="idCodePoint" jdbcType="VARCHAR" />
+
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" />
+		<result column="languages" property="languages" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="processname" property="processName" jdbcType="VARCHAR" />
+
+		<result column="startpointname" property="startPointName"
+			jdbcType="VARCHAR" />
+
+		<result column="endpointname" property="endPointName" jdbcType="VARCHAR" />
+		<result column="runpointname" property="runPointName" jdbcType="VARCHAR" />
+		<result column="idcodepointname" property="idCodePointName" jdbcType="VARCHAR" />
+		<result column="production_code" property="productionCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, process_code, code, index, equipment_code, start_point,
+		run_point,
+		end_point,
+		status, create_time, last_update_time,type ,
+		idcode_point
+	</sql>
+
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology">
+		insert into production_process_technology
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="processCode != null">
+				process_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="index != null">
+				`index`,
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code,
+			</if>
+			<if test="startPoint != null">
+				start_point,
+			</if>
+			<if test="runPoint != null">
+				run_point,
+			</if>
+			<if test="endPoint != null">
+				end_point,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="idCodePoint != null">
+				idcode_point,
+			</if>
+			status,
+			create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="processCode != null">
+				#{processCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="index != null">
+				#{index,jdbcType=INTEGER},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="startPoint != null">
+				#{startPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="runPoint != null">
+				#{runPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="endPoint != null">
+				#{endPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="idCodePoint != null">
+				#{idCodePoint,jdbcType=VARCHAR},
+			</if>
+			1,
+			UNIX_TIMESTAMP(NOW())*1000
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology">
+		insert production_process_technology_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology">
+		update production_process_technology
+		<set>
+			<if test="processCode != null">
+				process_code = #{processCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="index != null">
+				`index` = #{index,jdbcType=INTEGER},
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="startPoint != null">
+				start_point = #{startPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="runPoint != null">
+				run_point = #{runPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="endPoint != null">
+				end_point = #{endPoint,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="idCodePoint != null">
+				idcode_point = #{idCodePoint,jdbcType=VARCHAR},
+			</if>
+			last_update_time = UNIX_TIMESTAMP(NOW())*1000
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology">
+		UPDATE production_process_technology_info
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=VARCHAR}
+		AND language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteByCondition">
+		update production_process_technology
+		SET
+		status = 9
+		WHERE 
+		process_code = #{processCode,jdbcType=VARCHAR}
+		AND code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology"
+		resultMap="BaseResultMap">
+		SELECT
+		model.code, model.process_code, model.index,
+		model.equipment_code , model.start_point, model.run_point,
+		model.end_point, model.type, model.idcode_point,
+		info.name,info.comment,info.language,
+		processinfo.name AS processname
+		FROM
+		production_process_technology model
+		LEFT JOIN
+		production_process_technology_info info ON info.code = model.code AND
+		info.language = #{language,jdbcType=VARCHAR}
+		JOIN production_process
+		process ON process.code = model.process_code
+		LEFT JOIN
+		production_process_info processinfo ON processinfo.code = process.code
+		WHERE model.status = 1
+		<if test="code!=null and code!='' ">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessTechnology"
+		resultMap="BaseResultMap">
+		SELECT
+			model.code, process.production_code, model.process_code, model.index,
+			model.equipment_code , model.start_point, model.run_point,
+			model.end_point,model.type, model.idcode_point,
+			info.name,info.comment,info.language,
+			ei.name AS equipmentName,
+			(SELECT name FROM point_info pi 
+			WHERE pi.code = model.start_point 
+			AND pi.language = info.language) AS startpointname,
+			(SELECT
+			name FROM point_info pi
+			WHERE pi.code = model.end_point AND 
+			pi.language = info.language) AS endpointname,
+			(SELECT name FROM
+			point_info pi WHERE pi.code =
+			model.run_point AND pi.language =
+			info.language) AS runpointname,
+			(SELECT name FROM
+			point_info pi WHERE pi.code =
+			model.idcode_point AND pi.language =
+			info.language) AS idcodepointname	
+		FROM
+		production_process_technology model
+		LEFT JOIN production_process_technology_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN equipment e ON e.code = model.equipment_code
+		LEFT JOIN equipment_info ei ON ei.code = e.code AND ei.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN production_process process ON process.code = model.process_code
+		WHERE 
+			model.status = 1
+		AND 
+			e.status = 1
+		AND 
+			process.status = 1
+		AND 
+			model.process_code = #{processCode,jdbcType=VARCHAR}
+		ORDER BY model.type,model.`index`
+	</select>
+</mapper>

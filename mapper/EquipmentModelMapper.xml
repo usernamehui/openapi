@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EquipmentModelDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="equipment_category_code" property="equipmentCategoryCode"
+			jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="equipment_cate_name" property="equipmentCateName"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, equipment_category_code, status, create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from equipment_model
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		UPDATE
+		equipment_model
+		SET
+		status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		insert into equipment_model
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="equipmentCategoryCode != null">
+				equipment_category_code,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCategoryCode != null">
+				#{equipmentCategoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		insert into equipment_model_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		update equipment_model
+		<set>
+			<if test="equipmentCategoryCode != null">
+				equipment_category_code =
+				#{equipmentCategoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		update equipment_model_info
+		<set>
+			<if test="name != null">
+				name =
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language =
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		AND language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel"
+		resultMap="BaseResultMap">
+			SELECT 
+			em.code,eci.name AS
+			equipment_cate_name,emi.name,emi.comment,em.equipment_category_code,
+			(select
+			group_concat(language
+			SEPARATOR ',') as languages
+			FROM
+			equipment_model_info
+			WHERE code =
+			em.code group by code) languages
+			FROM
+		equipment_model em
+		JOIN equipment_model_info emi ON em.code = emi.code
+		JOIN equipments_category ec ON ec.code = em.equipment_category_code
+		LEFT JOIN equipments_category_info eci ON eci.code = ec.code AND eci.language = #{language,jdbcType=VARCHAR}
+		WHERE em.status = 1
+		AND ec.status =1 
+		AND	emi.language = #{language,jdbcType=VARCHAR}
+		<if test="equipmentCategoryCode != null">
+		AND em.equipment_category_code =#{equipmentCategoryCode,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode != null">
+		AND ec.oem_code =#{oemCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY em.create_time DESC
+	</select>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.EquipmentModel">
+		select em.code,eci.name as
+		equipment_cate_name,emi.name,emi.comment,em.equipment_category_code,
+		(select
+		group_concat(language
+		SEPARATOR ',') as languages
+		FROM
+		equipment_model_info
+		WHERE code =
+		em.code group by code) languages
+		FROM
+		equipment_model em
+		LEFT JOIN equipment_model_info emi ON emi.code =
+		em.code AND
+		emi.language = #{language,jdbcType=VARCHAR}
+		left join
+		equipments_category_info eci on eci.code =
+		em.equipment_category_code
+		and eci.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE em.code =
+		#{code,jdbcType=VARCHAR}
+		AND em.status = 1
+		and emi.language =
+		#{language,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

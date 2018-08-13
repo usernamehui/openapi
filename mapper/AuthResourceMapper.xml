@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AuthResourceDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthResource">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="portal" jdbcType="INTEGER" property="portal" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="icon" jdbcType="VARCHAR" property="icon" />
+		<result column="parent_id" jdbcType="INTEGER" property="parentId" />
+		<result column="grade" jdbcType="INTEGER" property="grade" />
+		<result column="sel_id" jdbcType="INTEGER" property="selId" />
+		<result column="url" jdbcType="VARCHAR" property="url" />
+		<result column="language" jdbcType="VARCHAR" property="language" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="comment" jdbcType="VARCHAR" property="comment" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<result column="last_update_time" jdbcType="VARCHAR" property="lastUpdateTime" />
+		<result column="languages" property="languages" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, type, name, icon, parent_id, grade, url,
+		order_id, status,
+		comment, create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from auth_resource
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		auth_resource
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AuthResource">
+		insert into auth_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+
+			<if test="portal != null">
+				portal,
+			</if>
+
+			<if test="type != null">
+				type,
+			</if>
+			<if test="icon != null">
+				icon,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			status,
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+
+			<if test="portal != null">
+				#{portal,jdbcType=INTEGER},
+			</if>
+
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.AuthResource">
+		insert into auth_resource_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthResource">
+		update auth_resource
+		<set>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="portal != null">
+				portal = #{portal,jdbcType=INTEGER},
+			</if>
+			<if test="icon != null">
+				icon = #{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=INTEGER},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthResource">
+		UPDATE auth_resource_info
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=VARCHAR}
+		AND language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.AuthResource">
+		update
+		auth_resource
+		set code = #{code,jdbcType=VARCHAR},
+		type =
+		#{type,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		icon =
+		#{icon,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=INTEGER},
+		grade = #{grade,jdbcType=INTEGER},
+		url = #{url,jdbcType=VARCHAR},
+		order_id = #{orderId,jdbcType=INTEGER},
+		status =
+		#{status,jdbcType=INTEGER},
+		comment = #{comment,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=VARCHAR},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthResource"
+		resultMap="BaseResultMap">
+		SELECT
+		ar.code, ar.type, ar.icon, ar.parent_id, ar.grade, ar.url,
+		ar.order_id, ar.status,
+		ar.create_time,ari.name,ari.comment,ari.language,ar.id AS
+		sel_id
+		FROM
+		auth_resource ar
+		LEFT JOIN auth_resource_info ari ON ar.code = ari.code
+		AND ari.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE ar.status = 1
+		<if test="code!=null and code!='' ">
+			AND ar.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId!=null">
+			AND ar.parent_id = #{parentId,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<update id="deleteByCondition" parameterType="java.lang.String">
+		update
+		auth_resource
+		set status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		ar.*,ari.name,ari.comment,ari.language,
+		(select
+		group_concat(language SEPARATOR ',') as languages
+		FROM
+		auth_resource_info
+		WHERE code = ar.code group by code) languages
+		FROM
+		auth_resource ar
+		LEFT JOIN auth_resource_info ari ON ar.code = ari.code
+		AND ari.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE ar.status = 1
+		<if test="type!=null">
+			AND ar.type =#{type,jdbcType=VARCHAR}
+		</if>
+
+		<if test="portal!=null">
+			AND ar.portal =#{portal,jdbcType=INTEGER}
+		</if>
+		ORDER BY ar.order_id
+	</select>
+
+	<select id="selectResourceByUser" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers"
+		resultMap="BaseResultMap">
+		SELECT 
+			ar.url,ari.name,ar.icon , ar.id AS sel_id
+			,ar.parent_id,ari.language 
+		FROM
+			auth_role_user aru
+		JOIN auth_role_resource arr ON aru.role_code = arr.role_code
+		JOIN auth_resource ar ON arr.resource_code = ar.code
+		LEFT JOIN auth_resource_info ari ON ar.code = ari.code AND ari.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		ar.status = 1
+		AND
+			aru.user_code = #{code,jdbcType=VARCHAR}
+		AND
+			aru.company_code=#{companyCode,jdbcType=VARCHAR}
+		AND 
+			aru.role_code =  #{roleCode,jdbcType=VARCHAR}
+		AND 
+			arr.role_code =  #{roleCode,jdbcType=VARCHAR}
+		AND 
+			aru.status = 1
+		AND 
+			arr.status = 1
+		
+		ORDER BY ar.order_id
+	</select>
+
+	<select id="selectSencondResourceByUser" resultMap="BaseResultMap">
+		SELECT
+			ar.url,ari.name,ar.icon , ar.id as sel_id ,ar.parent_id FROM
+		auth_role_user aru
+		JOIN auth_role_resource arr ON aru.role_code = arr.role_code
+		JOIN auth_resource ar ON arr.resource_code = ar.code
+		LEFT JOIN auth_resource_info ari ON ar.code = ari.code AND ari.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE 
+			ar.status = 1
+		AND
+			aru.user_code = #{code,jdbcType=VARCHAR}
+		AND		
+			aru.company_code=#{companyCode,jdbcType=VARCHAR}
+		AND 
+			ar.parent_id =#{parentId,jdbcType=INTEGER}
+		AND 
+			aru.role_code =  #{roleCode,jdbcType=VARCHAR}
+		AND 
+			arr.role_code =  #{roleCode,jdbcType=VARCHAR}
+		AND 
+			aru.status = 1
+		AND 
+			arr.status = 1
+		ORDER BY ar.order_id
+	</select>
+	<select id="selectTreeList" resultMap="BaseResultMap">
+		SELECT
+		ar.*, ari.`name`,
+		ari.`comment`
+		FROM
+		auth_resource ar
+		LEFT JOIN auth_resource_info ari ON
+		ar.code = ari.`code` AND ari.language = #{1}
+		WHERE
+		ar. CODE IN (
+		SELECT
+		rc.resource_code
+		FROM
+		auth_role_resource rc
+		WHERE
+		rc.role_code = #{0})
+	</select>
+
+	<select id="tableList" resultMap="BaseResultMap">
+		SELECT
+		ar.*,ari.name,ari.comment,
+		(select group_concat(language
+		SEPARATOR ',') as languages
+		FROM
+		auth_resource_info
+		WHERE code = ar.code
+		group by code) languages
+		FROM
+		auth_resource ar
+		LEFT JOIN
+		auth_resource_info ari ON ar.code = ari.code AND ari.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE
+		ar.status = 1
+		AND ar.code IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectResourcesByParentId" parameterType="int" resultMap="BaseResultMap">
+		select ri.name,r.url from auth_resource r,auth_resource_info ri where r.code=ri.code and parent_id=#{id,jdbcType=INTEGER}
+	</select>
+</mapper>

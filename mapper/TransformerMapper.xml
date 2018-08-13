@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.TransformerDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Transformer" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="number" property="number" jdbcType="VARCHAR"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="short_name" property="shortName" jdbcType="VARCHAR"/>
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+		<result column="user_code" property="usercode" jdbcType="VARCHAR"/>
+		<result column="company_code" property="comcode" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="last_time" property="lastTime" jdbcType="VARCHAR"/>
+		<result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+		<result column="location" property="location" jdbcType="VARCHAR"/>
+		<result column="area" property="area" jdbcType="VARCHAR"/>
+		<result column="duty_phone" property="dutyPhone" jdbcType="VARCHAR"/>
+		<result column="qr_path" property="qrPath" jdbcType="VARCHAR"/>
+		<result column="hologram_url" property="hologramUrl" jdbcType="VARCHAR"/>
+		<result column="organization_url" property="organizationUrl" jdbcType="VARCHAR"/>
+		<result column="system_image_url" property="systemImageUrl" jdbcType="VARCHAR"/>
+		<result column="radio" property="radio" jdbcType="VARCHAR"/>
+		<result column="remind_test" property="remindTest" jdbcType="INTEGER"/>
+		<result column="remind_clear" property="remindClear" jdbcType="INTEGER"/>
+		<result column="inspection_nextsend" property="inspectionNextsend" jdbcType="VARCHAR"/>
+		<result column="capacity" property="capacity" jdbcType="VARCHAR"/>
+		<result column="clear_nextsend" property="clearNextsend" jdbcType="VARCHAR"/>
+		<result column="power_time" property="powerTime" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="column_code" property="columnCode" jdbcType="VARCHAR"/>
+		<result column="value" property="value" jdbcType="VARCHAR"/>
+		<result column="to_work" property="toWork" jdbcType="VARCHAR"/>
+		<result column="off_work" property="offWork" jdbcType="VARCHAR"/>
+		<result column="duration" property="duration" jdbcType="VARCHAR"/>
+		<result column="across" property="across" jdbcType="VARCHAR"/>
+		<result column="item" property="item" jdbcType="VARCHAR"/>
+		<result column="to_work_before" property="toWorkBefore" jdbcType="VARCHAR"/>
+		<result column="to_work_after" property="toWorkAfter" jdbcType="VARCHAR"/>
+		<result column="off_work_after" property="offWorkAfter" jdbcType="VARCHAR"/>
+		<result column="off_work_before" property="offWorkBefore" jdbcType="VARCHAR"/>
+		<result column="inspection_time" property="inspectionTime" jdbcType="VARCHAR"/>
+		<result column="off_inspection_before" property="offInspectionBefore" jdbcType="VARCHAR"/>
+		<result column="off_inspection_after" property="offInspectionAfter" jdbcType="VARCHAR"/>
+		<result column="visit_name" property="visitName" jdbcType="VARCHAR"/>
+		<result column="visit_company" property="visitCompany" jdbcType="VARCHAR"/>
+		<result column="visit_purpose" property="visitPurpose" jdbcType="VARCHAR"/>
+		<result column="visit_come_time" property="visitComeTime" jdbcType="VARCHAR"/>
+		<result column="visit_go_time" property="visitGoTime" jdbcType="VARCHAR"/>
+		<result column="visit_common" property="visitCommon" jdbcType="VARCHAR"/>
+		<result column="unattend" property="unattend" jdbcType="INTEGER"/>
+		<result column="work_img" property="workImg" jdbcType="VARCHAR"/>
+		<result column="topic" property="topic" jdbcType="VARCHAR"/>
+		<result column="answer" property="answer" jdbcType="VARCHAR"/>
+		<result column="cut_net" property="cutNet" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, code, number, name, address, user_code, company_code, short_name,work_img,
+		create_time create_time, status, last_time last_time, img_url, location, area, duty_phone, 
+		qr_path, radio, remind_test, remind_clear, organization_url,
+		inspection_nextsend, capacity, clear_nextsend,hologram_url,
+		power_time power_time,system_image_url
+	</sql>
+	
+	<!-- 保存配电室信息 -->
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		insert into transformer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="number != null">
+				number,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="shortName != null">
+				short_name,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="comcode != null">
+				company_code,
+			</if>
+			<if test="usercode != null and usercode != '' and usercode != 'null'">
+				user_code,
+			</if>
+			<if test="imgUrl != null and imgUrl!=''">
+				img_url,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="area != null">
+				area,
+			</if>
+			<if test="dutyPhone != null">
+				duty_phone,
+			</if>
+			<if test="qrPath != null">
+				qr_path,
+			</if>
+			<if test="radio != null and radio != '' and radio != 'null'">
+				radio,
+			</if>
+			<if test="powerTime != null and powerTime != '' and powerTime != 'null'">
+				power_Time,
+			</if>
+			<if test="remindTest != null">
+				remind_test,
+			</if>
+			<if test="remindClear != null">
+				remind_clear,
+			</if>
+			<if test="inspectionNextsend != null">
+				inspection_nextsend,
+			</if>
+			<if test="capacity != null and capacity != '' and capacity != 'null'">
+				capacity,
+			</if>
+			<if test="clearNextsend != null and clearNextsend != '' and clearNextsend != 'null'">
+				clear_nextsend,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			create_time,
+			<if test="organizationUrl != null and organizationUrl != '' and organizationUrl != 'null'">
+				organization_url,
+			</if>
+			<if test="hologramUrl != null and hologramUrl != '' and hologramUrl != 'null'">
+				hologram_url,
+			</if>
+			<if test="systemImageUrl != null and systemImageUrl != '' and systemImageUrl != 'null'">
+				system_image_url,
+			</if>
+			<if test="workImg != null and workImg != '' and workImg != 'null'">
+				work_Img,
+			</if>
+			<if test="unattend != null">
+				unattend,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="number != null">
+				#{number,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null">
+				#{shortName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="comcode != null">
+				#{comcode,jdbcType=VARCHAR},
+			</if>
+			<if test="usercode != null and usercode != '' and usercode != 'null'">
+				#{usercode,jdbcType=VARCHAR},
+			</if>
+			<if test="imgUrl != null and imgUrl!=''">
+				#{imgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				#{area,jdbcType=VARCHAR},
+			</if>
+			<if test="dutyPhone != null">
+				#{dutyPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="qrPath != null">
+				#{qrPath,jdbcType=VARCHAR},
+			</if>
+			<if test="radio != null and radio != '' and radio != 'null'">
+				#{radio,jdbcType=VARCHAR},
+			</if>
+			<if test="remindTest != null">
+				#{remindTest,jdbcType=VARCHAR},
+			</if>
+			<if test="powerTime != null and powerTime != '' and powerTime != 'null'">
+				#{powerTime,jdbcType=VARCHAR},
+			</if>
+			<if test="remindClear != null">
+			 	#{remindClear,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionNextsend != null">
+				#{inspectionNextsend,jdbcType=VARCHAR},
+			</if>
+			<if test="capacity != null and capacity != '' and capacity != 'null'">
+				#{capacity,jdbcType=INTEGER},
+			</if>
+			<if test="clearNextsend != null and clearNextsend != '' and clearNextsend != 'null'">
+				#{clearNextsend,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+				unix_timestamp(now())*1000,
+			<if test="organizationUrl != null and organizationUrl != '' and organizationUrl != 'null'">
+				#{organizationUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="hologramUrl != null and hologramUrl != '' and hologramUrl != 'null'">
+				#{hologramUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="systemImageUrl != null and systemImageUrl != '' and systemImageUrl != 'null'">
+				#{systemImageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="workImg != null and workImg != '' and workImg != 'null'">
+				#{workImg,jdbcType=VARCHAR},
+			</if>
+			<if test="unattend != null">
+				#{unattend,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 删除配电室信息 -->
+	<delete id="deleteByCondition">
+		update transformer
+		set status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 修改配电室信息 -->
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		update transformer
+		<set>
+			<if test="number != null">
+				number = #{number,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null">
+				short_name = #{shortName,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="comcode != null">
+				company_code = #{comcode,jdbcType=VARCHAR},
+			</if>
+			<if test="usercode != null">
+				user_code = #{usercode,jdbcType=VARCHAR},
+			</if>
+			<if test="imgUrl != null and imgUrl !=''">
+				img_url = #{imgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="area != null">
+				area = #{area,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="unattend != null">
+				unattend = #{unattend,jdbcType=VARCHAR},
+			</if>
+			<if test="dutyPhone != null">
+				duty_phone = #{dutyPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="qrPath != null">
+				qr_path = #{qrPath,jdbcType=VARCHAR},
+			</if>
+			<if test="workImg != null">
+				work_Img = #{workImg,jdbcType=VARCHAR},
+			</if>
+			<if test="radio != null">
+				radio = #{radio,jdbcType=INTEGER},
+			</if>
+			<if test="remindTest != null">
+				remind_test = #{remindTest,jdbcType=VARCHAR},
+			</if>
+			<if test="remindClear != null">
+				remind_clear = #{remindClear,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionNextsend != null">
+				inspection_nextsend = #{inspectionNextsend,jdbcType=VARCHAR},
+			</if>
+			<if test="capacity != null">
+				capacity = #{capacity,jdbcType=VARCHAR},
+			</if>
+			<if test="powerTime != null">
+				power_Time = #{powerTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clearNextsend != null">
+				clear_nextsend = #{clearNextsend,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="organizationUrl != null">
+				organization_url = #{organizationUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="hologramUrl != null">
+				hologram_url = #{hologramUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="systemImageUrl != null">
+				system_image_url = #{systemImageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="breakNet !=null">
+				break_net=#{breakNet,jdbcType=VARCHAR},
+			</if>
+			<if test="cutNet !=null">
+				cut_net=#{cutNet,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 查询单条配电室信息 -->
+ 	<select id="selectEntityByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		select
+			id, code, number, name, address,unattend,type,work_img,
+			create_time create_time, status, last_time last_time, img_url, location,  duty_phone, 
+			qr_path, radio, remind_test, remind_clear, system_image_url,short_name,
+			inspection_nextsend, capacity, clear_nextsend,organization_url,hologram_url,
+			power_time power_time,company_code,user_code,hologram_url,
+			(select name from auth_user_info where code=user_code) username,
+			(select name from company_info where code=company_code) comname,
+			(select name from sys_dict where code=area) area 
+		from transformer
+		where status = 1 
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		limit 1
+	</select>
+	
+	<!-- 查询单条配电室信息
+	 <select id="selectEntityByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		select
+		<include refid="Base_Column_List" />
+		from transformer
+		where status = 1 
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		limit 1
+	</select>  -->
+	
+	<!-- 查询多条配电室信息 -->
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		select
+		id, code, number, name, address,type,unattend,radio,work_img,   
+		create_time create_time, status, last_time last_time, img_url, location,  duty_phone, 
+		qr_path, radio, remind_test, remind_clear, short_name,
+		inspection_nextsend, capacity, clear_nextsend,system_image_url,
+		power_time power_time,company_code,user_code,organization_url,hologram_url,
+		(select name from auth_user_info where code=user_code) username,
+		(select name from company_info where code=company_code) comname,
+		(select name from sys_dict where code=area) area  
+		from transformer t 
+		where 
+		status = 1 
+		<if test="statuse !=null and statuse != ''">
+			and type in(${statuse})
+		</if>
+		<if test="statuse ==null or statuse == ''">
+			and type in(1)
+		</if>
+		<if test="code != null">
+			AND code in(${code})
+		</if>
+		<if test="comcode != null">
+			AND company_code = #{comcode,jdbcType = VARCHAR}
+		</if>
+		<if test="usercode != null">
+			AND user_code = #{usercode,jdbcType = VARCHAR}
+		</if>
+		<if test="type != null">
+			AND type = #{type,jdbcType=INTEGER} 
+		</if>
+		<if test="unattend != null">
+			AND unattend = #{unattend,jdbcType=INTEGER} 
+		</if>
+		<if test="name != null">
+			AND name like CONCAT('%',#{name,jdbcType = VARCHAR},'%')
+		</if>
+		<if test="userHaveTrans != null and scheType != null">
+			AND exists (select trans_code from scheduling where user_code=#{userHaveTrans,jdbcType=VARCHAR} 
+						AND type = #{scheType,jdbcType=VARCHAR}  AND status = 1 
+						and (trans_code=t.code or spare=t.code)
+						<if test="createTime != null">
+							AND #{createTime,jdbcType=VARCHAR} &gt; work_time AND #{createTime,jdbcType=VARCHAR} &lt; work_off_time 
+						</if>
+			)
+		</if>
+		order by name 
+	</select>
+	
+	<!-- 查询配电室变比信息 -->
+	<select id="getChangeratio" parameterType="java.util.Map" resultType="java.util.Map">
+		select type,column_code,value from changeratio where 1 = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="columnCode != null">
+			and column_code = #{columnCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<!-- 查询单个配电室信息 -->
+	<select id="selectTransformerBycode" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List"/>
+		FROM transformer tran
+		where 1=1
+		AND tran.`code` = #{code,jdbcType=VARCHAR}
+		AND tran.user_code = #{usercode,jdbcType=VARCHAR}
+	</select>
+	
+		<!-- 查询智能化配电室信息 -->
+	<select id="selectZNList" resultMap="BaseResultMap">
+		SELECT 
+		<include refid="Base_Column_List"/>
+		FROM transformer tran
+		where status = 1
+		and unattend in(0,1)
+	</select>
+	
+	<!-- 查询配电室时间配置信息 -->
+	<select id="getTransTimeConfig" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM trans_time_config WHERE CODE=#{_parameter,jdbcType=VARCHAR} limit 1
+	</select>
+	<delete id="deleteTransTimeConfig" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		delete from trans_time_config where code = #{code,jdbcType=VARCHAR} 
+	</delete>
+	<select id="selectTransTimeConfigInfo" parameterType="String" resultMap="BaseResultMap">
+		select * from trans_time_config_info WHERE CODE=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	<select id="selectOneTransTimeConfig" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select * from trans_time_config_info where 1=1
+		<if test="code !=null">
+			and code=#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="item !=null">
+			and item=#{item,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 查询配电室时间配置信息LIST -->
+	<select id="getTransTimeConfigs" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM trans_time_config WHERE CODE = #{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 查询配电室时间配置信息 -->
+	<select id="getTransTimeConfigInfo" parameterType="String" resultMap="BaseResultMap">
+		SELECT * FROM trans_time_config_info WHERE CODE=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 查询配电室时间配置信息列表 -->
+	<select id="listTransTimeConfig" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select (select name from transformer where code=t.code) name,t.* from trans_time_config t where 1=1 
+		<if test="code != null and code != ''">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode != null and companyCode != ''">
+			and code in (select code from transformer where status !=9 and company_code = #{companyCode,jdbcType=VARCHAR})
+		</if>
+	</select>
+	<select id="findTransTimeConfig" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="BaseResultMap">
+		select (select name from transformer where code=t.code) name,t.* from trans_time_config t where 1=1 
+		<if test="transCode != null">
+			and code = #{transCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<!-- 查询配电室日常巡检时间配置信息 -->
+	<select id="getTransInspectionConfig" parameterType="String" resultMap="BaseResultMap">
+		select (select name from transformer where code=t.code) name,t.* from trans_inspection_config t where code = #{_parameter,jdbcType=VARCHAR} order by across,inspection_time
+	</select>
+	
+	<!-- 根据配电室以及时间查询配电室日常巡检时间配置信息 -->
+	<select id="getTransInspection" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select * from trans_inspection_config where 1=1
+		<if test="transCode !=null">
+			and code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="across !=null">
+			and across=#{across,jdbcType=VARCHAR}
+		</if>
+		<if test="inspectionTime !=null">
+			and inspection_time=#{inspectionTime,jdbcType=VARCHAR}
+		</if>
+		limit 1
+	</select>
+	
+	<!-- 查询配电室日常巡检时间配置表自动巡检中不包含该时间段的配置信息 -->
+	<select id="getTransInspectionConfigNotInPatrol" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select * from trans_inspection_config where code=#{code} and inspection_time not in(
+		select time from patrol p where  trans_code in(#{code})  and from_unixtime(create_time/1000,'%Y-%m-%d') = from_unixtime(#{createTime}/1000,'%Y-%m-%d'))	
+	</select>
+	
+	<!-- 查询配电室来访记录列表 -->
+	<select id="listVisit" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select (select name from transformer t where t.code=v.code) name,visit_name,visit_company,visit_purpose,
+		       visit_come_time visit_come_time, 
+		       visit_go_time visit_go_time, 
+		       visit_common,create_time create_time 
+			from trans_visit v where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="visitComeTime != null">
+			and #{visitComeTime,jdbcType=VARCHAR} &lt;= visit_come_time and visit_come_time &lt; ${@com.cloudinnov.yun.openapi.common.TimeUtils@addOneDayMill(visitComeTime)}
+		</if>
+		order by create_time desc 
+	</select>
+	
+	<!-- 保存配电室来访记录 -->
+	<insert id="saveVisit" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		insert into trans_visit 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="visitName != null">
+				visit_name,
+			</if>
+			<if test="visitCompany != null">
+				visit_company,
+			</if>
+			<if test="visitPurpose != null">
+				visit_purpose,
+			</if>
+			<if test="visitComeTime != null">
+				visit_come_time,
+			</if>
+			<if test="visitGoTime != null">
+				visit_go_time,
+			</if>
+			<if test="visitCommon != null">
+				visit_common,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			status
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="visitName != null">
+				#{visitName,jdbcType=VARCHAR},
+			</if>
+			<if test="visitCompany != null">
+				#{visitCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="visitPurpose != null">
+				#{visitPurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="visitComeTime != null">
+				#{visitComeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="visitGoTime != null">
+				#{visitGoTime,jdbcType=VARCHAR},
+			</if>
+			<if test="visitCommon != null">
+				#{visitCommon,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 获取配电室电度 -->
+	<select id="getElePoint" resultType="java.util.Map">
+		<!-- select CONCAT(trans_code,',',GROUP_CONCAT(code)) TPcode
+				from point p where trans_code in(select code from transformer where status=1 and unattend in(0,1)) 
+				and code in(select code from point_info pi where name like '正向有功电能_%') group by trans_code -->
+		select concat(tcode,';',group_concat(re.pcode)) TPcode from (
+			  select t.code tcode,p.code pcode from transformer t inner join equipment e on t.code=e.trans_code
+              inner join point p on p.object_code=e.code 
+              inner join point_info pi on p.code=pi.code 
+              where t.status=1 and e.status=1 and p.status=1 
+              and pi.name='正向有功电能_电度') re group by re.tcode 
+	</select>
+	
+	<select id="getElePointNameAndCode" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="java.util.Map">
+		select CONCAT(name,':',GROUP_CONCAT(code)) nameAndCode
+			from point_info pi where code in(
+			select code from point where trans_code =#{code,jdbcType=VARCHAR}) 
+			and name like '正向有功电能_%' and name != '正向有功电能_电度' group by name
+	</select>
+	
+	<!-- 根据客户获取配电室 -->
+	<select id="listByCompanyMap" parameterType="java.util.Map" 
+	    resultMap="BaseResultMap">
+		select code, name, location, qr_path, img_url, 
+		(select name from company_info where code=company_code) comname 
+		from transformer 
+		where status!=9 
+		<if test="comCode!=null and comCode!=''">
+			and company_code=#{comCode,jdbcType=VARCHAR} 
+		</if>
+	</select>
+	
+	<!-- 根据配电室删除巡检时间配置 -->
+	<delete id="deleteInspection" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		delete from trans_inspection_config where code = #{code,jdbcType=VARCHAR} 
+		<!-- <if test="inspectionTime != null">
+			and inspection_time = #{inspectionTime,jdbcType=VARCHAR}
+		</if> -->
+	</delete>
+	
+	<!-- 保存配电室巡检时间配置 -->
+	<insert id="saveInspection" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		insert into trans_inspection_config 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="inspectionTime != null">
+				inspection_time,
+			</if>
+			<if test="offInspectionBefore != null">
+				off_inspection_before,
+			</if>
+			<if test="offInspectionAfter != null">
+				off_inspection_after,
+			</if>
+			<if test="patrolAcross != null">
+				across,
+			</if>
+			<if test="across !=null">
+				across,
+			</if>
+				create_time,
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionTime != null">
+				#{inspectionTime,jdbcType=VARCHAR},
+			</if>
+			<if test="offInspectionBefore != null">
+				#{offInspectionBefore,jdbcType=VARCHAR},
+			</if>
+			<if test="offInspectionAfter != null">
+				#{offInspectionAfter,jdbcType=VARCHAR},
+			</if>
+			<if test="patrolAcross != null">
+				#{patrolAcross,jdbcType=VARCHAR},
+			</if>
+			<if test="across !=null">
+				#{across,jdbcType=VARCHAR},
+			</if>
+				unix_timestamp(now())*1000
+		</trim>
+	</insert>
+	
+	<!-- 保存或修改配电室考勤时间配置 -->
+	<insert id="saveOrUpdateTransAttendance" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select count(id) id from trans_time_config where code = #{code,jdbcType=VARCHAR}
+		</selectKey>
+		<if test="id == 0">
+			insert into trans_time_config 
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					code,
+				</if>
+				<if test="toWork != null">
+					to_work,
+				</if>
+				<if test="offWork != null">
+					off_work,
+				</if>
+				<if test="across != null">
+					across,
+				</if>
+				<if test="toWorkBefore != null">
+					to_work_before,
+				</if>
+				<if test="toWorkAfter != null">
+					to_work_after,
+				</if>
+				<if test="offWorkBefore != null">
+					off_work_before,
+				</if>
+				<if test="offWorkAfter != null">
+					off_work_after,
+				</if>
+				<if test="duration != null">
+					duration,
+				</if>
+				create_time
+			</trim>
+			<trim prefix="values(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					#{code,jdbcType=VARCHAR},
+				</if>
+				<if test="toWork != null">
+					#{toWork,jdbcType=VARCHAR},
+				</if>
+				<if test="offWork != null">
+					#{offWork,jdbcType=VARCHAR},
+				</if>
+				<if test="across != null">
+					#{across,jdbcType=VARCHAR},
+				</if>
+				<if test="toWorkBefore != null">
+					#{toWorkBefore,jdbcType=VARCHAR},
+				</if>
+				<if test="toWorkAfter != null">
+					#{toWorkAfter,jdbcType=VARCHAR},
+				</if>
+				<if test="offWorkBefore != null">
+					#{offWorkBefore,jdbcType=VARCHAR},
+				</if>
+				<if test="offWorkAfter != null">
+					#{offWorkAfter,jdbcType=VARCHAR},
+				</if>
+				<if test="duration != null">
+					#{duration,jdbcType=VARCHAR},
+				</if>
+				unix_timestamp(now())*1000
+			</trim>
+		</if>
+		<if test="id > 0">
+			update trans_time_config 
+			<set>
+				<if test="toWork != null">
+					to_work = #{toWork,jdbcType=VARCHAR},
+				</if>
+				<if test="offWork != null">
+					off_work = #{offWork,jdbcType=VARCHAR},
+				</if>
+				<if test="across != null">
+					across = #{across,jdbcType=VARCHAR},
+				</if>
+			</set>
+			<where>
+				<if test="code != null">
+					code = #{code,jdbcType=VARCHAR}
+				</if>
+			</where>
+		</if>
+	</insert>
+	
+	<!-- 查询配电室交接物列表 -->
+	<select id="listTransHandover" parameterType="java.util.Map" resultMap="BaseResultMap">
+					SELECT
+					i.code hcode,
+					i.trans_code code,
+					i.menu as itemsType,
+					(select name from transformer where code=trans_code) name,
+					i.unit hnumber,
+					i.name hname,
+					FROM_UNIXTIME(am.use_time/1000,'%Y-%m-%d') as useTime,
+					FROM_UNIXTIME(am.now_annual_time/1000,'%Y-%m-%d') as  nowAnnualTime,
+					FROM_UNIXTIME(am.next_annual_time/1000,'%Y-%m-%d') as nextAnnualTime,
+					am.annual_person as  annualPerson
+			FROM
+				items i
+			JOIN annual_message am ON i.`code` = am.items_code
+			WHERE
+				i.type = 4
+		<if test="transCode != null">
+			and trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+		
+	<select id="selectTranformerByTranCode" parameterType="String" resultMap="BaseResultMap">
+		SELECT  model.*,cominfo.name comname,ui.name username,u.phone,
+        		(select count(1) from equipment where 
+				category_code=(select code from equipments_category where type=1) 
+				and trans_code=model.code and	status = 1) highCount,
+				(select count(1) from equipment where 
+				category_code=(select code from equipments_category where type=2) 
+				and trans_code=model.code and	status = 1) lowCount,
+				(select count(1) from equipment where 
+				category_code=(select code from equipments_category where type=3) 
+				and trans_code=model.code and	status = 1) straightCount,
+				(select count(1) from equipment where 
+				category_code=(select code from equipments_category where type=4) 
+				and trans_code=model.code and	status = 1) changeCount
+			    from transformer model
+				LEFT JOIN company_info cominfo on cominfo.code=model.company_code
+				LEFT JOIN auth_user u on u.code = model.user_code
+				LEFT JOIN auth_user_info ui on ui.code = model.user_code
+			WHERE
+			model.`status` = 1 
+			and model.code= #{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 查询配电室列表编码、名称、坐标 -->
+	<select id="selectList" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select
+			distinct t.code,name,t.location,type,short_name 
+			<if test="environment != null">
+				,(select if(count(1)>0,1,0) from point_warn_history where status=1 and trans_code=t.code) environment
+			</if> 
+		from transformer t
+		<if test="curMonthEle !=null">
+			join electricity e on t.code=e.trans_code and date_format(time,'%Y-%m')=date_format(now(),'%Y-%m')
+		</if>
+		where t.status = 1 and t.type in(1,3)
+		<!-- <if test="code != null">
+			and t.code=#{#code,jdbcType=VARCHAR}
+		</if> -->
+	</select>
+	<!-- 查询配电室本年度每月用电量 -->
+	<select id="selectListMonthEle" resultMap="BaseResultMap">
+		select trans_code code,sum(ifnull(zong,0)) monthZong,
+		       (select short_name from transformer where code=trans_code) short_name 
+		from (
+		  select * from electricity where date_format(time,'%Y-%m')=date_format(now(),'%Y-%m') 
+		) ele group by trans_code
+	</select>
+	<!-- 所有配电室巡检次数/主动防御次数/抢修工单数量 -->
+	<select id="getWDWCount" resultType="java.util.Map">
+		select 
+			(select count(1) from workplan) workplanCount,
+			(select count(1) from work_order where status=1) workOrderCount
+		from dual
+	</select>
+	<!--  -->
+	<select id="getTransQuestionList" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select 
+			FROM_UNIXTIME(tq.create_time/1000,'%Y-%m-%d %H:%s:%i') create_time,
+			group_concat(sd.name) topic,
+			t.name,
+			tq.comment,
+			aui.code usercode,
+			aui.name username,
+			group_concat(tq.answer) answer 
+			from trans_question tq  
+				   left join sys_dict sd on tq.topic=sd.code 
+			     left join transformer t on tq.trans_code=t.code
+					 left join auth_user_info aui on aui.code = tq.user_code
+			where tq.status != 9 and t.status !=9
+		<if test="transCode != null">
+			and tq.trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="usercode != null">
+			and tq.user_code = #{usercode,jdbcType=VARCHAR}
+		</if>
+		<if test="comment != null">
+			and tq.comment = #{comment,jdbcType=VARCHAR}
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and from_unixtime(tq.create_time/1000,'%Y-%m-%d') &gt;= #{beginTime,jdbcType=VARCHAR} 
+			and from_unixtime(tq.create_time/1000,'%Y-%m-%d') &lt;= #{endTime,jdbcType=VARCHAR} 
+		</if>
+		 group by tq.trans_code,tq.user_code,tq.create_time
+	</select>
+	
+	<select id="listTransformer" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="com.cloudinnov.yun.openapi.model.Transformer">
+			select 
+			t.code as code,
+			t.`name` AS NAME,
+			t.`number` AS number,
+			t.`address` AS address,
+			(SELECT NAME FROM sys_dict WHERE CODE = t.area) dictName,
+			ci.`name` AS customerName,
+			ui.`name` AS visitName,
+			au.phone as dutyPhone,
+			t.`create_time` AS createTime,
+			t.`power_time` AS lastTime
+ 			from transformer t
+			join company_info ci on ci.code=t.company_code
+			left join auth_user au on au.code=t.user_code
+			left join auth_user_info ui on ui.`code`=au.`code`
+		<if test="code !=null">
+		where t.code in(${code})
+		</if>
+	</select>
+	
+	<select id="getTransBySche" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultMap="BaseResultMap">
+		select * from transformer t,scheduling s where (t.code=s.trans_code or t.code=s.spare)  
+				 and t.status!=9 and s.status!=9 and s.type=#{type} and s.user_code=#{userCode,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="listTransEqui" resultMap="BaseResultMap">
+		select t.name,t.address,t.location,t.duty_phone,IF(t.hologram_url,'null',null) hologram_url ,e.trans_code code,GROUP_CONCAT(concat(e.code,'-',ei.name)) equipments
+				from transformer t,equipment e,equipment_info ei where t.code=e.trans_code and e.code=ei.code 
+				and t.status!=9 and e.status!=9 and t.type=1 group by trans_code
+	</select>
+	
+	<select id="getCapacityTotal" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="int">
+		select sum(ifnull(capacity,0)) from transformer where status != 9 
+		<if test="code !=null and code != ''">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="getTransByUser" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select * from transformer where status=1  and code in (${code})
+	</select>
+	<select id="selectTranformerList" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select * from transformer where type=1 and  unattend in(0,1) 
+		<if test="breakNet !=null">
+			and break_net=#{breakNet,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<delete id="deleteUserTrans" parameterType="com.cloudinnov.yun.openapi.model.AuthUserTransformer">
+		delete from auth_user_transformer where 1=1
+		<if test="userCode !=null">
+		and  user_code = #{userCode,jdbcType=VARCHAR}
+		</if> 
+		<if test="transCode !=null">
+		and  trans_code= #{transCode,jdbcType=VARCHAR}
+		</if>
+	</delete>
+	<insert id="insertUserTrans" parameterType="com.cloudinnov.yun.openapi.model.AuthUserTransformer">
+		insert into auth_user_transformer 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="orders != null">
+				orders,
+			</if>
+			status,
+			<if test="createTime != null">
+				create_time
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INETEGER},
+			</if>
+			<if test="orders != null">
+				#{orders,jdbcType=VARCHAR},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectUserTranByUser" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.AuthUserTransformer">
+		select trans_code as transCode from auth_user_transformer where 
+			<if test="_parameter !=null">
+				user_code=#{_parameter,jdbcType=VARCHAR}
+			</if>
+			order by orders 
+	</select>
+	<select id="findFirstUserTrans" parameterType="com.cloudinnov.yun.openapi.model.AuthUserTransformer" resultMap="BaseResultMap">
+			SELECT
+			t.id, t.code as code, number, name, address,t.type type,unattend,radio,   
+			t.create_time create_time,t.status status, last_time last_time, img_url, location,  duty_phone, 
+			qr_path, remind_test, remind_clear, short_name,
+			inspection_nextsend, capacity, clear_nextsend,system_image_url,
+			power_time power_time,company_code,t.user_code as user_code,organization_url,hologram_url,
+			(select name from auth_user_info where code=t.user_code) username,
+			(select name from company_info where code=company_code) comname,
+			(select name from sys_dict where code=area) area  
+			FROM
+				auth_user_transformer aut
+			JOIN transformer t ON t. CODE = aut.trans_code
+			WHERE 1=1
+			<if test="userCode !=null">
+			and 	aut.user_code = #{userCode,jdbcType=VARCHAR}
+			</if>
+			order By aut.create_time
+	</select>
+	<select id="selectUserOrders" parameterType="String" resultType="String">
+		select  orders from auth_user_transformer where 1=1 
+		<if test="_parameter !=null">
+			and user_code=#{_parameter,jdbcType=VARCHAR}
+		</if> 
+		order by orders desc  LIMIT 1 
+	</select>
+	<select id="getTransPurview" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		select
+		id, code, number, name, address,type,unattend,radio,   
+		create_time create_time, status, last_time last_time, img_url, location,  duty_phone, 
+		qr_path, radio, remind_test, remind_clear, short_name,
+		inspection_nextsend, capacity, clear_nextsend,system_image_url,
+		power_time power_time,company_code,user_code,organization_url,hologram_url,
+		(select name from auth_user_info where code=user_code) username,
+		(select name from company_info where code=company_code) comname,
+		(select name from sys_dict where code=area) area  
+		from transformer t 
+		where 
+		status = 1 
+		<if test="statuse !=null and statuse != ''">
+			and type in(${statuse})
+		</if>
+		<if test="code != null">
+			AND code in(${code})
+		</if>
+		<if test="comcode != null">
+			AND company_code = #{comcode,jdbcType = VARCHAR}
+		</if>
+		<if test="usercode != null">
+			AND user_code = #{usercode,jdbcType = VARCHAR}
+		</if>
+		<if test="type != null">
+			AND type = #{type,jdbcType=INTEGER} 
+		</if>
+		<if test="name != null">
+			AND name like CONCAT('%',#{name,jdbcType = VARCHAR},'%')
+		</if>
+		<if test="userHaveTrans != null and scheType != null">
+			AND exists (select trans_code from scheduling where user_code=#{userHaveTrans,jdbcType=VARCHAR} 
+						AND type = #{scheType,jdbcType=VARCHAR}  AND status = 1 
+						and (trans_code=t.code or spare=t.code)
+						<if test="createTime != null">
+							AND #{createTime,jdbcType=VARCHAR} &gt; work_time AND #{createTime,jdbcType=VARCHAR} &lt; work_off_time 
+						</if>
+			)
+		</if>
+		order by id 
+	</select>
+	<insert id="insertTransPower" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		insert into trans_power
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				trans_code,
+			</if>
+			<if test="powerValue != null">
+				power_value,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="powerValue != null">
+				#{powerValue,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectPatrolItems" parameterType="com.cloudinnov.yun.openapi.model.TransTemplete" resultType="com.cloudinnov.yun.openapi.model.TransTemplete">
+		select code code,name name,genre genre,type type ,orders orders from trans_templete where 1=1 
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="code !=null">
+			and code =#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="genre !=null">
+			and genre=#{genre,jdbcType=VARCHAR}
+		</if>
+		<if test="number !=null">
+			and number=#{number,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectPatrolItemsByCode" parameterType="com.cloudinnov.yun.openapi.model.TransTemplete" resultType="com.cloudinnov.yun.openapi.model.TransTemplete">
+				SELECT
+			CODE CODE,
+			NAME NAME,
+			genre genre,
+			number number,
+			type type,
+			orders orders,
+			photo photo
+		FROM
+			trans_templete where status=1
+		<if test="code !=null">
+			and code =#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="genre !=null">
+			and genre=#{genre,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectTransBox" parameterType="String" resultType="String">
+		select trans_code transCode from trans_box where status=1
+		<if test="_parameter !=null">
+		and box_code=#{_parameter,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectBoxByTrans" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultMap="BaseResultMap">
+		select  
+		t.id, t.code, t.number, t.name, t.address,t.type,t.unattend,t.radio,   
+		t.create_time create_time, t.status, t.last_time last_time, t.img_url, t.location,  t.duty_phone, 
+		t.qr_path, t.radio, t.remind_test, t.remind_clear, t.short_name,
+		t.inspection_nextsend, t.capacity, t.clear_nextsend,t.system_image_url,
+		t.power_time power_time,t.company_code,t.user_code,t.organization_url,t.hologram_url,
+		(select name from auth_user_info where code=user_code) username,
+		(select name from company_info where code=company_code) comname,
+		(select name from sys_dict where code=area) area  
+		from trans_box  tb
+		join transformer t on tb.box_code=t.code
+		 where t.status=1 
+		 <if test="code !=null">
+		 	and tb.trans_code =#{code,jdbcType=VARCHAR}
+		 </if>
+	</select>
+	<select id="selectCount" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="int">
+		SELECT
+			count(*) count
+		FROM
+			trans_templete where 1=1 
+		<if test="code !=null">
+			and code =#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="genre !=null">
+			and genre=#{genre,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="insertTransGuage" parameterType="com.cloudinnov.yun.openapi.model.TransGauge">
+			insert into trans_gauge
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="columnCount != null">
+				column_count,
+			</if>
+			<if test="columnName != null">
+				column_name,
+			</if>
+			<if test="stepColumn != null">
+				step_column,
+			</if>
+			<if test="stepColumnName !=null">
+				step_columnName,
+			</if>
+			<if test="strideColumn!=null">
+				stride_column,
+			</if>
+			<if test="type !=null">
+				type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime !=null">
+				create_time
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="columnCount != null">
+				#{columnCount,jdbcType=INTEGER},
+			</if>
+			<if test="columnName != null">
+				#{columnName,jdbcType=VARCHAR},
+			</if>
+			<if test="stepColumn != null">
+				#{stepColumn,jdbcType=INTEGER},
+			</if>
+			<if test="stepColumnName !=null">
+				#{stepColumnName,jdbcType=VARCHAR},
+			</if>
+			<if test="strideColumn!=null">
+				#{strideColumn,jdbcType=INTEGER},
+			</if>
+			<if test="type !=null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime !=null">
+				#{createTime,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<select id="selectTransGuage" parameterType="com.cloudinnov.yun.openapi.model.TransGauge" resultType="com.cloudinnov.yun.openapi.model.TransGauge">
+				SELECT
+			trans_code transCode,
+			column_count columnCount,
+			column_name columnName,
+			step_column stepColumn,
+			step_columnName stepColumnName,
+			stride_column strideColumn,
+			type type,
+		status status,
+		FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') createTime
+		FROM
+			trans_gauge
+		WHERE status=1
+		<if test="transCode !=null">
+		and trans_code =#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="columnName !=null">
+		and column_name like CONCAT('%',#{columnName,jdbcType = VARCHAR},'%')
+		</if>
+		ORDER BY column_count desc limit 1
+	</select>
+	<update id="updateGuage" parameterType="com.cloudinnov.yun.openapi.model.TransGauge">
+		update trans_gauge
+		<set>
+			<if test="stepColumn !=null">
+				step_column=#{stepColumn,jdbcType=INTEGER},
+			</if>
+			<if test="stepColumnName != null">
+				step_columnName = #{stepColumnName,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where status=1 and  trans_code = #{transCode,jdbcType=VARCHAR}
+		and column_name  like CONCAT('%',#{columnName,jdbcType = VARCHAR},'%')
+	</update>
+	<insert id="saveTransQuestion" parameterType="com.cloudinnov.yun.openapi.model.Transformer">
+		insert into trans_question
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="usercode != null">
+				user_code,
+			</if>
+			<if test="topic !=null">
+				topic,
+			</if>
+			<if test="answer !=null">
+				answer,
+			</if>
+			<if test="comment !=null">
+				comment,
+			</if>
+			<if test="type !=null">
+				type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime !=null">
+				create_time
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="usercode != null">
+				#{usercode,jdbcType=VARCHAR},
+			</if>
+			<if test="topic !=null">
+				#{topic,jdbcType=VARCHAR},
+			</if>
+			<if test="answer !=null">
+				#{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="comment !=null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="type !=null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime !=null">
+				#{createTime,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<delete id="deleteGauge" parameterType="com.cloudinnov.yun.openapi.model.TransGauge">
+		update trans_gauge
+		set status = 9
+		where trans_code = #{transCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="getTotalCount" parameterType="java.lang.String" resultType="java.util.Map">
+		select 
+			(select count(1) transformerCount from transformer where status !=9) transformerCount,
+			(select count(1) transformerCount from transformer where status !=9 and create_time &gt;= #{_parameter}) addTransformerCount,
+			(select sum(capacity) from transformer where status !=9) transCapacity,
+			(select ifnull(sum(capacity),0) from transformer where status !=9 and create_time &gt;= #{_parameter}) addTransCapacity,
+			(select count(1) from equipment where status !=9 and trans_code in(select code from transformer where status !=9)) equipmentCount,
+			(select count(1) from equipment where status !=9 and trans_code in(select code from transformer where status !=9) and create_time &gt;= #{_parameter}) addEquipmentCount,
+			(select count(1) from point where status !=9 and trans_code in(select code from transformer where status !=9)) pointCount,
+			(select count(1) from point where status !=9 and trans_code in(select code from transformer where status !=9) and create_time &gt;= #{_parameter}) addPointCount,
+			(select count(1) from camera WHERE trans_code in(select code from transformer t where status = 1 and type in(1,2))) cameraCount,
+			(select count(1) from camera WHERE trans_code in(select code from transformer t where status = 1 and type in(1,2)) and create_time &gt;= #{_parameter}) addCameraCount,
+			(select count(1) from equipment where status !=9 and category_code='ECYY81RCF' and trans_code in(select code from transformer where status !=9)) transCount,
+			(select count(1) from equipment where status !=9 and category_code='ECYY81RCF' and trans_code in(select code from transformer where status !=9) and create_time &gt;= #{_parameter}) addTransCount 
+		from dual
+	</select>
+	
+	<select id="getTransPurview2" parameterType="java.lang.String" resultType="java.lang.String">
+		${_parameter} 
+	</select>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.DTUDao">
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.DTU" resultType="com.cloudinnov.yun.openapi.model.DTU">
+		select 
+			code as code,
+			dtu_name dtuName,
+			dtu_sn dtuSn,
+			dtu_address dtuAddress,
+			dtu_location dtuLocation,
+			sim_iccid simIccid,
+			ammeter_model ammeterModel,
+			radio radio,
+			company_code companyCode,
+			type,status,create_time createTime
+			from dtu where `status`=1
+		<if test="code !=null">
+		and code =#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="simIccid !=null">
+		and sim_iccid=#{simIccid,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode !=null">
+		and company_code=#{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type !=null">
+		and type=#{type,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="selectYesterdayEle" parameterType="com.cloudinnov.yun.openapi.model.DTU" resultType="com.cloudinnov.yun.openapi.model.DTU">
+		select dtu_code dtuCode,dtu_electric dtuElectric,time,dtu_sum dtuSum from dtu_day_electric where status=1
+		<if test="dtuCode !=null">
+			and dtu_code=#{dtuCode,jdbcType=VARCHAR}
+		</if>
+		<if test="time !=null">
+			and time like CONCAT('%',#{time},'%') 
+		</if>
+	</select>
+	<insert id="insertDtuEle" parameterType="com.cloudinnov.yun.openapi.model.DTU">
+		insert into dtu_day_electric
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dtuCode  != null">
+				dtu_code,
+			</if>
+			<if test="dtuElectric != null">
+				dtu_electric,
+			</if>
+			<if test="type !=null">
+				type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="time !=null">
+				time,
+			</if>
+			<if test="dtuSum !=null">
+				dtu_sum,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dtuCode !=null">
+				#{dtuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="dtuElectric">
+				#{dtuElectric,jdbcType=VARCHAR},
+			</if>
+			<if test="type !=null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="status!=null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="time !=null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+			<if test="dtuSum !=null">
+				#{dtuSum,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateDtuEle" parameterType="com.cloudinnov.yun.openapi.model.DTU">
+		update dtu_day_electric
+		<set>
+			<if test="dtuElectric != null">
+				dtu_electric = #{dtuElectric,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where status=1
+		<if test="dtuCode !=null">
+		and dtu_code=#{dtuCode,jdbcType=VARCHAR}
+		</if>
+		<if test="time !=null">
+		and time like CONCAT('%',#{time},'%') 
+		</if>
+	</update>
+	<select id="selectDTUCompany" parameterType="com.cloudinnov.yun.openapi.model.DTU" resultType="com.cloudinnov.yun.openapi.model.DTU">
+		select  
+			dtu_code as dtuCode,
+			company_code companyCode,
+			status status,
+			create_time createTime,
+			(select name from company_info where code=dc.company_code)companyName
+		from dtu_company dc where status=1  GROUP BY company_code
+	</select>
+</mapper>

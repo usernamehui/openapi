@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkOperationDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.WorkOperation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="work_code" property="workCode" jdbcType="VARCHAR" />
+    <result column="operation_code" property="operationCode" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="command_user" property="commandUser" jdbcType="VARCHAR" />
+    <result column="obey_user" property="obeyUser" jdbcType="VARCHAR" />
+    <result column="command_time" property="commandTime" jdbcType="VARCHAR" />
+    <result column="operation_start_time" property="operationStartTime" jdbcType="VARCHAR" />
+    <result column="operation_end_time" property="operationEndTime" jdbcType="VARCHAR" />
+    <result column="operation_type" property="operationType" jdbcType="INTEGER" />
+    <result column="operation_user" property="operationUser" jdbcType="VARCHAR" />
+    <result column="guardian" property="guardian" jdbcType="VARCHAR" />
+    <result column="webmaster_user" property="webmasterUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    
+    <result column="workTitle" property="workTitle" jdbcType="VARCHAR" />
+    <result column="operationName" property="operationName" jdbcType="VARCHAR" />
+    <result column="task" property="task" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="commandUserName" property="commandUserName" jdbcType="VARCHAR" />
+    <result column="obeyUserName" property="obeyUserName" jdbcType="VARCHAR" />
+    <result column="operationUserName" property="operationUserName" jdbcType="VARCHAR" />
+    <result column="guardianUserName" property="guardianUserName" jdbcType="VARCHAR" />
+    <result column="webmasterUserName" property="webmasterUserName" jdbcType="VARCHAR" />
+    
+    <collection property="infoList" resultMap="infoMap"></collection>
+  </resultMap>
+  
+  <resultMap type="com.cloudinnov.yun.openapi.model.WorkOperationInfo" id="infoMap">
+  	<id column="wid" property="wid" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="work_operation_code" property="workOperationCode" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="audio_url" property="audioUrl" jdbcType="VARCHAR" />
+    <result column="orderby" property="orderby" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+  
+	  <insert id="saveOrUpdate" parameterType="com.cloudinnov.yun.openapi.model.WorkOperation">
+	  	 <selectKey keyProperty="id" resultType="int"  order="BEFORE">
+	  	 	select count(id) id from work_operation 
+	  	 	where code=#{code,jdbcType=VARCHAR} 
+	  	 </selectKey>
+	  	 <if test="id == 0">
+	  	 	insert into work_operation 
+	  	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	  	 		<if test="code != null">
+	  	 			code,
+	  	 		</if>
+	  	 		<if test="workCode != null">
+	  	 			work_code,
+	  	 		</if>
+	  	 		<if test="operationCode != null">
+	  	 			operation_code,
+	  	 		</if>
+	  	 		<if test="type != null">
+	  	 			type,
+	  	 		</if>
+	  	 		<if test="commandUser != null">
+	  	 			command_user,
+	  	 		</if>
+	  	 		<if test="obeyUser != null">
+	  	 			obey_user,
+	  	 		</if>
+	  	 			command_time,
+	  	 			operation_start_time,
+	  	 		<if test="operationEndTime != null">
+	  	 			operation_end_time,
+	  	 		</if>
+	  	 		<if test="operationType != null">
+	  	 			operation_type,
+	  	 		</if>
+	  	 		<if test="operationUser != null">
+	  	 			operation_user,
+	  	 		</if>
+	  	 		<if test="guardian != null">
+	  	 			guardian,
+	  	 		</if>
+	  	 		<if test="webmasterUser != null">
+	  	 			webmaster_user,
+	  	 		</if>
+	  	 		create_time,
+	  	 		<if test="lastUpdateTime != null">
+	  	 			last_update_time,
+	  	 		</if>
+	  	 		status
+	  	 	</trim>
+	  	 	<trim prefix="values(" suffix=")" suffixOverrides=",">
+	  	 		<if test="code != null">
+	  	 			#{code,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="workCode != null">
+	  	 			#{workCode,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationCode != null">
+	  	 			#{operationCode,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="type != null">
+	  	 			#{type,jdbcType=INTEGER},
+	  	 		</if>
+	  	 		<if test="commandUser != null">
+	  	 			#{commandUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="obeyUser != null">
+	  	 			#{obeyUser,jdbcType=VARCHAR},
+	  	 		</if>
+		  	 		unix_timestamp()*1000,
+	  	 			unix_timestamp()*1000,
+	  	 		<if test="operationEndTime != null">
+	  	 			#{operationEndTime,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationType != null">
+	  	 			#{operationType,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationUser != null">
+	  	 			#{operationUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="guardian != null">
+	  	 			#{guardian,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="webmasterUser != null">
+	  	 			#{webmasterUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 			unix_timestamp()*1000,
+	  	 		<if test="lastUpdateTime != null">
+	  	 			#{lastUpdateTime,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 			0
+	  	 	</trim>
+	  	 </if>
+	  	 <if test="id > 0">
+	  	 	update work_operation 
+	  	 	<set>
+	  	 		<if test="commandUser != null">
+	  	 			command_user = #{commandUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="obeyUser != null">
+	  	 			obey_user = #{obeyUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="commandTime != null">
+	  	 			command_time = #{commandTime,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationStartTime != null">
+	  	 			operation_start_time = #{operationStartTime,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationEndTime != null">
+	  	 			operation_end_time = #{operationEndTime,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationType != null">
+	  	 			operation_type = #{operationType,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="operationUser != null">
+	  	 			operation_user = #{operationUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="guardian != null">
+	  	 			guardian = #{guardian,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 		<if test="webmasterUser != null">
+	  	 			webmaster_user = #{webmasterUser,jdbcType=VARCHAR},
+	  	 		</if>
+	  	 			last_update_time = unix_timestamp()*1000,
+	  	 		<if test="status != null">
+	  	 			status = #{status,jdbcType=INTEGER},
+	  	 		</if>
+	  	 	</set>
+	  	 	<where>
+	  	 		code = #{code,jdbcType=VARCHAR}
+	  	 	</where>
+	  	 </if>
+	  </insert>
+	  
+	  
+	  <insert id="saveOrUpdateInfo" parameterType="com.cloudinnov.yun.openapi.model.WorkOperationInfo">
+	     <selectKey keyColumn="wid" keyProperty="wid" order="BEFORE" resultType="int">
+	        select count(wid) wid from work_operation_info 
+	        where code = #{code,jdbcType=VARCHAR} 
+	     </selectKey>
+	     <if test="wid == 0">
+		  	 insert into work_operation_info 
+		  	 <trim prefix="(" suffix=")" suffixOverrides=",">
+		  	 	<if test="code != null">
+		  	 		code,
+		  	 	</if>
+		  	 	<if test="workOperationCode != null">
+		  	 		work_operation_code,
+		  	 	</if>
+		  	 	<if test="content != null">
+		  	 		content,
+		  	 	</if>
+		  	 	<if test="audioUrl != null">
+		  	 		audio_url,
+		  	 	</if>
+		  	 	<if test="orderby != null">
+		  	 		orderby,
+		  	 	</if>
+		  	 	create_time
+		  	 </trim>
+		  	  <trim prefix="values(" suffix=")" suffixOverrides=",">
+		  	 	<if test="code != null">
+		  	 		#{code,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="workOperationCode != null">
+		  	 		#{workOperationCode,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="content != null">
+		  	 		#{content,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="audioUrl != null">
+		  	 		#{audioUrl,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="orderby != null">
+		  	 		#{orderby,jdbcType=INTEGER},
+		  	 	</if>
+		  	 	unix_timestamp()*1000
+		  	 </trim>
+	  	 </if>
+	  	  <if test="wid > 0">
+		  	 update work_operation_info 
+		  	 <set>
+		  	 	<if test="workOperationCode != null">
+		  	 		work_operation_code = #{workOperationCode,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="content != null">
+		  	 		content = #{content,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="audioUrl != null">
+		  	 		audio_url = #{audioUrl,jdbcType=VARCHAR},
+		  	 	</if>
+		  	 	<if test="orderby != null">
+		  	 		orderby = #{orderby,jdbcType=INTEGER},
+		  	 	</if>
+		  	 		create_time = unix_timestamp()*1000
+		  	 </set>
+		  	 <where>
+		  	 	code = #{code,jdbcType=VARCHAR} 
+		  	 </where>
+	  	 </if>
+	  </insert>
+	  
+	  <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkOperation" resultMap="BaseResultMap">
+	  	select   wo.code,
+	  		    (select title from work_order where code=work_code) workTitle,
+	  		    (select name from operation where code=operation_code) operationName,
+	  		    IF(EXISTS(select name from auth_user_info where code=command_user),(select name from auth_user_info where code=command_user),command_user) commandUserName,
+	  		    IF(EXISTS(select name from auth_user_info where code=obey_user),(select name from auth_user_info where code=obey_user),obey_user) obeyUserName,
+	  		    IF(EXISTS(select name from auth_user_info where code=operation_user),(select name from auth_user_info where code=operation_user),operation_user) operationUserName,
+	  		    IF(EXISTS(select name from auth_user_info where code=guardian),(select name from auth_user_info where code=guardian),guardian) guardianUserName,
+	  		    IF(EXISTS(select name from auth_user_info where code=webmaster_user),(select name from auth_user_info where code=webmaster_user),webmaster_user) webmasterUserName,
+	  		    (select logo from auth_user where code=command_user) commandUserLogo,
+	  		    (select logo from auth_user where code=obey_user) obeyUserLogo,
+	  		    (select logo from auth_user where code=operation_user) operationUserLogo,
+	  		    (select logo from auth_user where code=guardian) guardianUserLogo,
+	  		    (select logo from auth_user where code=webmaster_user) webmasterUserLogo,
+	  		    status,
+	  			work_code,operation_code,command_time,operation_start_time,operation_end_time,operation_type,wo.create_time,wo.last_update_time,wo.type  
+	  	from work_operation wo 
+	  	 where status != 9 
+	  	<if test="code != null">
+	  		and code = #{code,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="workCode != null">
+	  		and work_code = #{workCode,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="operationCode != null">
+	  		and operation_code = #{operationCode,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="type != null">
+	  		and type = #{type,jdbcType=INTEGER}
+	  	</if>
+	  	order by operationName asc
+	  </select>
+	  
+	  <select id="selectList" parameterType="com.cloudinnov.yun.openapi.model.WorkOperation" resultMap="BaseResultMap">
+	  	 select wo.*
+	  		from work_operation wo 
+	  	 	where status != 9 
+	  	<if test="code != null">
+	  		and code = #{code,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="workCode != null">
+	  		and work_code = #{workCode,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="operationCode != null">
+	  		and operation_code = #{operationCode,jdbcType=VARCHAR}
+	  	</if>
+	  	<if test="type != null">
+	  		and type = #{type,jdbcType=INTEGER}
+	  	</if>
+	  	order by create_time desc
+	  </select>
+	  
+	  
+	  <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkOperation" resultMap="BaseResultMap">
+	  	select * from (
+		  	select (select title from work_order where code=work_code) workTitle,
+		  		   (select name from operation where code=operation_code) operationName,
+		  		   (select task from operation where code=operation_code) task,
+		  		   (select number from operation where code=operation_code) number,
+		  		    IF(EXISTS(select name from auth_user_info where code=command_user),(select name from auth_user_info where code=command_user),command_user) commandUserName,
+	  		    	IF(EXISTS(select name from auth_user_info where code=obey_user),(select name from auth_user_info where code=obey_user),obey_user) obeyUserName,
+	  		    	IF(EXISTS(select name from auth_user_info where code=operation_user),(select name from auth_user_info where code=operation_user),operation_user) operationUserName,
+	  		    	IF(EXISTS(select name from auth_user_info where code=guardian),(select name from auth_user_info where code=guardian),guardian) guardianUserName,
+	  		    	IF(EXISTS(select name from auth_user_info where code=webmaster_user),(select name from auth_user_info where code=webmaster_user),webmaster_user) webmasterUserName,
+		  			work_code,operation_code,id,command_time,operation_start_time,
+		  			operation_end_time,operation_type,wo.create_time,wo.last_update_time,wo.type,
+		  			woinfo.content,woinfo.code,woinfo.audio_url,woinfo.orderby 
+		  	from work_operation wo 
+		  	JOIN work_operation_info woinfo 
+		  	on wo.code=woinfo.work_operation_code 
+	  	where status != 9 
+	  		and wo.code = #{code,jdbcType=VARCHAR}
+	  	) top order by top.orderby asc
+	  </select>
+	  
+	  <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkOperation">
+	  	 update work_operation 
+	  	 <set>
+	  	 	<if test="createTime != null">
+	  	 		create_time = #{createTime,jdbcType=VARCHAR},
+	  	 	</if>
+	  	 	<if test="lastUpdateTime != null">
+	  	 		last_Update_Time = #{lastUpdateTime,jdbcType=VARCHAR},
+	  	 	</if>
+	  	 </set>
+	  	 	where code = #{code,jdbcType=VARCHAR}
+	  </update>
+  	
+	</mapper>

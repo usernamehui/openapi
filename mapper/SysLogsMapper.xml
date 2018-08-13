@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudinnov.yun.openapi.dao.SysLogsDao">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<resultMap id="int" type="java.lang.Integer"></resultMap>
+	
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.SysLogs">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="user_code" jdbcType="VARCHAR" property="userCode" />
+		<result column="login_name" jdbcType="VARCHAR" property="loginName" />
+		<result column="module" jdbcType="VARCHAR" property="module" />
+		<result column="methods" jdbcType="VARCHAR" property="methods" />
+		<result column="action_time" jdbcType="VARCHAR" property="actionTime" />
+		<result column="user_ip" jdbcType="VARCHAR" property="userIP" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="oem_code" jdbcType="VARCHAR" property="oemCode" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, user_code, login_name, module, methods, action_time, user_ip,
+		create_time,
+		description,
+		status,oem_code
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.SysLogs">
+		insert into sys_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="module != null">
+				module,
+			</if>
+			<if test="methods != null">
+				methods,
+			</if>
+			<if test="actionTime != null">
+				action_time, 
+			</if>
+			<if test="userIp != null">
+				user_ip,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="oemCode != null">
+				oem_code
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="module != null">
+				#{module,jdbcType=VARCHAR},
+			</if>
+			<if test="methods != null">
+				#{methods,jdbcType=VARCHAR},
+			</if>
+			<if test="actionTime != null">
+				#{actionTime,jdbcType=VARCHAR},
+			</if>
+			<if test="userIp != null">
+				#{userIp,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysLogs">
+		update sys_log
+		<set>
+			<if test="loginName != null">
+				login_name = #{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				user_code = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="module != null">
+				module = #{module,jdbcType=VARCHAR},
+			</if>
+			<if test="methods != null">
+				methods = #{methods,jdbcType=VARCHAR},
+			</if>
+			<if test="actionTime != null">
+				action_time = #{actionTime,jdbcType=VARCHAR},
+			</if>
+			<if test="userIp != null">
+				user_ip = #{userIp,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="oemCode != null">
+				oem_code = #{oemCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysLogs"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sys_log 
+		WHERE 1=1
+		<if test="code != null">
+			AND code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="loginName != null">
+			AND login_name = #{loginName,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="module != null">
+			AND module = #{module,jdbcType=VARCHAR}
+		</if>
+		<if test="methods != null">
+			AND methods = #{methods,jdbcType=VARCHAR}
+		</if>
+		<if test="actionTime != null">
+			AND action_time = #{actionTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userIp != null">
+			AND user_ip = #{userIp,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null">
+			AND create_time = #{createTime,jdbcType=VARCHAR}
+		</if>
+		<if test="description != null">
+			AND description = #{description,jdbcType=VARCHAR},
+		</if>
+		<if test="status != null">
+			AND status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="oemCode != null">
+			AND oem_code = #{oemCode,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+	<select id="listAll" resultMap="int">
+		SELECT count(id) from
+		sys_log
+	</select>
+
+	<select id="list" resultType="java.util.Map">
+		SELECT
+		code, user_code,login_name, module, methods, action_time, user_ip,
+		create_time,
+		description,
+		status,oem_code
+		 from sys_log
+	</select>
+
+</mapper>

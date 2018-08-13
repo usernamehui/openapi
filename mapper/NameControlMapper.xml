@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.NameControlDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.NameControl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="wg_name" property="wgName" jdbcType="VARCHAR" />
+    <result column="pt_name" property="ptName" jdbcType="VARCHAR" />
+    <result column="classes" property="classes" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, type, wg_name, pt_name,classes,unit, status
+  </sql>
+  
+ 
+ <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.NameControl" resultMap="BaseResultMap">
+ 	select id, code, type, wg_name, pt_name,classes,unit, status from name_control where status=1
+ 	<if test="wgName != null and type == 1">
+ 		and #{wgName} like concat(wg_name,'%')
+ 	</if>
+ 	<if test="wgName != null and type != 1">
+ 		and wg_name = #{wgName}
+ 	</if>
+ 	<if test="type != null">
+ 		and type = #{type}
+ 	</if>
+ 	limit 1
+ </select>
+ 
+</mapper>

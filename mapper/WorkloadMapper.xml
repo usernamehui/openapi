@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkloadDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.Workload" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="work_duration" property="workDuration" jdbcType="VARCHAR" />
+    <result column="person_count" property="personCount" jdbcType="INTEGER" />
+    <result column="car_count" property="carCount" jdbcType="INTEGER" />
+    <result column="engine_count" property="engineCount" jdbcType="INTEGER" />
+    <result column="switch_count" property="switchCount" jdbcType="INTEGER" />
+    <result column="outlet_count" property="outletCount" jdbcType="INTEGER" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="work_item" property="workItem" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, CODE, work_duration, person_count, car_count, engine_count, switch_count, outlet_count, 
+    user_code, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from workload
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from workload
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.Workload" >
+    insert into workload (id, CODE, work_duration, 
+      person_count, car_count, engine_count, 
+      switch_count, outlet_count, user_code, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{workDuration,jdbcType=VARCHAR}, 
+      #{personCount,jdbcType=INTEGER}, #{carCount,jdbcType=INTEGER}, #{engineCount,jdbcType=INTEGER}, 
+      #{switchCount,jdbcType=INTEGER}, #{outletCount,jdbcType=INTEGER}, #{userCode,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Workload" >
+    insert into workload
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        CODE,
+      </if>
+      <if test="workDuration != null" >
+        work_duration,
+      </if>
+      <if test="personCount != null" >
+        person_count,
+      </if>
+      <if test="carCount != null" >
+        car_count,
+      </if>
+      <if test="engineCount != null" >
+        engine_count,
+      </if>
+      <if test="switchCount != null" >
+        switch_count,
+      </if>
+      <if test="outletCount != null" >
+        outlet_count,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="workItem != null">
+      	work_item,
+      </if>
+      <if test="type != null">
+      	type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="workDuration != null" >
+        #{workDuration,jdbcType=VARCHAR},
+      </if>
+      <if test="personCount != null" >
+        #{personCount,jdbcType=INTEGER},
+      </if>
+      <if test="carCount != null" >
+        #{carCount,jdbcType=INTEGER},
+      </if>
+      <if test="engineCount != null" >
+        #{engineCount,jdbcType=INTEGER},
+      </if>
+      <if test="switchCount != null" >
+        #{switchCount,jdbcType=INTEGER},
+      </if>
+      <if test="outletCount != null" >
+        #{outletCount,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="workItem != null">
+      	#{workItem,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+      	 #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.Workload" >
+    update workload
+    <set >
+      <if test="code != null" >
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="workDuration != null" >
+        work_duration = #{workDuration,jdbcType=VARCHAR},
+      </if>
+      <if test="personCount != null" >
+        person_count = #{personCount,jdbcType=INTEGER},
+      </if>
+      <if test="carCount != null" >
+        car_count = #{carCount,jdbcType=INTEGER},
+      </if>
+      <if test="engineCount != null" >
+        engine_count = #{engineCount,jdbcType=INTEGER},
+      </if>
+      <if test="switchCount != null" >
+        switch_count = #{switchCount,jdbcType=INTEGER},
+      </if>
+      <if test="outletCount != null" >
+        outlet_count = #{outletCount,jdbcType=INTEGER},
+      </if>
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.Workload" >
+    update workload
+    set CODE = #{code,jdbcType=VARCHAR},
+      work_duration = #{workDuration,jdbcType=VARCHAR},
+      person_count = #{personCount,jdbcType=INTEGER},
+      car_count = #{carCount,jdbcType=INTEGER},
+      engine_count = #{engineCount,jdbcType=INTEGER},
+      switch_count = #{switchCount,jdbcType=INTEGER},
+      outlet_count = #{outletCount,jdbcType=INTEGER},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectWorkLoadByCode" resultMap="BaseResultMap"
+   parameterType="com.cloudinnov.yun.openapi.model.Workload">
+  	select model.work_duration,model.person_count,
+	model.car_count,model.engine_count,model.switch_count
+	,model.outlet_count
+	from workload model
+	where 
+	model.code = #{code,jdbcType=VARCHAR}
+	AND model.type = #{type,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectEntityByCondition" resultMap="BaseResultMap">
+  	select 
+	  	model.code, model.work_duration,model.person_count,
+		model.car_count,model.engine_count,model.switch_count
+		,model.outlet_count,model.type,model.user_code,model.work_item
+	from workload model
+	where 
+	model.code = #{code,jdbcType=VARCHAR}
+	<if test="type != null">
+		AND model.type = #{type,jdbcType=INTEGER}
+	</if>
+  </select>
+  
+</mapper>

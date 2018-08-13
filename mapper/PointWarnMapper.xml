@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.PointWarnDao">
+	<select id="selectRatedValue" parameterType="string" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+		SELECT rated_value ratedValue FROM point_warn_info WHERE point_code=#{pointCode} GROUP BY rated_value 
+	</select>
+	<select id="selectLevel" parameterType="java.util.Map" resultType="int">
+		SELECT warn_level FROM point_warn_info 
+		WHERE #{parseDouble} BETWEEN min_value AND MAX_VALUE  AND point_code=#{pointCode}
+	</select>
+	
+	<select id="selectListByPointCode" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+			SELECT 	
+				ci.`code` AS comCode,
+				ci.`short_name` AS comName,
+				ei.`code` AS equipmentCode,
+				ei.`name` AS equipmentName,
+				bi.code bomCode,
+				bi.name bomName,
+				t.`code` AS transCode,
+				t.`name` AS transName,
+				p.`code` AS pointCode,
+				pi.`name` AS pointName,
+				p.`config` AS pointRange,
+				t.type as transType,
+				pwc.type pointType,
+				pwc.equipment_type equipmentType,
+				pwc.rated_value ratedValue,
+				pwc.value value,
+				(select comment from equipment_bom_info where code=p.bom_code)comment
+			FROM POINT p
+			left JOIN equipment_info ei ON p.object_code=ei.`code`
+			left JOIN point_info PI ON p.`code`=pi.`code`
+			left JOIN transformer t ON t.`code`=p.`trans_code`
+			left JOIN company_info ci ON p.`customer_code`=ci.`code`
+			LEFT JOIN point_warning_config pwc on pwc.point_code=p.code
+			LEFT JOIN equipment_bom_info bi on bi.code=p.bom_code			
+			where p.status=1 and p.code=#{pointCode} limit 1
+	</select>
+	
+	 <insert id="insertPointWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+        INSERT INTO point_warn_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="code != null">
+        		code,
+        	</if>
+        	<if test="comCode != null">
+        		com_code,
+        	</if>
+        	<if test="comName != null">
+        		com_name,
+        	</if>
+        	<if test="transCode != null">
+        		trans_code,
+        	</if>
+        	<if test="transName != null">
+        		trans_name,
+        	</if>
+        	<if test="equipmentCode != null">
+        		equipment_code,
+        	</if>
+        	<if test="equipmentName != null">
+        		equipment_name,
+        	</if>
+        	<if test="bomCode !=null">
+        		bom_code,
+        	</if>
+        	<if test="bomName !=null">
+        		bom_name,
+        	</if>
+        	<if test="pointRange != null">
+        		point_range,
+        	</if>
+        	<if test="pointCode != null">
+        		point_code,
+        	</if>
+        	<if test="pointName != null">
+        		point_name,
+        	</if>
+        	<if test="warnType != null">
+        		warn_type,
+        	</if>
+        	<if test="warnValue != null">
+        		warn_value,
+        	</if>
+        	<if test="expertsRecommend != null">
+        		experts_recommend,
+        	</if>
+        	<if test="warnLevel != null">
+        		warn_level,
+        	</if>
+        	<if test="warnContext != null">
+        		warn_context,
+        	</if>
+        	<if test="createTime != null">
+        		create_time,
+        	</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+            #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="comCode != null">
+            #{comCode,jdbcType=VARCHAR},
+            </if>
+            <if test="comName != null">
+            #{comName,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+            #{transCode,jdbcType=VARCHAR},
+            </if>
+            <if test="transName != null">
+            #{transName,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentCode != null">
+            #{equipmentCode,jdbcType=VARCHAR},
+            </if>
+            <if test="equipmentName != null">
+            #{equipmentName,jdbcType=VARCHAR},
+            </if>
+            <if test="bomCode !=null">
+            #{bomCode,jdbcType=VARCHAR},
+            </if>
+            <if test="bomName !=null">
+            #{bomName,jdbcType=VARCHAR},
+            </if>
+             <if test="pointRange != null">
+            #{pointRange,jdbcType=VARCHAR},
+            </if>
+            <if test="pointCode != null">
+            #{pointCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pointName != null">
+            #{pointName,jdbcType=VARCHAR},
+            </if>
+            <if test="warnType != null">
+        	#{warnType,jdbcType=INTEGER},
+        	</if>
+            <if test="warnValue != null">
+            #{warnValue,jdbcType=DECIMAL},
+            </if>
+            <if test="expertsRecommend != null">
+        	#{expertsRecommend,jdbcType=VARCHAR},
+        	</if>
+            <if test="warnLevel != null">
+            #{warnLevel,jdbcType=INTEGER},
+            </if>
+            <if test="warnContext != null">
+            #{warnContext,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+        	 #{createTime,jdbcType=VARCHAR},
+        	</if>
+           </trim>
+    </insert>
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT 
+    	pwh.`code` AS CODE,
+    	pwh.`com_name` AS comName,
+    	pwh.`trans_name` AS transName,
+    	pwh.`equipment_name` AS equipmentName,
+    	pwh.point_name AS pointName,
+    	pwh.`warn_value` AS warnValue,
+    	pwh.`warn_level` AS warnLevel,
+    	pwh.`point_range` AS pointRange,
+    	pwh.warn_context AS warnContext,
+    	STATUS,
+    	FROM_UNIXTIME((pwh.`create_time`)/1000,'%Y-%m-%d %H:%i')AS createTime ,
+    	pwh.status AS checkStatus,
+    	au.`name` AS checkUser
+    	FROM point_warn_history pwh 
+    	LEFT JOIN  auth_user_info au ON au.`code`=pwh.`check_user`
+    	WHERE STATUS!=9 
+    	<if test="transCode != null">
+	    	and pwh.`trans_code`= #{transCode,jdbcType=VARCHAR} 
+    	</if>
+    	<if test="status != null">
+	    	and pwh.`status`= #{status,jdbcType=INTEGER} 
+    	</if>
+    	 order by create_time desc
+    </select>
+    
+      <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT 
+    	pwh.`code` AS CODE,
+    	pwh.`com_name` AS comName,
+    	pwh.`trans_code` AS transCode,
+    	pwh.`trans_name` AS transName,
+    	pwh.`equipment_name` AS equipmentName,
+    	pwh.point_code as pointCode,
+    	pwh.point_name AS pointName,
+    	pwh.`warn_value` AS warnValue,
+    	pwh.`warn_level` AS warnLevel,
+    	pwh.`point_range` AS pointRange,
+    	pwh.warn_context AS warnContext,
+    	pwh.point_explain AS pointExplain,
+    	pwh.warn_type as warnType,
+    	(select bom_code from point where code=pwh.point_code)bomCode,
+    	STATUS,
+    	FROM_UNIXTIME((pwh.`last_update_time`/1000),'%Y-%m-%d %H:%i') AS lastUpdateTime,
+    	point_url AS pointUrl,
+    	(select name from auth_user_info where code=pwh.`check_user` limit 1) AS checkUser,
+    	FROM_UNIXTIME((pwh.`create_time`)/1000,'%Y-%m-%d %H:%i')AS createTime ,
+    	pwh.status AS checkStatus 
+    	FROM point_warn_history pwh 
+    	WHERE STATUS!=9 
+    	<if test="transCode != null">
+	    	and pwh.`trans_code`= #{transCode,jdbcType=VARCHAR} 
+    	</if>
+    	<if test="status != null">
+	    	and pwh.`status`= #{status,jdbcType=INTEGER} 
+    	</if>
+    	<if test="code != null">
+	    	and pwh.`code`= #{code,jdbcType=VARCHAR} 
+    	</if>
+    	 order by create_time desc
+    	 limit 1
+    </select>
+    
+    <select id="selectHistory" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="int">
+    	SELECT count(*) FROM point_warn_history pwh 
+    	WHERE pwh.`point_code`=#{pointCode,jdbcType=VARCHAR} 
+    	AND pwh.`warn_level`=#{warnLevel,jdbcType=DECIMAL}
+    </select>
+    <select id="selectUserByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+    	select u.*,u.login_name AS loginName,ui.name,u.user_type as userType  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code=#{transCode,jdbcType=VARCHAR} 
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type as userType from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND model.trans_code = #{transCode,jdbcType=VARCHAR} 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			<if test="comCode !=null">
+				 union all
+				 select u.*,u.login_name AS loginName,ui.name,u.user_type userType from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9 
+					and company_code=#{comCode,jdbcType=VARCHAR}  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+			</if>
+    </select>
+    <select id="selectStatus" resultType="int" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT COUNT(1)  FROM point_warn_history wh WHERE STATUS=1 
+    	<if test="pointCode !=null">
+    	AND wh.point_code=#{pointCode,jdbcType=VARCHAR}
+    	</if>
+    </select>
+    <select id="selectStatusTwo" resultType="int" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT COUNT(1)  FROM point_warn_history wh WHERE STATUS=2 
+    	<if test="pointCode !=null">
+    	AND wh.point_code=#{pointCode,jdbcType=VARCHAR}
+    	</if>
+    </select>
+    <select id="selectLevelByPointCode" resultType="com.cloudinnov.yun.openapi.model.PointWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT 
+    	wh.code as "code",
+    	wh.last_update_time as "lastUpdateTime"
+    	FROM point_warn_history wh
+    	WHERE status=2 AND wh.point_code=#{pointCode,jdbcType=VARCHAR}
+    	order by last_Update_Time desc limit 1
+    </select>
+    <select id="selectLevelByPointCodes" resultType="com.cloudinnov.yun.openapi.model.PointWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT 
+    	wh.code as "code",
+    	wh.warn_level as "warnLevel"
+    	FROM point_warn_history wh
+    	WHERE status=1 AND wh.point_code=#{pointCode,jdbcType=VARCHAR}
+    </select>
+    <update id="updateHistoryByCode" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	UPDATE point_warn_history wh ,
+		messages m 
+		SET wh.status=9,m.status=9
+		WHERE wh.code=m.work_code
+		AND wh.code=#{code,jdbcType=VARCHAR}
+    </update>
+    <update id="updatePointWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	UPDATE	point_warn_history wh
+    	<set>
+			wh.`status`=2,
+			<if test="lastUpdateTime != null">
+			wh.`last_update_time`=#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="pointUrl != null">
+			wh.`point_url`=#{pointUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="pointExplain != null">
+			wh.`point_explain`=#{pointExplain,jdbcType=VARCHAR},
+			</if>
+			<if test="checkUser !=null">
+			wh.check_user = #{checkUser,jdbcType=VARCHAR},
+			</if>
+			<if test="available!=null">
+			wh.available=#{available,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE wh.code=#{code,jdbcType=VARCHAR}
+    </update>
+    <select id="selectPointWarnCountByType" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="java.util.Map">
+    	SELECT COUNT(1) AS zongCount,
+			COUNT(wh.`warn_type`=1  or NULL)dianLiuCount,
+			COUNT(wh.`warn_type`=2  or NULL)dianYaCount,
+			COUNT(wh.`warn_type`=3  or NULL)wenDuCount,
+			COUNT(wh.`warn_type`=4  or NULL)kaiGuangCount,
+			COUNT(wh.`warn_type`=5  or NULL)envirExceptionCount,
+			COUNT(wh.`status`=1  or NULL)weiFuHeCount,
+			COUNT(wh.`status`=2  or NULL)fuHeCount
+		FROM point_warn_history wh 
+		RIGHT JOIN messages m on wh.code=m.work_code
+		WHERE wh.status!=9  and m.status!=9
+		<if test="createTime != null">
+			 AND (FROM_UNIXTIME((wh.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((wh.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		<if test="transCode !=null">
+			 AND wh.`trans_code` in(${transCode})
+		</if>
+    </select>
+    
+    <select id="selectPointWarnCountByTrans" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="int">
+    	select count(id) from point_warn_history where 1=1 
+    	<if test="transCode !=null">
+    		and trans_code=#{transCode,jdbcType=VARCHAR} 
+    	</if>
+    	<if test="status !=null">
+    		and status=#{status,jdbcType=INTEGER}
+    	</if>
+    </select>
+    <select id="selectExpertsRecommend" parameterType="java.lang.Integer" resultType="String">
+    	SELECT experts_recommend AS expertsRecommend FROM point_warn_recommend 
+    	 <if test="_parameter != null">
+            where warn_type = #{_parameter,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="selectManageByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+    select u.*,u.login_name AS loginName,ui.name,u.user_type userType  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code=#{transCode,jdbcType=VARCHAR} 
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+					LIMIT 1
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type userType from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND model.trans_code = #{transCode,jdbcType=VARCHAR} 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+					LIMIT 1
+			        union all
+			select u.*,u.login_name AS loginName,ui.name,u.user_type userType from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9 
+					and company_code=#{comCode,jdbcType=VARCHAR}  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+					LIMIT 1
+    </select>
+    <insert id="insertWarnTime" parameterType="java.util.Map">
+    	 INSERT INTO point_warn_continuetime 
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="code != null">
+        		code,
+        	</if>
+        	<if test="warnTime != null">
+        		warn_time,
+        	</if>
+        	<if test="createTime != null">
+        		create_time,
+        	</if>
+       			status
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+            #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="warnTime != null">
+            #{warnTime,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+            </if>
+            1
+           </trim>
+    </insert>
+    <select id="selectWarnTime" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	SELECT count as count,warn_time as createTime FROM point_warn_continuetime  
+    	<if test="_parameter!=null">
+    	WHERE CODE=#{_parameter,jdbcType=VARCHAR}
+    	</if>
+    	and status=1
+    	ORDER BY count  DESC  LIMIT 1
+    </select>
+    <update id="updateWarnCount" parameterType="String">
+    	update point_warn_continuetime 
+    	set count=count+1
+    	<if test="_parameter!=null">
+    	where code=#{_parameter,jdbcType=VARCHAR}
+    	</if>
+    </update>
+    <delete id="deleteWarnTime" parameterType="String">
+    delete from point_warn_continuetime 
+    <if test="_parameter !=null">
+    where code=#{_parameter,jdbcType=VARCHAR}
+    </if>
+    </delete>
+    <select id="selectWarnStatus" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+    	select last_update_time lastUpdateTime,status status from point_warn_history  
+    	where  status!=9 and warn_type !=4
+    	<if test="pointCode !=null">
+    		and point_code=#{pointCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="equipmentCode !=null">
+    		and equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="bomCode !=null">
+    		and bom_code=#{bomCode,jdbcType=VARCHAR}
+    	</if>
+    	<if test="warnType !=null">
+    		and warn_type=#{warnType,jdbcType=INTEGER}
+    	</if>
+    	ORDER BY create_time DESC LIMIT 1 
+    </select>
+    <select id="selectTime" resultType="com.cloudinnov.yun.openapi.model.Items" >
+    	select menu,unit from items where type=9  order by unit ASC 
+    </select>
+    <update id="colseAndOpenWarn" parameterType="com.cloudinnov.yun.openapi.model.Points">
+		UPDATE point_warning_config pwc
+		LEFT JOIN point p on p.code=pwc.point_code
+		<set>
+			<if test="status !=null">
+				 pwc.`status`=#{status,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where  1=1
+		<if test="code !=null">
+			and p.code=#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode !=null">
+			and p.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode !=null">
+			and p.object_code=#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="bomCode !=null">
+			and p.bom_code=#{bomCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type !=null">
+			and pwc.type=#{type,jdbcType=VARCHAR}
+		</if>
+	</update>
+	<update id="updatePointWarnConfig" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+		update point_warning_config
+		<set>
+			<if test="value !=null">
+				value=#{value,jdbcType=DECIMAL}
+			</if>
+		</set>
+		where status=1
+		<if test="pointCode !=null">
+			and point_code=#{pointCode,jdbcType=VARCHAR}
+		</if>
+	</update>
+		
+	<select id="getStatusCount" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="java.util.Map">
+		select count(1) allWarnCount,count(status = 1 or null) ingWarnCount,count(status = 2 or null) suWarnCount,create_time  
+			from point_warn_history where 
+			status != 9 
+			and trans_code in(${transCode}) 
+			and create_time &gt;= #{beginTime} 
+			and create_time &lt;= #{endTime}
+	</select>
+	<select id="selectWarnCount" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="java.util.Map">
+		select COUNT(1)zongCount,COUNT(pwh.`status`=1 or NULL)noCheckCount from point_warn_history pwh
+		RIGHT JOIN messages m on pwh.code=m.work_code
+		where pwh.`status`!=9 
+		<if test="transCode !=null">
+			and trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="findUserWarnFormation" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Messages">
+			SELECT
+			 m.code,m.type mtype, m.title,m.create_time createTime,'MUXSPTM' mucode,
+			 m.context, m.create_time,m.work_code workCode,m.status ,pwh.status warnStatus,pwh.point_code pointCode,pwh.code warnHistoryCode,pwh.warn_type pointWarnType
+			FROM 
+			messages m
+			LEFT JOIN point_warn_history pwh ON pwh.code=m.work_code AND pwh.status !=9
+			WHERE m.status!=9  and m.type = 3
+		<if test="messageTime !=null">
+			AND (FROM_UNIXTIME((m.create_time)/1000,'%Y-%m')=#{messageTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((m.create_time)/1000,'%Y')=#{messageTime,jdbcType=VARCHAR})
+		</if>
+		<if test="checkStatus !=null">
+			AND pwh.status=#{checkStatus,jdbcType=INTEGER}
+		</if>
+		<if test="statuse !=null">
+			and (select rated_value from point_warning_config where point_code=pwh.point_code limit 1)>=pwh.warn_value
+		</if>
+		<if test="warnLevel !=null">
+			and pwh.warn_level=#{warnLevel,jdbcType=INTEGER}
+		</if>
+		<if test='transCode !=null and transCode!=""'>
+			AND pwh.`trans_code` IN (${transCode})
+		</if>
+		<if test="warnType !=null">
+			AND pwh.`warn_type`=#{warnType,jdbcType=INTEGER}
+		</if>
+		GROUP BY m.code
+		ORDER BY m.create_time DESC
+	</select>
+	<select id="selectAvailableWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+		select code,trans_code transCode,trans_name transName,equipment_code equipmentCode,equipment_name equipmentName,
+		point_code pointCode,point_name pointName,warn_value warnValue,warn_type warnType from point_warn_history where  `status`!=9 
+		<if test="createTime !=null">
+			and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+		</if>
+		<if test="available !=null">
+			and available=#{available,jdbcType=VARCHAR}
+		</if>
+		<if test="beginTime !=null">
+			and FROM_UNIXTIME(create_time/1000,'%Y-%m')=#{beginTime,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode !=null">
+			and equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectPointWarnConfig" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+		select rated_value configValue,`value` value,switch_place switchPlace from point_warning_config where status=1 
+		<if test="pointCode !=null">
+			and point_code=#{pointCode,jdbcType=VARCHAR}
+		</if>
+		<if test="operator !=null">
+			 and operator=#{operator,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="selectWarnConfig" parameterType="com.cloudinnov.yun.openapi.model.PointWarnConfig" resultType="com.cloudinnov.yun.openapi.model.PointWarnConfig">
+		select code,type,point_type pointType,day_up dayUp,day_down dayDown,month_up monthUp,
+		month_down monthDown,equipment_code,month_expect monthExpect,count,status,create_time createTime
+		from point_Warn_config where `status`!=9 
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="pointType !=null">
+			and point_type=#{pointType,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode !=null">
+			and equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectWarnConfigByType" parameterType="com.cloudinnov.yun.openapi.model.PointWarnConfig" resultType="com.cloudinnov.yun.openapi.model.PointWarnConfig">
+		select code,type,point_type pointType,day_up dayUp,day_down dayDown,month_up monthUp,
+		month_down monthDown,equipment_code equipmentCode,month_expect monthExpect,count,status,create_time createTime
+		from point_Warn_config where `status`!=9 
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		<if test="pointType !=null">
+			and point_type=#{pointType,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode !=null">
+			and equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+</mapper>

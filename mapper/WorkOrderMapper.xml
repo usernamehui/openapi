@@ -1,0 +1,1186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkOrderDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.WorkOrder">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+		<result column="padding_by" property="paddingBy" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="em_group_id" property="emGroupId" jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="reservation" property="reservation" jdbcType="INTEGER" />
+		<result column="reservation_time" property="reservationTime"
+			jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="transformer_code" property="transformerCode"
+			jdbcType="VARCHAR" />
+		<result column="fault_type" property="faultType" jdbcType="VARCHAR" />
+		<result column="transformerName" property="transformerName"
+			jdbcType="VARCHAR" />
+		<result column="equipmentName" property="equipmentName"
+			jdbcType="VARCHAR" />
+		<result column="paddingByName" property="paddingByName"
+			jdbcType="VARCHAR" />
+		<result column="companyName" property="companyName"
+			jdbcType="VARCHAR" />
+		<result column="transformerName" property="transformerName"
+			jdbcType="VARCHAR" />
+		<result column="solution" property="solution" jdbcType="VARCHAR" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+		<result column="comLogo" property="comLogo" jdbcType="VARCHAR" />
+		<result column="paddingLogo" property="paddingLogo" jdbcType="VARCHAR" />
+		<result column="star_rating" property="starRating" jdbcType="VARCHAR"/>
+		<result column="star_user" property="starUser" jdbcType="VARCHAR"/>
+		<result column="evaluation" property="evaluation" jdbcType="INTEGER"/>
+		<result column="evaluation_content" property="evaluationContent" jdbcType="VARCHAR"/>
+		<result column="expect_time" property="expectTime" jdbcType="VARCHAR" />
+		<result column="show_code" property="showCode" jdbcType="VARCHAR" />
+		<result column="place" property="place" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="authName" property="authName" jdbcType="VARCHAR"/>
+		<result column="advanceClose" property="advanceClose" jdbcType="VARCHAR"/>
+		<collection property="workPlanJob" resultMap="workPlanJobResultMap"></collection>
+	</resultMap>
+	
+	<resultMap id="workPlanJobResultMap" type="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="code" property="code" jdbcType="VARCHAR" />
+	    <result column="setting" property="setting" jdbcType="VARCHAR" />
+	    <result column="complete_time" property="completeTime" jdbcType="VARCHAR" />
+	    <result column="completeTimes" property="completeTimes" jdbcType="VARCHAR" />
+	    <result column="executor" property="executor" jdbcType="VARCHAR" />
+	    <result column="duration" property="duration" jdbcType="VARCHAR" />
+	    <result column="items_code" property="itemsCode" jdbcType="VARCHAR" />
+	  </resultMap>
+	
+	<resultMap id="ResultMap" type="com.cloudinnov.yun.openapi.model.WorkOrder"
+		extends="BaseResultMap">
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="authName" property="authName" jdbcType="VARCHAR" />
+		<result column="first_time" property="firstTime" jdbcType="VARCHAR" />
+		<result column="equcode" property="equipment.code" jdbcType="VARCHAR" />
+		<result column="equname" property="equipment.name" jdbcType="VARCHAR" />
+		<result column="imageurl" property="equipment.imageUrl"
+			jdbcType="VARCHAR" />
+		<result column="comcode" property="company.code" jdbcType="VARCHAR" />
+		<result column="fault_type" property="faultType" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="VARCHAR" />
+		<result column="comname" property="company.name" jdbcType="VARCHAR" />
+		<result column="paddingPhone" property="paddingPhone" jdbcType="VARCHAR" />
+		<result column="tranUrl" property="tranUrl" jdbcType="VARCHAR" />
+		
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="handing_suggestion" property="handingSuggestion"
+			jdbcType="LONGVARCHAR" />
+
+		<collection property="company" resultMap="ComResultMap" />
+		<collection property="equipment" resultMap="EquResultMap" />
+		<collection property="attach" resultMap="AttachResultMap" />
+	</resultMap>
+
+	<resultMap id="ComResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="comcode" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="comname" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="customers" property="customers" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="EquResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<result column="equcode" property="code" jdbcType="VARCHAR" />
+		<result column="equname" property="name" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber"
+			jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="place_of_origin" property="placeOfOrigin"
+			jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="production_date" property="productionDate"
+			jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="purchase_date" property="purchaseDate"
+			jdbcType="VARCHAR" />
+		<result column="guarantee_begin_date" property="guaranteeBeginDate"
+			jdbcType="VARCHAR" />
+		<result column="warranty_period" property="warrantyPeriod"
+			jdbcType="INTEGER" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="AttachResultMap" type="com.cloudinnov.yun.openapi.model.Attach">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="object_id" property="objectId" jdbcType="INTEGER" />
+		<result column="object_code" property="objectCode" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="file_type" property="fileType" jdbcType="VARCHAR" />
+		<result column="size" property="size" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, code, customer_code, title, type, level, order_status,
+		padding_by,
+		STATUS, comment,
+		create_time, last_update_time
+	</sql>
+
+	<sql id="Blob_Column_List">
+		content
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="ResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from work_order
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		work_order
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		insert into
+		work_order (id, CODE, customer_code,
+		title, type, LEVEL,
+		order_status,
+		padding_by, STATUS,
+		COMMENT, create_time, last_update_time,
+		content)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{customerCode,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER}, #{level,jdbcType=INTEGER},
+		#{orderStatus,jdbcType=INTEGER}, #{paddingBy,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER},
+		#{comment,jdbcType=VARCHAR},
+		#{createTime,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=VARCHAR},
+		#{content,jdbcType=LONGVARCHAR})
+	</insert>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		insert into work_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				CODE,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="level != null">
+				LEVEL,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+			<if test="paddingBy != null">
+				padding_by,
+			</if>
+			STATUS,
+			<if test="comment != null">
+				COMMENT,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="emGroupId != null">
+				em_group_id,
+			</if>
+			<if test="transformerCode != null">
+				transformer_code,
+			</if>
+			<if test="showCode != null">
+				show_code,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=INTEGER},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=INTEGER},
+			</if>
+			<if test="paddingBy != null">
+				#{paddingBy,jdbcType=VARCHAR},
+			</if>
+			1,
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="emGroupId != null">
+				#{emGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="transformerCode != null">
+				#{transformerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="showCode != null">
+				#{showCode,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		update work_order
+		<set>
+			<if test="code != null">
+				CODE = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				LEVEL = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=INTEGER},
+			</if>
+			<if test="paddingBy != null">
+				padding_by = #{paddingBy,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="comment != null">
+				COMMENT = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="emGroupId != null">
+				em_group_id = #{emGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="starRating != null">
+				star_rating = #{starRating,jdbcType=INTEGER},
+			</if>
+			<if test="starUser != null">
+				star_user = #{starUser,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="reservationTime != null">
+				reservation_time = #{reservationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluation != null">
+				evaluation = #{evaluation,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluationContent != null">
+				evaluation_content = #{evaluationContent,jdbcType=VARCHAR},
+			</if>
+			<if test="showCode != null">
+				show_code = #{showCode,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		update
+		work_order
+		set CODE = #{code,jdbcType=VARCHAR},
+		customer_code =
+		#{customerCode,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		LEVEL = #{level,jdbcType=INTEGER},
+		order_status = #{orderStatus,jdbcType=INTEGER},
+		padding_by =
+		#{paddingBy,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=INTEGER},
+		COMMENT = #{comment,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=VARCHAR},
+		content =
+		#{content,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		update work_order
+		set CODE = #{code,jdbcType=VARCHAR},
+		customer_code =
+		#{customerCode,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		type = #{type,jdbcType=INTEGER},
+		LEVEL = #{level,jdbcType=INTEGER},
+		order_status = #{orderStatus,jdbcType=INTEGER},
+		padding_by =
+		#{paddingBy,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=INTEGER},
+		COMMENT = #{comment,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT wr.`CODE`,wr.transformer_code,wr.type,wr.show_code,wr.location,wr.address,
+		wr.customer_code,wr.level,wr.em_group_id,
+		wr.create_time AS createTime,wr.title,
+		(select name from company_info where code=wr.customer_code) AS companyName,
+		(select name from transformer  where code=wr.transformer_code) AS transformerName,
+		wr.create_time,
+		wr.order_status,hwr.description,hwr.reservation,hwr.reservation_time
+		FROM work_order wr
+		LEFT JOIN hand_work_order hwr
+		ON wr.`CODE` = hwr.`CODE`
+		<if test="userCode != null">
+			LEFT JOIN alarm_work_user users ON users.`code` = wr.`code`		
+		</if>
+		WHERE wr.`STATUS` = 1 
+		<if test="customerCode != null">
+			AND wr.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND wr.order_status = #{orderStatus,jdbcType=INTEGER}
+		</if>
+		<if test="orderStatusStr != null">
+			AND wr.order_status in( #{orderStatusStr,jdbcType=VARCHAR} )
+		</if>
+		<if test="type != null">
+			AND wr.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="transformerCode != null">
+			and wr.transformer_code = #{transformerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			AND users.`status` = 1	
+			AND users.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY wr.create_time DESC
+	</select>
+
+	<select id="selectHandWorkOrderByCode" resultMap="ResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+	SELECT 
+		info.`name` AS  paddingByName,
+		users.logo AS paddingLogo,
+		users.phone AS paddingPhone,
+		model.code,
+		model.location,
+		model.address,
+		model.create_time,
+		model.level,
+		model.show_code,
+		model.evaluation,
+		model.order_status,
+		model.transformer_code,
+		model.evaluation_content,
+		model.type,
+		model.comment,
+		hand.description,
+		ei.`name` AS equipmentName,
+		hand.fault_type,
+		hand.place,
+		model.padding_by,
+		hand.reservation,
+		hand.reservation_time,
+		tran.`name` AS transformerName,
+		tran.img_url AS tranUrl
+		FROM work_order model
+		LEFT JOIN hand_work_order hand ON hand.`code` = model.`code`
+		LEFT JOIN auth_user users ON users.code = model.padding_by AND users.`status` != 9
+		LEFT JOIN auth_user_info info ON info.code = users.`code`
+		LEFT JOIN equipment e ON e.`code` = hand.equipment_code AND e.`status` = 1
+		LEFT JOIN equipment_info ei ON ei.code = e.`code`
+		LEFT JOIN transformer tran ON tran.`code` = model.transformer_code
+		WHERE 
+		model.`code` = #{code,jdbcType=VARCHAR}
+		<!-- AND model.customer_code = #{customerCode,jdbcType=VARCHAR} -->
+		AND model.`status` = 1
+		AND model.type = #{type,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectMapByCondition" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+		alarm.code ,
+		alarm.level,
+		alarm.type,
+		alarm.location,
+		alarm.address,
+		alarm.last_update_time,
+		alarm.create_time AS
+		firstTime,alarm.status,alarm.order_status AS
+		orderStatus,alarm.padding_by,
+		equ.name,equ.code as
+		equcode,equmodel.image_url,equ.model,
+		equmodel.oem_person AS oems,
+		equmodel.supplier_person AS suppliers,
+		equmodel.customer_person AS
+		customers,
+		equmodel.production_date AS productionDate,
+		equmodel.warranty_period AS warrantyPeriod,
+		equmodel.current_state AS
+		currentState,
+		equmodel.guarantee_begin_date AS guaranteeBeginDate,
+		equ.brand AS brand,equ.place_of_origin AS placeOfOrigin,
+		com.name AS
+		comname,com.code AS comcode
+		FROM
+		work_order alarm
+		LEFT JOIN
+		hand_work_order hand on alarm.`CODE` = hand.`CODE`
+		LEFT JOIN equipment
+		AS equmodel ON equmodel.code = hand.equipment_code
+		LEFT JOIN
+		equipment_info AS equ ON equ.code = equmodel.code AND equ.language =
+		#{language,jdbcType=VARCHAR}
+		LEFT JOIN company_info AS com ON
+		alarm.customer_code = com.code AND
+		com.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE 1=1
+		AND alarm.code =
+		#{code,jdbcType=VARCHAR}
+		AND alarm.status = 1
+	</select>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		SELECT
+		model.`CODE`,model.order_status,model.type,model.last_update_time,model.em_group_id,model.show_code
+		,model.padding_by
+		from work_order model
+		where
+		model.`CODE` = #{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getWorkOrderType" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder"
+		resultMap="ResultMap">
+		SELECT wo.type
+		FROM work_order wo
+		WHERE
+		wo.code =
+		#{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="getWorkOrderSummary" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder"
+		resultMap="BaseResultMap">
+		SELECT
+			r.transformerName,r.equipmentName,r.description,r.solution,r.`comment`,r.type,
+			a.url
+		FROM
+			(
+			SELECT DISTINCT
+			hwo.`code`,
+			t. NAME AS transformerName,
+			ei. NAME AS equipmentName,
+			hwo.description,
+			wol.solution,
+			wo.`comment`,
+			wo.type
+			FROM
+			work_order wo
+			LEFT JOIN work_order_log wol ON wol.work_code = wo. code
+			JOIN
+			hand_work_order hwo ON hwo. code = wo. code
+			JOIN transformer t ON t.
+			code = hwo.transformer_code
+			JOIN equipment e ON e. code =
+			hwo.equipment_code
+			LEFT JOIN equipment_info ei ON ei. code = e. code
+			WHERE
+			wo.`status` = 1
+			AND hwo.`status` = 1
+			AND wol.operation = 1
+			AND wo. code = #{code,jdbcType = VARCHAR}
+			) r
+		JOIN attach a ON a.object_code = r. code
+	</select>
+	
+	<select id="getWorkOrderCount" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder" resultType="java.util.Map">
+		select (select count(1) from work_order where status = 1 
+				 and transformer_code = #{transformerCode,jdbcType=VARCHAR} and order_status = 0) unworkorder,
+			   (select count(1) from work_order where status = 1 
+				 and transformer_code = #{transformerCode,jdbcType=VARCHAR} and order_status = 1 
+				 and #{beginTime} &lt;= last_update_time and last_update_time &lt; #{endTime}) inworkorder,
+			   (select count(1) from work_order where status = 1 
+				 and transformer_code = #{transformerCode,jdbcType=VARCHAR} and order_status = 2 
+				 and #{beginTime} &lt;= last_update_time and last_update_time &lt; #{endTime}) acworkorder
+       	  from dual
+	</select>
+	
+	<select id="selectWorkOrderCount" parameterType="java.lang.String"
+	resultType="java.util.Map">
+		SELECT ( select count(id)  from work_order where status = 1 
+		and customer_code = #{customerCode,jdbcType=VARCHAR} AND order_status = 0) AS untreatedWorkOrder,
+		(select count(id)  from work_order where status = 1 
+		and customer_code = #{customerCode,jdbcType=VARCHAR} AND order_status = 1) AS handWorkOrder,
+		(select count(id)  from work_order where status = 1 
+		and customer_code = #{customerCode,jdbcType=VARCHAR} AND order_status = 2) AS processedWorkOrder,
+		(select count(id)  from work_order where status = 1 
+		and customer_code = #{customerCode,jdbcType=VARCHAR} ) AS SUM
+		FROM dual
+	</select>
+	<select id="searchWorkOrder" resultMap="BaseResultMap" parameterType="java.util.Map">
+		SELECT
+			wr.code,
+			wr.location,
+			wr.address,
+			wr.padding_by,
+			wr.customer_code,
+			wr.level,
+			wr.show_code,
+			wr.em_group_id,
+			wr.type,
+			wr.title,
+			wr.create_time,
+			wr.last_update_time,
+			wr.order_status,
+			wr.last_update_time,
+			wr.evaluation,
+			wr.evaluation_content,
+			unix_timestamp()*1000 -	wr.create_time continueTime,
+			hwr.description,
+			hwr.reservation,
+			hwr.place,
+			hwr.reservation_time,
+			(select case when count(1)>0 then 0 when count(1)=0 then 1 end from work_order_log log where log.work_code=wr.code and operation=16 and order_status=6) advanceClose
+		FROM
+			work_order wr
+		LEFT JOIN hand_work_order hwr ON wr.`CODE` = hwr.`CODE`
+		<if test="userCode != null">
+			LEFT JOIN alarm_work_user users ON users.`code` = wr.`code`		
+		</if>
+		WHERE
+			1 = 1
+		<if test="customerCode != null">
+			AND wr.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND wr.order_status = #{orderStatus,jdbcType=INTEGER} 
+		</if>
+		<if test="type != null">
+			AND wr.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="level != null"  >
+			AND wr.`level` = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND wr.create_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND wr.create_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			AND users.`status` = 1	
+			AND users.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null">
+			AND (wr.title like concat('%',#{title,jdbcType=VARCHAR},'%') or wr.show_code = #{title,jdbcType=VARCHAR})
+		</if>
+		<if test="transformerCode != null and transformerCode != ''">
+			AND wr.transformer_code = #{transformerCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="place != null and place != ''">
+			AND hwr.place = #{place,jdbcType=VARCHAR} 
+		</if>
+		<if test="continueTimeBegin != null and continueTimeEnd != null">
+			AND unix_timestamp()*1000-wr.create_time &gt;= #{continueTimeBegin,jdbcType=VARCHAR} AND unix_timestamp()*1000-wr.create_time &lt;= #{continueTimeEnd,jdbcType=VARCHAR}
+		</if>
+			AND wr.`STATUS` = 1
+		<if test="levelOrder != null">
+			ORDER BY wr.level ${levelOrder}
+		</if>
+		<if test="continueTimeOrder != null">
+			ORDER BY unix_timestamp()*1000-wr.create_time ${continueTimeOrder} 
+		</if>
+		<if test="order != null">
+			ORDER BY wr.create_time ${order}
+		</if>
+		<if test="order == null and levelOrder == null and continueTimeOrder == null">
+			ORDER BY wr.create_time DESC
+		</if>
+	</select>
+	<select id="search" resultMap="BaseResultMap" 
+	parameterType="java.util.Map">
+		SELECT
+			wr.code,
+			wr.location,
+			wr.address,
+			wr.padding_by,
+			wr.customer_code,
+			wr.level,
+			wr.show_code,
+			wr.em_group_id,
+			wr.type,
+			wr.title,
+			wr.create_time,
+			wr.last_update_time,
+			wr.order_status,
+			wr.last_update_time,
+			unix_timestamp()*1000 -	wr.create_time continueTime,
+			hwr.description,
+			hwr.reservation,
+			hwr.place,
+			hwr.reservation_time
+		FROM
+			work_order wr
+		LEFT JOIN hand_work_order hwr ON wr.`CODE` = hwr.`CODE`
+		<if test="userCode != null">
+			LEFT JOIN alarm_work_user users ON users.`code` = wr.`code`		
+		</if>
+		WHERE
+			1 = 1
+		<if test="customerCode != null">
+			AND wr.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND wr.order_status = #{orderStatus,jdbcType=INTEGER} 
+		</if>
+		 <if test="orderStatus == null">
+			AND wr.order_status != 16 
+		</if> 
+		<if test="type != null">
+			AND wr.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="level != null"  >
+			AND wr.`level` = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND wr.create_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND wr.create_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			AND users.`status` = 1	
+			AND users.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null">
+			AND (wr.title like concat('%',#{title,jdbcType=VARCHAR},'%') or wr.show_code = #{title,jdbcType=VARCHAR})
+		</if>
+		<if test="transformerCode != null and transformerCode != ''">
+			AND wr.transformer_code = #{transformerCode,jdbcType=VARCHAR} 
+		</if>
+		<if test="place != null and place != ''">
+			AND hwr.place = #{place,jdbcType=VARCHAR} 
+		</if>
+		<if test="continueTimeBegin != null and continueTimeEnd != null">
+			AND unix_timestamp()*1000-wr.create_time &gt;= #{continueTimeBegin,jdbcType=VARCHAR} AND unix_timestamp()*1000-wr.create_time &lt;= #{continueTimeEnd,jdbcType=VARCHAR}
+		</if>
+			AND wr.`STATUS` = 1
+		<if test="levelOrder != null">
+			ORDER BY wr.level ${levelOrder}
+		</if>
+		<if test="continueTimeOrder != null">
+			ORDER BY unix_timestamp()*1000-wr.create_time ${continueTimeOrder} 
+		</if>
+		<if test="order != null">
+			ORDER BY wr.create_time ${order}
+		</if>
+		<if test="order == null and levelOrder == null and continueTimeOrder == null">
+			ORDER BY wr.create_time DESC
+		</if>
+	</select>
+	
+	<select id="selectWorkPlanJob" resultMap="BaseResultMap">
+		SELECT 
+		model.`code`,model.`comment`,model.content,model.location,model.address,
+		model.create_time,model.customer_code,model.em_group_id,
+		model.last_update_time,model.`level`,model.type,
+		model.order_status,model.padding_by,
+		model.transformer_code,model.title,
+		job.complete_time AS completeTimes,
+		job.duration,
+		job.setting AS setting
+		FROM work_order model 
+		LEFT JOIN work_plan_job job ON model.`code` = job.`code`
+		WHERE 1=1
+		<if test="code != null">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode != null">
+			AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transformerName != null">
+			AND model.transformer_code = #{transformerName,jdbcType=VARCHAR}
+		</if>
+		<if test="level != null">
+			AND model.level = #{level,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND model.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+		AND model.type = 7
+		AND model.status = 1
+		ORDER BY model.create_time DESC
+	</select>
+	
+	<select id="selectWorkPlanJobByCode" resultMap="BaseResultMap">
+		SELECT 
+		model.`code`,model.`comment`,model.content,model.location,model.address,
+		model.create_time,model.customer_code,model.em_group_id,
+		model.last_update_time,model.`level`,model.type,
+		model.order_status,model.padding_by,
+		model.transformer_code,model.title,
+		job.complete_time AS completeTimes,
+		job.duration,
+		job.setting AS setting
+		FROM work_order model 
+		LEFT JOIN work_plan_job job ON model.`code` = job.`code`
+		WHERE 1=1
+		<if test="code != null">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode != null">
+			AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transformerName != null">
+			AND model.transformer_code = #{transformerName,jdbcType=VARCHAR}
+		</if>
+		<if test="level != null">
+			AND model.level = #{level,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND model.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+		AND model.type = 7
+		AND model.status = 1
+		ORDER BY model.create_time 
+	</select>
+	
+	<select id="selectWorkOrder" resultMap="BaseResultMap">
+		SELECT 
+		`work`.create_time AS create_time
+		FROM work_order work
+		WHERE
+		`work`.`code` = #{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectEmGroupId" resultMap="BaseResultMap">
+		SELECT model.`code`,model.em_group_id FROM work_order model
+		WHERE model.`code` = #{workCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="quartxWOrkOrder" resultMap="BaseResultMap">
+		SELECT
+			model.create_time, model.em_group_id,model.show_code,
+			model.code,model.order_status 
+		FROM work_order  model 
+		WHERE 1=1
+			AND model.order_status = 0
+			AND model.`status` = 1
+	</select>
+	
+	<select id="selectWorkOrderCountByUserCode" parameterType="java.util.Map"
+	resultType="java.util.Map">
+	SELECT 
+		(SELECT count(`work`.id) FROM work_order work LEFT JOIN alarm_work_user users ON `work`.`code` = users.`code`
+		WHERE `work`.`status` = 1 AND users.user_code = #{userCode,jdbcType=VARCHAR} AND `work`.order_status = 0) AS untreatedWorkOrder,
+		(SELECT count(work.id) FROM work_order work LEFT JOIN alarm_work_user users ON `work`.`code` = users.`code`
+		WHERE `work`.`status` = 1 AND users.user_code = #{userCode,jdbcType=VARCHAR} AND `work`.order_status = 1) AS processedWorkOrder,
+		(SELECT count(work.id) FROM work_order work LEFT JOIN alarm_work_user users ON `work`.`code` = users.`code`
+		WHERE `work`.`status` = 1 AND users.user_code = #{userCode,jdbcType=VARCHAR} AND `work`.order_status = 2) AS handWorkOrder,
+		(SELECT count(work.id) FROM work_order work LEFT JOIN alarm_work_user users ON `work`.`code` = users.`code`
+		WHERE `work`.`status` = 1 AND users.user_code = #{userCode,jdbcType=VARCHAR}) AS sum
+	FROM dual 
+	</select>
+	
+	
+	<select id="selectWorkOrderBuShowCode" resultMap="BaseResultMap"
+	parameterType="java.util.Map">
+		SELECT model.*  FROM work_order model WHERE model.`status` = 1  
+		AND  model.id = (SELECT MAX(model.id) FROM work_order model WHERE model.`status` = 1 )
+	</select>
+	
+	<select id="selectWorkOrderEvaluation" resultMap="BaseResultMap">
+		SELECT model.* from work_order model
+		WHERE
+		model.`status` = 1
+		AND model.`code` = #{code,jdbcType=VARCHAR}
+	</select>
+	
+	
+	<select id="selectKharmaWorkOrder" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT model.`code`,model.create_time,hand.description,model.order_status  FROM work_order model
+		LEFT JOIN hand_work_order hand ON hand.`code` = model.`code` AND hand.`status` = 1
+		WHERE
+		model.`status` = 1
+		AND hand.`status` = 1
+		AND model.type = 6
+		AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		<if test="level != null and level != ''">
+			AND model.`level` = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND model.order_status = #{orderStatus,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND model.create_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND model.create_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+	</select>
+		
+	<select id="selectKharmaWorkOrderDatails" resultMap="ResultMap">
+		SELECT 
+			model.`code`,hand.equipment_code.model.title,hand.reservation,hand.reservation_time,hand.description
+		FROM work_order model
+		LEFT JOIN hand_work_order hand ON hand.`code` = model.`code`
+		WHERE
+		model.`status` = 1
+		AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		AND model.`code` = #{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectWorkOrderHistory" resultMap="BaseResultMap" 
+	parameterType="java.util.Map">
+		SELECT
+			wr.code,
+			wr.location,
+			wr.address,
+			wr.padding_by,
+			wr.customer_code,
+			wr.level,
+			wr.show_code,
+			wr.em_group_id,
+			wr.type,
+			wr.title,
+			wr.evaluation,
+			wr.evaluation_content,
+			wr.create_time,
+			wr.last_update_time,
+			wr.order_status,
+			wr.last_update_time,
+			unix_timestamp()*1000 -	wr.create_time continueTime,
+			hwr.description,
+			hwr.reservation,
+			hwr.place,
+			hwr.reservation_time, 
+			(select case when count(1)>0 then 0 when count(1)=0 then 1 end from work_order_log log where log.work_code=wr.code and operation=16 and order_status=6) advanceClose,
+			(select u.logo from alarm_work_user awu join auth_user u on u.code=awu.user_code where awu.code=wr.code and role=1 limit 1) paddingLogo,
+			(select aui.name from alarm_work_user awu join auth_user_info aui on awu.user_code=aui.code where awu.code=wr.code and role=1 limit 1) authName  
+		FROM
+			work_order wr
+		LEFT JOIN hand_work_order hwr ON wr.`CODE` = hwr.`CODE`
+		<if test="userCode != null">
+			LEFT JOIN alarm_work_user users ON users.`code` = wr.`code`		
+		</if>
+		WHERE
+			1 = 1
+		<if test="customerCode != null">
+			AND wr.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND wr.order_status = #{orderStatus,jdbcType=INTEGER} 
+		</if>
+		<if test="orderStatus == null">
+			AND wr.order_status = 16 
+		</if>
+		<if test="type != null">
+			AND wr.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="level != null"  >
+			AND wr.`level` = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND wr.create_time &gt;= #{startTime,jdbcType=VARCHAR}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND wr.create_time &lt;= #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			AND users.`status` = 1	
+			AND users.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null">
+			AND wr.title like concat('%',#{title,jdbcType=VARCHAR},'%') 
+		</if>
+		<if test="transformerCode != null">
+			AND wr.transformerCode = #{transformerCode,,jdbcType=VARCHAR} 
+		</if>
+		AND wr.`STATUS` = 1
+		<if test="order != null">
+			ORDER BY wr.create_time ${order}
+		</if>
+		<if test="order == null">
+			ORDER BY wr.create_time DESC
+		</if>
+	</select>
+	
+	
+	<select id="selectWorkOrderGroup" resultMap="BaseResultMap">
+		SELECT model.`code`,model.em_group_id,model.type FROM work_order model
+		WHERE
+		model.`status` = 1
+		AND model.`code` = #{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectWorkOrderMonth" parameterType="java.util.Map" resultType="java.util.Map">
+		select wo.order_status orderStatus,wo.create_time createTime,wo.evaluation,
+			 ((select submit_time from work_order_log where work_code=wo.code and operation=8) - wo.create_time)/1000/60 ordersCost,
+			 ((select submit_time from work_order_log where work_code=wo.code and operation=4) - (select submit_time from work_order_log where work_code=wo.code and operation=8))/1000/60 reachCost,
+			 ((select submit_time from work_order_log where work_code=wo.code and operation=2) - (select submit_time from work_order_log where work_code=wo.code and operation=6))/1000/60 carryoutCost 
+		from work_order wo 
+		where wo.status != 9 
+		and wo.type=6 
+		and transformer_code = #{transformerCode,jdbcType=VARCHAR}  
+		and create_time &gt;= #{startTime}  
+		and create_time &lt;  #{endTime} 
+	</select>
+	
+	<select id="selectWorkOrderMonthDetail" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+		    FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') time,
+			count(FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')) zong  
+			from work_order wo 
+			where wo.status != 9 
+			and wo.type=6 
+			and transformer_code = #{transformerCode,jdbcType=VARCHAR}  
+			and create_time &gt;= #{startTime}  
+			and create_time &lt;  #{endTime} 
+			group by FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') 
+	</select>
+	
+	
+	<select id="selectDayList" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+			  select 
+					time,
+					count(id) zong,
+					sum(if(place='计量',1,0)) feng,
+					sum(if(place='线路',1,0)) gu,
+					sum(if(place='电缆',1,0)) ping,
+					(select max(temp) from electricity e where trans_code='TR9EYKVA' and DATE_FORMAT(e.time,${type})=electricity.time) temp
+				from (  select FROM_UNIXTIME(wr.create_time/1000,${type}) time,wr.*,hwo.place 
+						from work_order wr
+						LEFT JOIN hand_work_order hwo 
+						ON wr.code = hwo.code 
+						where wr.status != 9 and hwo.status != 9 
+						and wr.transformer_code = #{transCode,jdbcType=VARCHAR} 
+					  <if test="beginTime != null and endTime != null">
+					  	  and FROM_UNIXTIME(wr.create_time/1000,${type})&lt;=${beginTime} and FROM_UNIXTIME(wr.create_time/1000,${type})&gt;=${endTime} 
+					  </if>
+					  <if test="time != null and year == null and month == null">
+					  	  and FROM_UNIXTIME(wr.create_time/1000,${type})=#{time}
+					  </if>
+					  <if test="time != null and year != null">
+					  	  and FROM_UNIXTIME(wr.create_time/1000,${year})=#{time}
+					  </if>
+					  <if test="time != null and month != null">
+					  	  and FROM_UNIXTIME(wr.create_time/1000,${month})=#{time}
+					  </if>
+				      ) electricity group by time
+		    order by time asc
+	</select>
+	
+	<select id="selectNodeTime" resultType="java.util.Map">
+			select 
+				sum(ifnull(orders,0)) orders,
+				sum(ifnull(arrivals,0)) arrivals,
+				sum(ifnull(wotu,0)) wotu,
+				sum(ifnull(wwwt,0)) wwwt,
+				sum(ifnull(comp,0)) comp,
+				sum(ifnull(ct,0)) ct,
+				sum(ifnull(closet,0)) closet
+				from (
+				select 
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=8 limit 1) - wo.create_time)/1000/60,0) orders,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=4 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=8 limit 1))/1000/60,0) arrivals,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=5 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=4 limit 1))/1000/60,0) wotu,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=6 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=5 limit 1))/1000/60,0) wwwt,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=2 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=6 limit 1))/1000/60,0) comp,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=7 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=2 limit 1))/1000/60,0) ct,
+				format(((select submit_time from work_order_log where work_code=wo.code and operation=3 limit 1) - (select submit_time from work_order_log where work_code=wo.code and operation=7 limit 1))/1000/60,0) closet
+				from work_order wo
+				where wo.status !=9 
+				and wo.type=6 
+				order by wo.code
+			) time
+	</select>
+	<select id="selectWorkOrderCountByType" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder" resultType="java.util.Map">
+		select 
+		count(1)zong,
+		(SELECT COUNT(1) from work_order where LEVEL=1 and status=#{status,jdbcType=INTEGER})graveCount,
+		(SELECT COUNT(1) from work_order where LEVEL=2 and status=#{status,jdbcType=INTEGER})urgentCount,
+		(SELECT COUNT(1) from work_order where LEVEL=3 and status=#{status,jdbcType=INTEGER})kindCount,
+		(SELECT COUNT(1) FROM work_order where order_status=0 and status=#{status,jdbcType=INTEGER})noHandCount,
+		(SELECT COUNT(1) FROM work_order where order_status=12 and status=#{status,jdbcType=INTEGER})inHandCount,
+		(SELECT COUNT(1) FROM work_order where order_status=16 and status=#{status,jdbcType=INTEGER})handledCount
+		from work_order WHERE status=#{status,jdbcType=INTEGER}
+	</select>
+	<select id="selectListByWorkOrder" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder" resultType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		select 
+		w.code code,w.show_code showCode,type type,
+		(select name from transformer where code=w.transformer_code)transformerName,
+		FROM_UNIXTIME(create_time/1000,'%Y年%m月%d日')createTime ,
+		w.title title,w.order_status orderStatus
+		 from work_order w where STATUS =1 ORDER BY order_status asc, create_time desc limit 7 
+	</select>
+	<select id="findNewWorkOrderByCode" parameterType="com.cloudinnov.yun.openapi.model.WorkOrderLogs" resultType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		select show_code showCode,
+		(SELECT name from auth_user_info where code=w.padding_by)paddingByName,
+		(SELECT logo from auth_user where code=w.padding_by)imagesJson,
+		place,comment,`level`,title,w.content,w.address,hw.expect_time,
+		FROM_UNIXTIME(w.create_time/1000,'%Y-%m-%d %H:%i')createTime,
+		reservation_time as reservationTime,w.location,hw.description
+		from work_order w 
+		LEFT JOIN hand_work_order hw on hw.code=w.code
+		where w.status=1 
+		<if test="workCode !=null">
+			and w.code=#{workCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectWorkOrderByCode" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder" resultType="com.cloudinnov.yun.openapi.model.WorkOrder">
+		SELECT 
+		info.`name` AS  paddingByName,
+		users.logo AS paddingLogo,
+		users.phone AS paddingPhone,
+		model.code,
+		model.location,
+		model.address,
+		model.create_time createTime,
+		model.level,
+		model.content,
+		model.show_code showCode,
+		model.evaluation,
+		model.order_status orderStatus,
+		model.transformer_code transformerCode,
+		model.evaluation_content evaluationContent,
+		model.type,
+		model.comment,
+		hand.description,
+		hand.fault_type faultType,
+		hand.place,
+		model.padding_by paddingBy,
+		hand.reservation,
+		hand.reservation_time reservationTime,
+		tran.`name` AS transformerName,
+		tran.img_url AS tranUrl
+		FROM work_order model
+		LEFT JOIN hand_work_order hand ON hand.`code` = model.`code`
+		LEFT JOIN auth_user users ON users.code = model.padding_by AND users.`status` != 9
+		LEFT JOIN auth_user_info info ON info.code = users.`code`
+		LEFT JOIN transformer tran ON tran.`code` = model.transformer_code
+		WHERE 
+		model.`code` = #{code,jdbcType=VARCHAR}
+		AND model.`status` = 1
+	</select>
+</mapper>

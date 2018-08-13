@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.SchedulingDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Scheduling" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="company_code" property="companyCode" jdbcType="VARCHAR"/>
+	 	<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+	 	<result column="user_code" property="userCode" jdbcType="VARCHAR"/>
+	 	<result column="user_type" property="userType" jdbcType="INTEGER"/>
+	 	<result column="work_time" property="workTime" jdbcType="VARCHAR"/>
+	 	<result column="work_off_time" property="workOffTime" jdbcType="VARCHAR"/>
+	 	<result column="week" property="week" jdbcType="VARCHAR"/>
+	 	<result column="type" property="type" jdbcType="INTEGER"/>
+	 	<result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	 	<result column="name" property="name" jdbcType="VARCHAR"/>
+	 	<result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+	 	<result column="userName" property="userName" jdbcType="VARCHAR"/>
+	 	<result column="phone" property="phone" jdbcType="VARCHAR"/>
+	 	<result column="spare" property="spare" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, code, company_code, trans_code, user_code, user_type,spare, 
+		work_time,work_off_time, week, create_user, create_time, status
+	</sql>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		insert into scheduling
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="workTime != null">
+				work_time,
+			</if>
+			<if test="workOffTime != null">
+				work_off_time,
+			</if>
+			<if test="week != null">
+				week,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<!-- <if test="createTime != null"> -->
+				create_time,
+			<!-- </if> -->
+			<if test="type != null">
+				type,
+			</if>
+			<if test="spare != null">
+				spare,
+			</if>
+			status
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="workTime != null">
+				#{workTime,jdbcType=VARCHAR},
+			</if>
+			<if test="workOffTime != null">
+				#{workOffTime,jdbcType=VARCHAR},
+			</if>
+			<if test="week != null">
+				#{week,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="createTime != null"> -->
+				unix_timestamp(now())*1000,
+			<!-- </if> -->
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="spare != null">
+				#{spare,jdbcType=VARCHAR},
+			</if>
+			1
+		</trim>
+	</insert>
+	
+	<delete id="deleteByCondition">
+		update scheduling
+		set status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		update scheduling
+		<set>
+			<if test="companyCode != null">
+				company_code = #{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				trans_code = #{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				user_code = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				user_type = #{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="workTime != null">
+				work_time = #{workTime,jdbcType=VARCHAR},
+			</if>
+			<if test="workOffTime != null">
+				work_off_time = #{workOffTime,jdbcType=VARCHAR},
+			</if>
+			<if test="week != null">
+				week = #{week,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+<!-- 	<select id="selectEntityByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		<include refid="Base_Column_List" />
+		from scheduling
+		where status = 1 
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+	</select> -->
+	<select id="selectListOrderID" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select FROM_UNIXTIME((clear_nextsend)/1000,'%Y-%m-%d') from transformer where code=trans_code)nextClearDate,
+		 (select logo from auth_user where code= user_code) userLogo,
+		 (select phone from auth_user where code=user_code)phone,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,work_time, work_off_time, week, create_user, create_time create_time,spare,
+		  user_type, status,
+		    (select checkin_time from attendance att where att.user_code = s.user_code 
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=1 
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time limit 1) toWorkTime,
+			(select checkin_time from attendance att where att.user_code = s.user_code 
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=2
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time desc limit 1) offWorkTime 
+		from scheduling s
+		where 
+		status = 1
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null"> 
+			AND (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="userCode != null">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			AND user_type = #{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime != null and toWorkTime != 'YMD'">
+			and #{workTime,jdbcType=VARCHAR} &gt; work_time and #{workTime,jdbcType=VARCHAR} &lt; work_off_time 
+		</if>
+		<if test="workTime != null and toWorkTime == 'YMD'">
+			and from_unixtime(work_time/1000,'%Y-%m-%d') = from_unixtime(#{workTime,jdbcType=VARCHAR}/1000,'%Y-%m-%d') 
+		</if>
+		<if test="workTimeParam != null">
+			and (#{workTimeParam,jdbcType=VARCHAR} &lt;= work_time or type=3)
+		</if>
+		<if test="week != null">
+			AND week = #{week,jdbcType=VARCHAR}
+		</if>
+		<if test="createUser != null">
+			AND create_user = #{createUser,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="type == 4">
+			order by week
+		</if>
+		<if test="type != 4">
+			order by user_type,id  desc limit 1
+		</if>
+	</select>
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select FROM_UNIXTIME((clear_nextsend)/1000,'%Y-%m-%d') from transformer where code=trans_code)nextClearDate,
+		 (select logo from auth_user where code= user_code) userLogo,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,work_time, work_off_time, week, create_user, create_time create_time,spare,
+		  user_type, status,
+		    (select checkin_time from attendance att where att.user_code = s.user_code and att.status=1
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=1 
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time limit 1) toWorkTime,
+			 (select address from attendance att where att.user_code = s.user_code  and att.status=1
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=1 
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time limit 1) address,
+			 (select location from attendance att where att.user_code = s.user_code  and att.status=1
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=1 
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time limit 1) location,
+			(select checkin_time from attendance att where att.user_code = s.user_code  and att.status=1
+			and s.work_time &lt; checkin_time and s.work_off_time &gt; checkin_time and checkin_type=2
+			and s.work_time &lt; #{workTime,jdbcType=VARCHAR} and #{workTime,jdbcType=VARCHAR} &lt; work_off_time and att.trans_code=#{transCode,jdbcType=VARCHAR} order by checkin_time desc limit 1) offWorkTime 
+		from scheduling s
+		where 
+		status = 1
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null"> 
+			AND (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="userCode != null">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			AND user_type = #{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime != null and toWorkTime != 'YMD'">
+			and #{workTime,jdbcType=VARCHAR} &gt; work_time and #{workTime,jdbcType=VARCHAR} &lt; work_off_time 
+		</if>
+		<if test="workTime != null and toWorkTime == 'YMD'">
+			and from_unixtime(work_time/1000,'%Y-%m-%d') = from_unixtime(#{workTime,jdbcType=VARCHAR}/1000,'%Y-%m-%d') 
+		</if>
+		<if test="workTimeParam != null">
+			and (#{workTimeParam,jdbcType=VARCHAR} &lt;= work_time or type=3)
+		</if>
+		<if test="week != null">
+			AND week = #{week,jdbcType=VARCHAR}
+		</if>
+		<if test="createUser != null">
+			AND create_user = #{createUser,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="type == 4">
+			order by week
+		</if>
+		<if test="type != 4">
+			order by user_type desc
+		</if>
+	</select>
+	<select id="selectListByTransCode" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select logo from auth_user where code= user_code) userLogo,
+		  (select phone from auth_user where code= user_code) phone,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,work_time, work_off_time, week, create_user, create_time create_time,spare,
+		  user_type, status
+		from scheduling s 
+		where 
+		status = 1 
+		<if test="type == null">
+			and type!=1
+		</if>
+		<if test="transCode != null"> 
+			AND (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime !=null">
+			and FROM_UNIXTIME(work_time/1000,'%Y-%m-%d')=#{workTime,jdbcType=VARCHAR}
+		</if>
+		<if  test="workOffTime !=null">
+			and work_off_time=#{workOffTime,jdbcType=VARCHAR}
+		</if>
+			group by s.user_code
+	</select>
+	<select id="selectList" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select logo from auth_user where code= user_code) userLogo,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,work_time, work_off_time, week, create_user, create_time create_time,spare,
+		  user_type, status
+		from scheduling
+		where 
+		status = 1
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null"> 
+			AND (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="userCode != null">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			AND user_type = #{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime != null">
+			and #{workTime,jdbcType=VARCHAR} &gt;= work_time and #{workTime,jdbcType=VARCHAR} &lt;= work_off_time 
+		</if>
+		<if test="workTimeParam != null">
+			and (#{workTimeParam,jdbcType=VARCHAR} &lt;= work_time or type=3)
+		</if>
+		<if test="week != null">
+			AND week = #{week,jdbcType=VARCHAR}
+		</if>
+		<if test="createUser != null">
+			AND create_user = #{createUser,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime !=null">
+			and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+		</if>
+		<if test="type == 4">
+			order by week
+		</if>
+		<if test="type != 4">
+			order by id
+		</if>
+	</select>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultMap="BaseResultMap">
+		select 	 id, code, (select name from company_info where code=company_code) comName,company_code,
+				 (select name from transformer where code=trans_code) transName,trans_code,
+				 (select name from auth_user_info where code= user_code) userName,user_code, user_type, 
+				  work_time, work_off_time, week, create_user, create_time,type,spare, status 
+				 from scheduling where status = 1 
+				<if test="transCode != null || spare != null">
+					and (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{spare,jdbcType=VARCHAR}) 
+				</if>
+				<if test="companyCode != null">
+					and company_code = #{companyCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="userCode != null">
+					and user_code = #{userCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="userType != null">
+				    and user_type = #{userType,jdbcType=INTEGER} 
+				</if>
+				<if test="workTime != null">
+					and #{workTime,jdbcType=VARCHAR} &gt;= work_time and #{workTime,jdbcType=VARCHAR} &lt; work_off_time
+				</if>
+				<if test="week != null">
+				    and week = #{week,jdbcType=VARCHAR} 
+				</if>
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="type != null">
+					and type = #{type,jdbcType=VARCHAR}
+				</if>
+				order by id desc 
+				limit 0,1
+	</select>
+	
+	
+	<select id="get" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultMap="BaseResultMap">
+		select 	 *
+				 from scheduling where status = 1 
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="companyCode != null">
+					and company_code = #{companyCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="userCode != null">
+					and user_code = #{userCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="userType != null">
+				    and user_type = #{userType,jdbcType=INTEGER} 
+				</if>
+				<if test="workTime != null">
+					and #{workTime,jdbcType=VARCHAR} = work_time 
+				</if>
+				<if test="workOffTime != null">
+					and #{workOffTime,jdbcType=VARCHAR} = work_off_time
+				</if>
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="type != null">
+					and type = #{type,jdbcType=VARCHAR}
+				</if>
+				limit 1
+	</select>
+	
+	<select id="selectSchedulingByTranCode" resultMap="BaseResultMap"
+	 parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		SELECT sch.code,sch.type,sch.user_code,sch.user_type,sch.name,sch.login_name,sch.phone
+		FROM 
+		(
+			SELECT 
+				model.code, model.type,model.user_code,model.user_type,info.`name`,users.login_name,users.phone
+				from scheduling model 
+				JOIN auth_user users ON users.`code` = model.user_code AND users.`status` != 9
+				LEFT JOIN auth_user_info info ON info.`code` = users.`code` 
+				where 1=1
+				AND model.trans_code = #{transCode,jdbcType=VARCHAR}
+				AND model.`status` = 1
+				AND model.type = 2
+				AND #{workTime,jdbcType=VARCHAR} &lt;= model.work_time 
+				and model.work_off_time &lt; #{workTime,jdbcType=VARCHAR}
+	
+				union ALL 
+			
+			SELECT model.code, model.type,model.user_code,model.user_type,info.`name`,users.login_name,users.phone
+			FROM scheduling model
+			JOIN auth_user users ON model.user_code = users.`code` AND users.`status` != 9
+			LEFT JOIN auth_user_info info ON users.`code` = info.`code` 
+			WHERE 1=1
+			AND model.trans_code = #{transCode,jdbcType=VARCHAR}
+			AND model.`status` = 1
+			AND model.type = 1
+			AND #{workTime,jdbcType=VARCHAR} &lt;= model.work_time 
+			and model.work_off_time &lt; #{workTime,jdbcType=VARCHAR}
+		)
+		sch 
+	</select>
+	
+	<select id="selectSchedulingByTransformerCode" resultMap="BaseResultMap"
+	 parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		SELECT sch.code,sch.type,sch.user_code,sch.user_type,sch.name,sch.login_name FROM 
+		(
+			SELECT 
+				model.code, model.type,model.user_code,model.user_type,info.`name`,users.login_name
+				from scheduling model 
+				JOIN auth_user users ON users.`code` = model.user_code AND users.`status` != 9
+				LEFT JOIN auth_user_info info ON info.`code` = users.`code` 
+				where 1=1
+				AND model.trans_code = #{transCode,jdbcType=VARCHAR}
+				AND model.company_code = #{companyCode,jdbcType=VARCHAR}
+				AND model.`status` = 1
+				AND model.type = 2
+				AND #{workTime,jdbcType=VARCHAR} &lt;= model.work_time 
+				AND model.work_off_time &lt; #{workTime,jdbcType=VARCHAR}
+	
+				union ALL 
+			
+			SELECT model.code,
+			model.type,model.user_code,model.user_type,info.`name`,users.login_name FROM scheduling model
+			JOIN auth_user users ON model.user_code = users.`code` AND users.`status` != 9
+			LEFT JOIN auth_user_info info ON users.`code` = info.`code` 
+			WHERE 1=1
+			AND model.trans_code = #{transCode,jdbcType=VARCHAR}
+				AND model.company_code = #{companyCode,jdbcType=VARCHAR}
+			AND model.`status` = 1
+			AND model.type = 1
+			AND #{workTime,jdbcType=VARCHAR} &lt;= model.work_time 
+			AND model.work_off_time &lt; #{workTime,jdbcType=VARCHAR}
+		)
+		sch 
+	</select>
+	
+	<select id="selectListSchedling" resultMap="BaseResultMap"
+	 parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+	 	
+	 	select
+		id, code, (select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, user_type, 
+		work_time work_time, week, create_user, create_time,type,spare, status
+		from scheduling
+		where 
+		status = 1
+
+			AND company_code = #{companyCode,jdbcType=VARCHAR} 
+			AND trans_code = #{transCode,jdbcType=VARCHAR}
+			AND #{workTime,jdbcType=VARCHAR} &lt;= work_time 
+			and work_off_time &lt; #{workTime,jdbcType=VARCHAR}
+			and type = 1
+	 	
+	 </select>
+	 
+	 <select id="getPlanPersonCount" resultType="int" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+	 	select count(distinct week) from scheduling s where trans_code=#{transCode,jdbcType=VARCHAR} and type = #{type,jdbcType=INTEGER}
+	 </select>
+	
+	
+	<select id="selectSpare" parameterType="String" resultMap="BaseResultMap">
+		select * from scheduling where spare = #{_parameter,jdbcType=VARCHAR} and type = 4 limit 1
+	</select>
+	<select id="selectSchedulingByUser" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="String">
+		SELECT
+			FROM_UNIXTIME((s.work_time) / 1000, '%d') AS date
+		FROM
+		scheduling s
+		WHERE 1=1
+		<if test="transCode !=null">
+		and (s.trans_code =#{transCode,jdbcType=VARCHAR} or s.spare=#{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="workTime !=null">
+		AND  FROM_UNIXTIME((s.work_time) / 1000, '%Y-%m')=#{workTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+		and s.user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectSchedulingCount" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="Integer">
+		SELECT
+			count(1) count
+		FROM
+		scheduling s
+		WHERE
+		<if test="transCode !=null">
+		s.trans_code =#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime !=null">
+		AND  FROM_UNIXTIME((s.work_time) / 1000, '%Y-%m')=#{workTime,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+		and s.user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectTransFormerByUserCode" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select s.trans_code as transCode,t.`name` as transName from scheduling s
+		join transformer t on s.trans_code =t.code
+		where s.status=1 and s.type=3 
+		and t.status=1 and t.type in(1,2,3)
+		<if test="userType !=null">
+		and s.user_type=#{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+		and s.user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectSchedulingByUserCode" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="int">
+		select count(*) from scheduling where type=3 and `status`=1 
+		<if test="userCode !=null">
+			and user_code =#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode !=null">
+			and trans_code =#{transCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="insertScheduling" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+	insert into scheduling
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="workTime != null">
+				work_time,
+			</if>
+			<if test="workOffTime != null">
+				work_off_time,
+			</if>
+			<if test="week != null">
+				week,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			 <if test="createTime != null"> 
+				create_time,
+			</if> 
+			<if test="type != null">
+				type,
+			</if>
+			<if test="spare != null">
+				spare,
+			</if>
+			status
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="workTime != null">
+				#{workTime,jdbcType=VARCHAR},
+			</if>
+			<if test="workOffTime != null">
+				#{workOffTime,jdbcType=VARCHAR},
+			</if>
+			<if test="week != null">
+				#{week,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			 <if test="createTime != null"> 
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="spare != null">
+				#{spare,jdbcType=VARCHAR},
+			</if>
+			1
+		</trim>
+	</insert>
+	<update id="updateSchedulingByUserCode" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		update scheduling 
+		<set>
+			status=9
+		</set>
+		where user_code=#{userCode,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getUsers" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.code,ui.name,'' beginTime,'' endTime,s.user_Type userType,(select GROUP_CONCAT(role_code) from auth_role_user ru where ru.user_code=u.code) roleCode,u.logo,u.phone,u.company_Code companyCode from scheduling s,auth_user u,auth_user_info ui where s.user_code=u.code and u.code=ui.code
+						 <if test="type != null">
+							 and s.type=${type} 
+						 </if>
+						 <if test="transCode != null">
+							 and s.trans_code=#{transCode} 
+						 </if>
+						 <if test="userType != null">
+							 and s.user_type=#{userType} 
+						 </if>
+							 and u.status!=9
+	</select>
+	<select id="selectScheduListPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select logo from auth_user where code= user_code) userLogo,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,create_user, create_time create_time,spare,
+		  user_type, status
+		from scheduling s
+		where 
+		status = 1
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null"> 
+			AND (trans_code = #{transCode,jdbcType=VARCHAR} or spare = #{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="type == 4">
+			order by week
+		</if>
+	</select>
+	<select id="selectTimeByUserAndTrans" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="BaseResultMap">
+		select user_code,trans_code,work_time,work_off_time,create_time from scheduling 
+		where 1=1
+		<if test="transCode !=null">
+			and (trans_code=#{transCode,jdbcType=VARCHAR} or spare=#{transCode,jdbcType=VARCHAR})
+		</if>
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="time !=null">
+			and FROM_UNIXTIME(work_time/1000,'%Y-%m-%d')=#{time,jdbcType=VARCHAR}
+		</if>
+		limit 1 
+	</select>
+	<update id="updateSchedulingByTransAndUser" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		update scheduling 
+		<set>
+			status=9
+		</set>
+		where status=1 and type=#{type,jdbcType=VARCHAR}
+		and trans_code=#{transCode,jdbcType=VARCHAR}
+		and user_code=#{userCode,jdbcType=VARCHAR}
+	</update>
+		<select id="selectUserByTransCode" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select
+		id, code, company_code,(select name from company_info where code=company_code) comName,
+		 (select name from transformer where code=trans_code) transName,trans_code,
+		 (select name from auth_user_info where code= user_code) userName,
+		 (select logo from auth_user where code= user_code) userLogo,
+		  (select phone from auth_user where code= user_code) phone,
+		 (select login_name from auth_user where code = user_code) AS login_name,user_code, 
+		  type,work_time, work_off_time, week, create_user, create_time create_time,spare,
+		  user_type, status
+		from scheduling s 
+		where 
+		status = 1 
+		<if test="type == null">
+			and type!=1
+		</if>
+		<if test="transCode != null"> 
+			and trans_code !=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode != null">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+			and user_code not in (${userCode})
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="userType !=null">
+			and user_type=#{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime !=null">
+			and FROM_UNIXTIME(work_time/1000,'%Y-%m-%d')=#{workTime,jdbcType=VARCHAR}
+		</if>
+		<if  test="workOffTime !=null">
+			and work_off_time=#{workOffTime,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode !=null">
+			group by s.user_code
+		</if>
+	</select>
+	<select id="selectSupervieUser" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select user_code userCode from scheduling where status=1
+		<if test="type !=null">
+			and type=#{type,jdbcType=VARCHAR}
+		</if>
+		group by user_code
+	</select>
+	<select id="selectSchdueByUserAndTime" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultType="com.cloudinnov.yun.openapi.model.Scheduling">
+		select work_time workTime,work_off_time workOffTime,user_code userCode ,type type,spare spare,trans_code transCode from scheduling where STATUS=1 
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="workTime !=null">
+			AND #{workTime,jdbcType=VARCHAR} &gt;= work_time 
+			and work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+		</if>
+		limit 1
+	</select>
+</mapper>

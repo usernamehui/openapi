@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.CompanyDao">
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+		<result column="integrator_code" property="integratorCode"
+			jdbcType="VARCHAR" />
+		<result column="industry_code" property="industryCode"
+			jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+
+		<result column="languages" property="languages" />
+		<result column="application_code" property="applicationCode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMapInfo" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="industry_code" property="industryCode"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="application_code" property="applicationCode"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, type, name, short_name, logo, homepage,
+		contact,language,
+		telephone,
+		country, province,
+		city, address, fax,
+		service_telephone,
+		email, oem_code, agent_code,
+		location, status,
+		comment, create_time,
+		last_update_time,
+		industry_code,application_code
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Company">
+		insert into company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="oemCode != null">
+				oem_code,
+			</if>
+			<if test="agentCode != null">
+				agent_code,
+			</if>
+			<if test="integratorCode != null">
+				integrator_code,
+			</if>
+			<if test="industryCode != null">
+				industry_code,
+			</if>
+			<if test="logo != null">
+				logo,
+			</if>
+			<if test="homepage != null">
+				homepage,
+			</if>
+			<if test="telephone != null">
+				telephone,
+			</if>
+			<if test="fax != null">
+				fax,
+			</if>
+			<if test="serviceTelephone != null">
+				service_telephone,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="applicationCode != null">
+				application_code,
+			</if>
+			status,
+			<if test="createTime!=null">
+			create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="agentCode != null">
+				#{agentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="integratorCode != null">
+				#{integratorCode,jdbcType=VARCHAR},
+			</if>
+			<if test="industryCode != null">
+				#{industryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null">
+				#{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="homepage != null">
+				#{homepage,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null">
+				#{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				#{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceTelephone != null">
+				#{serviceTelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationCode != null">
+				#{applicationCode,jdbcType=VARCHAR},
+			</if>
+			1,
+			<if test="createTime!=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.Company">
+		insert into company_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				language,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="shortName != null">
+				short_name,
+			</if>
+			<if test="contact != null">
+				contact,
+			</if>
+
+			<if test="country != null">
+				country,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="applicationCode != null">
+				application_code
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null">
+				#{shortName,jdbcType=VARCHAR},
+			</if>
+
+			<if test="contact != null">
+				#{contact,jdbcType=VARCHAR},
+			</if>
+
+			<if test="country != null">
+				#{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationCode != null">
+				#{applicationCode,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Company">
+		update company
+		<set>
+			<if test="code != null and code!='' and code!='null'">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null and type !='' and type!='null'">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="oemCode != null and oemCode!='' and oemCode!='null'">
+				oem_code = #{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="agentCode != null and agentCode!='' and agentCode!='null'">
+				agent_code = #{agentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="industryCode != null and industryCode!=''">
+				industry_code = #{industryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null and location!='' and location!='null'">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="logo != null and logo !=''">
+				logo = #{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="homepage != null and homepage !='' and homepage !='null'">
+				homepage = #{homepage,jdbcType=VARCHAR},
+			</if>
+			<if test="telephone != null and telephone!='' and telephone!='null'">
+				telephone = #{telephone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null and fax !='' and fax!='null'">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="serviceTelephone != null">
+				service_telephone = #{serviceTelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null and email!='' and email!=''">
+				email =
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationCode != null and applicationCode!=''">
+				application_code =
+				#{applicationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="code!=null and id!='' ">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</update>
+
+
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.Company">
+		update company_info
+		<set>
+			<if test="code != null and code!='' and code!='null'">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null and name!='' and name!='null'">
+				name =
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="contact != null and contact!='' and contact!='null'">
+				contact = #{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="shortName != null and shortName!='' and shortName!='null'">
+				short_name = #{shortName,jdbcType=VARCHAR},
+			</if>
+
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null and address!='' and address!='null'">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null and comment!='' and comment!='null'">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="code!=null and id!='' ">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+			AND language = #{language,jdbcType=VARCHAR}
+		</where>
+	</update>
+
+
+	<update id="deleteByCondition">
+		update company
+		set
+		status = 9
+		where code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap">
+		SELECT com.*,info.`language`, info.`name`, info.`short_name`,
+		info.`contact`,
+		info.`country`, info.`province`, info.`city`,
+		info.`address`,
+		info.`comment`
+		FROM company com
+		LEFT JOIN company_info
+		info ON info.code = com.code
+		AND info.`language` = 'cn'
+		WHERE 1
+		= 1
+		<if test="code!=null and code!='' ">
+			AND com.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="id!=null and id!='' ">
+			AND com.id = #{id,jdbcType=INTEGER}
+		</if>
+	</select>
+
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Company"
+		resultMap="BaseResultMap">
+		SELECT 
+			com.*,info.`language`, info.`name`, info.`short_name`,
+			info.`contact`,
+			info.`country`, info.`province`, info.`city`,
+			info.`address`,
+			info.`comment`,
+			(select group_concat(language SEPARATOR
+			',') as languages
+			FROM
+			company_info
+			WHERE code = com.code group by code)
+			languages
+		FROM company com
+		LEFT JOIN company_info info ON info.code =
+		com.code AND
+		info.`language` = #{language,jdbcType=VARCHAR}
+
+		WHERE
+		1=1
+		<if test="name != null">
+			AND info.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="shortName != null">
+			AND info.short_name = #{shortName,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode != null">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+			AND com.type &lt;&gt; 'oem'
+		</if>
+		<!-- type=1 合作客户，自主创建   type=2 通过APP注册创建 -->
+		<if test="type != null and type == 1">
+			AND com.industry_code not in(select code from auth_user where new_user=0)
+		</if>
+		<if test="type != null and type == 2">
+			AND com.industry_code in(select code from auth_user where new_user=0)
+		</if>
+		<if test="agentCode != null">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode != null">
+			AND com.integrator_code = #{integratorCode,jdbcType=VARCHAR}
+		</if>
+		AND com.status = 1
+	</select>
+
+	<select id="selectCompanyCodeAndName" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		model.code,info.name,model.logo,model.location
+		FROM
+		company model
+		LEFT JOIN company_info info ON info.code = model.code
+		AND
+		info.`language` = #{language,jdbcType=VARCHAR}
+		WHERE
+		model.oem_code =
+		#{oemcode}
+		AND
+		model.type &lt;&gt; 'oem'
+		AND
+		model.type
+		&lt;&gt; 'agent'
+		AND model.status = 1
+	</select>
+
+
+	<select id="selectCompanyCodeAndNameByOem" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.Company">
+		SELECT
+		model.code,model.logo,info.name FROM
+		company model
+		LEFT JOIN company_info
+		info ON info.code = model.code AND info.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE 1=1
+		<if test="oemCode!=null and oemCode!='' ">
+			AND model.oem_code = #{oemCode,jdbcType=VARCHAR}
+			AND
+			model.type = 'customer'
+			AND model.agent_code IS NULL
+		</if>
+		<if test="agentCode!=null and agentCode!='' ">
+			AND model.agent_code = #{agentCode,jdbcType=VARCHAR}
+			AND
+			model.type = 'customer'
+		</if>
+		
+		<if test="country != null and country !=''">
+			AND info.country IN
+			<foreach item="item" index="index" collection="countrys" open="("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="province != null and province!=''">
+			AND info.province IN
+			<foreach item="item" index="index" collection="provinces" open="("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		
+		<if test="city != null and city != ''">
+			AND info.city IN
+			<foreach item="item" index="index" collection="citys" open="("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		
+		<if test="industryCode != null and industryCode != ''">
+			AND info.industry_code IN
+			<foreach item="item" index="index" collection="industryCodes" open="("
+				separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		AND model.status = 1
+	</select>
+
+	<select id="selectCompanyEntity" parameterType="com.cloudinnov.yun.openapi.model.Company"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from Company
+		<where>
+			<if test="code!=null and code!='' ">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="id!=null and id!='' ">
+				id = #{id,jdbcType=INTEGER}
+			</if>
+			and status = 1
+		</where>
+	</select>
+
+	<select id="search" resultMap="BaseResultMap">
+		SELECT 
+			model.*,info.`language`, info.`name`, info.`short_name`,
+			info.`contact`,info.`country`, info.`province`,
+			info.`city`,info.`address`,info.`comment`,
+			(select
+			group_concat(language SEPARATOR ',') as languages
+			FROM company_info
+			info
+			WHERE code = model.code group by code) languages
+		FROM company model
+		LEFT JOIN company_info info ON info.code = model.code
+		AND
+		info.`language` = #{language,jdbcType=VARCHAR}
+		WHERE model.status = 1
+		<if test="code != null and code !=''">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode != null and oemCode !=''">
+			AND model.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode != null and integratorCode !=''">
+			AND model.integrator_code =
+			#{integratorCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null and type !=''">
+			AND model.type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null and country !=''">
+			AND info.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND info.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND info.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name != ''">
+			AND info.name LIKE CONCAT('%',#{name,jdbcType =
+			VARCHAR},'%')
+		</if>
+		<if test="shortName != null and shortName != ''">
+			AND info.short_name LIKE CONCAT('%',#{shortName,jdbcType =
+			VARCHAR},'%')
+		</if>
+		ORDER BY model.create_time DESC 
+	</select>
+
+	<select id="searchTotal" resultMap="int">
+		select
+		count(1)
+		from Company
+		where status = 1 and oem_code = #{4}
+		or country =
+		#{0}
+		or
+		province = #{1}
+		or city = #{2}
+		or name like CONCAT('%',#{3},'%')
+		or
+		short_name like
+		CONCAT('%',#{3},'%')
+	</select>
+	<select id="selectCompanyTotalByOemCode" resultMap="int"
+		parameterType="com.cloudinnov.yun.openapi.model.Company">
+		SELECT
+		count(1)
+		FROM company
+		WHERE status = 1
+		AND type = 'customer'
+		<if test="oemCode!=null and oemCode!='' ">
+			AND oem_code = #{oemCode,jdbcType=VARCHAR}
+			AND agent_code
+			IS NULL
+		</if>
+		<if test="agentCode!=null and agentCode!='' ">
+			AND agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode!=null and integratorCode!='' ">
+			AND integrator_code = #{integratorCode,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+
+	<select id="selectCompanysMonitors" resultType="java.util.HashMap"
+		parameterType="java.util.Map">
+		SELECT
+		(SELECT count(*) FROM equipment WHERE customer_code = t.code AND status = 1 ) AS equcount,
+		(SELECT count(*) FROM alarm_work_order WHERE customer_code = t.code AND status = 1 AND order_status = 0) AS alarmcount,
+		(
+		SELECT count(*) FROM production_line WHERE customer_code = t.code AND status = 1 ) AS linecount,t.code,info.name,
+		info.short_name AS shortname,info.contact,t.logo
+		FROM
+		company t
+		LEFT JOIN company_info info ON info. CODE = t.code 
+		AND info.language = #{language,jdbcType=VARCHAR}
+		WHERE t.status = 1
+		AND t.type ="customer"
+		<if test="oemCode != null and oemCode !=''">
+			and t.oem_code =
+			#{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode != null and integratorCode !=''">
+			and t.integrator_code =
+			#{integratorCode,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null and country !=''">
+			AND info.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND info.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND info.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="customerName!=null and customerName!='' ">
+			AND info.name
+			like
+			CONCAT('%',#{customerName,jdbcType =
+			VARCHAR},'%')
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND t.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		
+		<if test="name != null and name != ''">
+			AND concat(info.name) LIKE CONCAT('%',#{name,jdbcType=VARCHAR},'%' )
+		</if>
+		
+		GROUP BY
+		t.code
+	</select>
+
+	<select id="listByCodes" resultMap="BaseResultMap">
+		SELECT
+		c.code,ci.name
+		from company c join company_info ci on c.code =
+		ci.code
+		WHERE c.status
+		= 1
+		and
+		ci.language =
+		#{language,jdbcType= VARCHAR}
+
+		AND c.code IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectCompanyByName" parameterType="com.cloudinnov.yun.openapi.model.Company" resultType="int">
+		select count(c.id) from company c,company_info ci where c.code=ci.code and status=1
+		<if test="name!=null and name!=''">
+			and ci.name=#{name}
+		</if>
+	</select>
+	<select id="listByCompany" parameterType="com.cloudinnov.yun.openapi.model.Company" resultType="com.cloudinnov.yun.openapi.model.Company">
+		SELECT c.code as code,ci.`name` AS NAME,ci.`comment` AS COMMENT,c.`telephone` AS telephone,
+		c.`logo` AS logo,c.`email` AS email,c.`fax` AS fax,ci.`address` AS address,
+		c.`create_time` AS createTime,c.`last_update_time` AS lastUpdateTime FROM company c 
+		JOIN company_info ci ON c.`code`=ci.`code`
+		<if test="customerCode!=null">
+		where c.code in (${customerCode})
+		</if>
+	</select>
+</mapper>

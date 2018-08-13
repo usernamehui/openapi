@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkplanDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Workplan" id="workplanMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+	 	<result column="type" property="type" jdbcType="INTEGER"/>
+	 	<result column="settime" property="settime" jdbcType="VARCHAR"/>
+ 	    <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="common" property="common" jdbcType="VARCHAR"/>
+	 	<result column="user_code" property="userCode" jdbcType="INTEGER"/>
+	 	<result column="exception_hand" property="exceptionHand" jdbcType="VARCHAR"/>
+	 	<result column="executor" property="executor" jdbcType="VARCHAR"/>
+	 	<result column="duration" property="duration" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	 	<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+	 	<result column="transName" property="transName" jdbcType="VARCHAR"/>
+	 	<result column="userName" property="userName" jdbcType="VARCHAR"/>
+	 	<result column="unattend" property="unattend" jdbcType="VARCHAR"/>
+	 	<result column="statuse" property="statuse" jdbcType="VARCHAR"/>
+	 	<result column="beginTime" property="beginTime" jdbcType="VARCHAR"/>
+	 	<result column="endTime" property="endTime" jdbcType="VARCHAR"/>
+	 	<result column="countPlan" property="countPlan" jdbcType="VARCHAR"/>
+	 	<result column="applicationStatus" property="applicationStatus" jdbcType="INTEGER"/>
+	 	<collection property="workplanInfos" resultMap="workplanInfosMap"></collection>
+	</resultMap>
+	
+	<resultMap type="com.cloudinnov.yun.openapi.model.WorkplanInfo" id="workplanInfosMap">
+		<result column="pointName" property="pointName" jdbcType="VARCHAR"/>
+	 	<result column="equipmentName" property="equipmentName" jdbcType="VARCHAR"/>
+	 	<result column="pointValue" property="pointValue" jdbcType="VARCHAR"/>
+	 	<result column="realValue" property="realValue" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Workplan">
+		insert into workplan 
+		<trim prefix="(" suffix=")" prefixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			type
+		</trim>
+		<trim prefix="values(" suffix=")" prefixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			1
+		</trim>
+	</insert>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanMap">
+		select  code,trans_code,type,settime,
+				create_time,common,user_code,
+				IF((select status from workplan_expire where workplan_code=w.code order by create_time desc limit 1) IS NULL,0,(select status from workplan_expire where workplan_code=w.code order by create_time desc limit 1))applicationStatus, 
+				(select name from auth_user_info where code = user_code) userName,
+				(select unattend from transformer t where t.code=w.trans_code) unattend,
+				exception_Hand exceptionHand,
+				(select name from auth_user_info where code = executor) executor,
+				duration,status,
+				(select count(id) from workplan_info where workplan_code = w.code and status = 0 and (w.executor = '' or w.executor is null)) statuse,
+				settime  beginTime,last_update_time endTime,
+				(select name from transformer where code=trans_code) transName  
+			    from workplan w 
+				where status != 9
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR}
+				</if>
+				<if test="beginTime != null and endTime != null">
+					and #{beginTime} &lt;= create_time and create_time &lt; #{endTime} 
+				</if> 
+				<if test="statuse != null and status == null">
+					and status in(${statuse})
+				</if>
+				<if test="status != null and statuse == null">
+					and status in(${status})
+				</if>
+				order by create_time asc
+	</select>
+	
+	<select id="selectListCount" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+		select  sum(case when status=0 then 1 else 0 end) puntreated,
+			    sum(case when status=1 then 1 else 0 end) ptreateding,
+			    sum(case when status=2 then 1 else 0 end) ptreated,
+			    sum(case when status=3 then 1 else 0 end) poldtreated
+			    from workplan 
+				where status != 9
+				and trans_code = #{transCode}
+				<if test="beginTime != null and endTime != null">
+					and #{beginTime} &lt;= create_time and create_time &lt; #{endTime} 
+				</if> 
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Workplan">
+		update workplan 
+		<set>
+			<if test="transCode != null">
+				trans_code = #{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="settime != null">
+				settime = #{settime,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="exceptionHand != null">
+				exception_Hand = #{exceptionHand,jdbcType=VARCHAR},
+			</if>
+			<if test="executor != null">
+				executor = #{executor,jdbcType=VARCHAR},
+			</if>
+			<if test="duration != null">
+				duration = #{duration,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="userCode != null">
+				user_code = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+ 	<select id="getWorkplanCount" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+		select (select count(1) from work_plan_job wpj left join work_order wo on wpj.code=wo.code 
+		  where wo.transformer_code = #{transCode,jdbcType=VARCHAR} and wo.order_status = 0) unworkplan,
+        	  (select count(1) from work_plan_job wpj left join work_order wo on wpj.code=wo.code 
+		  where wo.transformer_code = #{transCode,jdbcType=VARCHAR} and wo.order_status = 1 
+	      and #{beginTime} &lt;= wo.last_update_time and wo.last_update_time &lt; #{endTime}) inworkplan,
+		  (select count(1) from work_plan_job wpj left join work_order wo on wpj.code=wo.code 
+		  where wo.transformer_code = #{transCode,jdbcType=VARCHAR} and wo.order_status = 2
+		  and #{beginTime} &lt;= wo.last_update_time and wo.last_update_time &lt; #{endTime}) acworkplan
+		from dual
+	</select>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanMap">
+		select  code,trans_code trans_code,type,settime,
+				create_time,last_update_time,common,user_code,
+				(select name from auth_user_info where code = user_code) userName,
+				exception_hand, executor,
+				duration,status,
+				(select count(id) from workplan wo where status!=9 
+					<if test="transCode != null">
+						and wo.trans_code=#{transCode,jdbcType=VARCHAR}
+					</if>
+					 and wo.create_time&lt;=w.create_time) countPlan,
+				(select count(id) from workplan_info where workplan_code = w.code and status = 0) statuse 
+			    from workplan w 
+				where status != 9
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR}
+				</if>
+				<if test="createTime != null">
+					and from_unixtime(create_time/1000,'%Y-%m-%d') = #{createTime} 
+				</if> 
+				limit 1
+	</select>
+	
+	<select id="getWorkplan" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanMap">
+		select  code,trans_code trans_code,type,settime,
+				create_time,last_update_time,common,user_code,user_code,exception_hand, executor,duration,status 
+			    from workplan w 
+				where status != 9
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR}
+				</if>
+				<if test="createTime != null">
+					and from_unixtime(create_time/1000,'%Y-%m-%d %H:%s:%i') = from_unixtime(#{createTime}/1000,'%Y-%m-%d %H:%s:%i') 
+				</if> 
+				limit 1
+	</select>
+	
+	<update id="updateUserCode" parameterType="com.cloudinnov.yun.openapi.model.Workplan">
+		update workplan 
+		<set>
+			<if test="userCode != null">
+				user_code = #{userCode,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where trans_code = #{transCode,jdbcType=VARCHAR} and create_time &gt; #{beginTime} and create_time &lt; #{endTime} 
+	</update>
+	
+	<select id="selectExceptions" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		select 
+			IFNULL((select substring_index(column_code,';',1) from items where code=wi.point_code),(select name from equipment_info where code=(select object_code from point where code=wi.point_code))) equipmentName,
+			IFNULL((select name from point_info where code=wi.point_code),(select name from items i where i.code=wi.point_code)) pointName,
+			wi.point_code,wi.point_value pointValue,wi.real_value realValue
+		 from workplan_info wi where wi.status=0 and wi.workplan_code = #{code}
+	</select>
+		
+	
+	<select id="getExceptions" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanMap">
+		select  (select name from transformer where code=(select trans_code from workplan where code=wi.workplan_code)) transName,
+			 	(select FROM_UNIXTIME(create_time/1000,'%Y-%m-%d %H:%s:%i') from workplan where code=wi.workplan_code) create_time,
+			 	count(wi.workplan_code) countPlan,
+			 	wi.workplan_code code,
+				(select name from auth_user_info where code=wi.create_user) userName
+				from workplan_info wi where status=0 
+				and exists (select 1 from workplan where code=wi.workplan_code and (executor is null or executor=''))
+				group by workplan_code order by create_time desc
+	</select>
+	<insert id="insertExpire" parameterType="com.cloudinnov.yun.openapi.model.WorkplanExpire">
+		insert into workplan_expire 
+		<trim prefix="(" suffix=")" prefixOverrides=",">
+			<if test="workplanCode != null">
+				workplan_code,
+			</if>
+			<if test="sendCode != null">
+				send_code,
+			</if>
+			<if test="sendToCode != null">
+				sendto_code,
+			</if>
+			<if test="createTime !=null">
+				create_time,
+			</if>
+			<if test="common !=null and common!=''">
+				common,
+			</if>
+			status
+		</trim>
+		<trim prefix="values(" suffix=")" prefixOverrides=",">
+			<if test="workplanCode != null">
+				#{workplanCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sendCode != null">
+				#{sendCode,jdbcType=VARCHAR},
+			</if>
+			<if test="sendToCode != null">
+				#{sendToCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime !=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="common !=null and common!=''">
+				#{common,jdbcType=VARCHAR},
+			</if>
+			'${@com.cloudinnov.yun.openapi.common.CommonUtils@ALREADY_SEND}'
+		</trim>
+	</insert>   
+	<update id="updateExpire" parameterType="com.cloudinnov.yun.openapi.model.WorkplanExpire">
+		update workplan_expire
+		<set>
+			<if test="status != null">
+				status =#{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime !=null">
+				last_update_time =#{lastUpdateTime,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where  workplan_code=#{workplanCode,jdbcType=VARCHAR};
+		update workplan
+		<set>
+			status='${@com.cloudinnov.yun.openapi.common.CommonUtils@ORDER_STATUS_HANDLE}'
+		</set>
+		where code=#{workplanCode,jdbcType=VARCHAR}
+	</update>
+	<select id="selectExpire" parameterType="com.cloudinnov.yun.openapi.model.WorkplanExpire" resultType="com.cloudinnov.yun.openapi.model.WorkplanExpire">
+		select 
+		workplan_code as workplanCode,
+		send_code as sendCode,
+		(select name from auth_user_info where code=send_code) userName,
+		sendto_code as sendToCode,
+		status as status, 
+		create_time as createTime,
+		common as common
+		 from workplan_expire where 
+		<if test="workplanCode !=null">
+			workplan_code=#{workplanCode,jdbcType=VARCHAR}
+		</if>
+		<if test="sendToCode !=null">
+			and sendto_code=#{sendToCode,jdbcType=VARCHAR}
+		</if>
+		<if test="sendCode !=null">
+			and send_code=#{sendCode,jdbcType=VARCHAR}
+		</if>
+		<if test="status !=null">
+			and status=#{status,jdbcType=VARCHAR}
+		</if>
+		order by create_time desc limit 1
+	</select>
+	<select id="selectWorkPlanByCode" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanMap">
+		select (select NAME from transformer where code =w.trans_code)transName,w.* from workplan w where 
+		<if test="code !=null">
+			code=#{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectWorkPlan" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		select   IFNULL((select name from equipment_info where code=p.object_code),(select substring_index(column_code,';',1) from items where code=wpi.point_code)) equipmentName,
+				 ifnull(pi.name,i.name) pointName,
+				FROM_UNIXTIME(wp.create_time/1000,'%Y-%m-%d %H:%i:%s') as createTime,
+				 wp.trans_code transCode,
+				 wpi.* from workplan_info wpi 
+				 LEFT JOIN workplan wp ON wp.code=wpi.workplan_code 
+				 LEFT JOIN point p ON wpi.point_code=p.code
+				 LEFT JOIN point_info pi ON wpi.point_code=pi.code
+				 LEFT JOIN items i ON wpi.point_code=i.code  
+			     where 1=1
+			     <if test="transCode !=null">
+			     	and wp.trans_code=#{transCode,jdbcType=VARCHAR}
+			     </if>
+			      <if test="createTime !=null">
+			     	and FROM_UNIXTIME(wp.create_time/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+			     </if>
+			      order by create_time desc
+	</select>
+	<select id="selectWorkplanByTrans" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Workplan">
+		select code as code ,trans_code as transCode,FROM_UNIXTIME(settime/1000,'%Y-%m-%d %H:%i:%s')createTime,
+		FROM_UNIXTIME(last_update_time/1000,'%Y-%m-%d %H:%i:%s')lastUpdateTime,
+		FROM_UNIXTIME(create_time/1000,'%H:%i:%s')time,
+		(select name from transformer where code=w.trans_code)transName
+		from workplan w 
+		where trans_code=#{transCode} and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime}
+	</select>
+	<select id="selectRealValue" parameterType="java.util.Map" resultType="String">
+		SELECT real_value from workplan_info where 
+		<if test="pointCode !=null">
+		point_code=#{pointCode,jdbcType=VARCHAR}
+		</if>
+		<if test="workplanCode !=null">
+		and workplan_code=#{workplanCode,jdbcType=VARCHAR}
+		</if>  
+		ORDER BY create_time DESC limit 1
+	</select>
+	<select id="selectWorkInfoByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Workplan">	
+			select name pointName,column_code equipmentName,
+			(select real_value from workplan_info where point_code=i.code and workplan_code=#{workplanCode})value
+			from items i 
+			where i.trans_code=#{transCode}
+	</select>
+	<select id="setTableOutfit" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="com.cloudinnov.yun.openapi.model.Workplan">
+		select trans_code transCode,(select name from transformer where code=trans_code)transName,column_name columnName,column_count columnCount,step_column stepColumn,step_columnName stepColumnName from trans_gauge 
+		where status=1
+		<if test="transCode !=null">
+		and trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="time !=null">
+		and FROM_UNIXTIME(begin_time/1000,'%Y-%m-%d') &lt;=#{time,jdbcType=VARCHAR}
+		and FROM_UNIXTIME(end_time/1000,'%Y-%m-%d')&gt;=#{time,jdbcType=VARCHAR}
+		</if>
+		ORDER BY  column_count
+	</select>
+	<select id="getWorkplanIsLast" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="int">
+		select count(1) from workplan where code = (
+				select code from workplan where  
+				trans_code=#{transCode} 
+				and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=FROM_UNIXTIME(#{createTime}/1000,'%Y-%m-%d') 
+				order by create_time desc limit 1
+			)
+			and code = #{code}
+	</select>
+	
+	<select id="getStatusCount" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+		select 
+			count(status=0 or null) un,
+			count(status=1 or null) uning,
+			count(status=2 or null) su,
+			count(status=3 or null) de,
+			count(1) total  
+		from workplan 
+			where 
+			create_time &gt;= #{beginTime} 
+			and create_time &lt;= #{endTime} 
+			and trans_code in (${transCode}) 
+	</select>
+</mapper>

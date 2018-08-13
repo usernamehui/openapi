@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkplanInfoDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.WorkplanInfo" id="workplanInfoMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="workplan_code" property="workplanCode" jdbcType="VARCHAR"/>
+	 	<result column="point_code" property="pointCode" jdbcType="VARCHAR"/>
+	 	<result column="point_value" property="pointValue" jdbcType="VARCHAR"/>
+	 	<result column="real_value" property="realValue" jdbcType="VARCHAR"/>
+	 	<result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+	 	<result column="last_update_user" property="lastUpdateUser" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="BEFORE">
+        	select count(*) as id from workplan_info where workplan_code = #{workplanCode,jdbcType=VARCHAR} and point_code=#{pointCode,jdbcType=VARCHAR}
+	    </selectKey>        
+	     
+	    <!-- 如果大于0则更新 -->  
+	    <if test="id > 0">  
+	        update workplan_info set      
+	        	point_value = #{pointValue,jdbcType=VARCHAR} ,
+	        	real_value  = #{realValue,jdbcType=VARCHAR}  ,
+	        	status      = #{status,jdbcType=INTEGER}
+	        where workplan_code = #{workplanCode,jdbcType=VARCHAR} and point_code=#{pointCode,jdbcType=VARCHAR}
+	    </if>
+	     
+	    <!-- 如果等于0则保存 -->  
+	    <if test="id == 0">
+			insert into workplan_info 
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					code,
+				</if>
+				<if test="workplanCode != null">
+					workplan_code,
+				</if>
+				<if test="pointCode != null">
+					point_code,
+				</if>
+				<if test="pointValue != null">
+					point_value,
+				</if>
+				<if test="realValue != null">
+					real_value,
+				</if>
+				<if test="createUser != null">
+					create_user,
+				</if>
+				<if test="createTime != null">
+					create_time,
+				</if>
+				<if test="status != null">
+					status,
+				</if>
+			</trim>
+			<trim prefix="values(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					#{code,jdbcType=VARCHAR},
+				</if>
+				<if test="workplanCode != null">
+					#{workplanCode,jdbcType=VARCHAR},
+				</if>
+				<if test="pointCode != null">
+					#{pointCode,jdbcType=VARCHAR},
+				</if>
+				<if test="pointValue != null">
+					#{pointValue,jdbcType=VARCHAR},
+				</if>
+				<if test="realValue != null">
+					#{realValue,jdbcType=VARCHAR},
+				</if>
+				<if test="createUser != null">
+					#{createUser,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime != null">
+					#{createTime,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					#{status,jdbcType=INTEGER},
+				</if>
+			</trim>
+		</if>
+	</insert>
+	
+	
+	<delete id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		delete from workplan_info where workplan_code=#{workplanCode};
+	</delete>
+	
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select   IFNULL((select name from equipment_info where code=p.object_code),(select substring_index(column_code,';',1) from items where code=wpi.point_code)) equipmentName,
+				 ifnull(pi.name,i.name) pointName,
+				 ifnull(SUBSTRING_INDEX(p.config,'|',1),i.unit) pointUnit,
+				 aui.name userName,
+				 au.logo userLogo,
+				 wp.settime beginTime,
+				 wp.last_update_time endTime,
+				 wp.trans_code transCode,
+				 p.type pointType,
+				 (select count(id) from workplan wo where status!=9 and wo.trans_code=#{transCode,jdbcType=VARCHAR} and wo.create_time&lt;=wp.create_time) countPlan,
+				 wpi.* from workplan_info wpi 
+				 LEFT JOIN workplan wp ON wp.code=wpi.workplan_code 
+				 LEFT JOIN auth_user au ON au.code=wpi.create_user 
+				 LEFT JOIN auth_user_info aui ON aui.code=wpi.create_user 
+				 LEFT JOIN point p ON wpi.point_code=p.code
+				 LEFT JOIN point_info pi ON wpi.point_code=pi.code
+				 LEFT JOIN items i ON wpi.point_code=i.code  
+			     where 1=1
+			     <if test="workplanCode != null">
+			     	and workplan_code=#{workplanCode,jdbcType=VARCHAR}
+			     </if> 
+			     <if test="pointCode != null">
+			     	and point_code=#{pointCode,jdbcType=VARCHAR}
+			     </if>
+			     <if test="transCode != null">
+			     	and workplan_code in(select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR})
+			     	<if test="status != null">
+			     		and wpi.status = #{status,jdbcType=INTEGER}
+			     	</if>
+			     </if>
+			     order by create_time desc
+	</select>
+	
+	
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select   IFNULL((select name from equipment_info where code=p.object_code),(select substring_index(column_code,';',1) from items where code=wpi.point_code)) equipmentName,
+				 ifnull(pi.name,i.name) pointName,
+				 ifnull(SUBSTRING_INDEX(p.config,'|',1),i.unit) pointUnit,
+				 aui.name userName,
+				 au.logo userLogo,
+				 wp.settime beginTime,
+				 wp.last_update_time endTime,
+				 wp.trans_code transCode,
+				 p.type pointType,
+				 (select count(id) from workplan wo where status!=9 and wo.trans_code=#{transCode,jdbcType=VARCHAR} and wo.create_time&lt;=wp.create_time) countPlan,
+				 wpi.* from workplan_info wpi 
+				 LEFT JOIN workplan wp ON wp.code=wpi.workplan_code 
+				 LEFT JOIN auth_user au ON au.code=wpi.create_user 
+				 LEFT JOIN auth_user_info aui ON aui.code=wpi.create_user 
+				 LEFT JOIN point p ON wpi.point_code=p.code
+				 LEFT JOIN point_info pi ON wpi.point_code=pi.code
+				 LEFT JOIN items i ON wpi.point_code=i.code  
+			     where 1=1
+			     <if test="workplanCode != null">
+			     	and workplan_code=#{workplanCode,jdbcType=VARCHAR}
+			     </if> 
+			     <if test="pointCode != null">
+			     	and point_code=#{pointCode,jdbcType=VARCHAR}
+			     </if>
+			     <if test="name != null">
+			     	and i.name = #{name,jdbcType=VARCHAR}
+			     </if>
+			     <if test="transCode != null">
+			     	and workplan_code in(select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR})
+			     	<if test="status != null">
+			     		and wpi.status = #{status,jdbcType=INTEGER}
+			     	</if>
+			     </if>
+			     <if test="columnCode != null">
+			     	and i.column_code like CONCAT('',#{columnCode,jdbcType=VARCHAR},'%')
+			     </if>
+			     limit 1 
+	</select>
+	
+	
+	<select id="selectWarnList" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select 
+		  	IFNULL((select name from equipment_info where code=p.object_code),(select substring_index(column_code,';',1) from items where code=wi.point_code)) equipmentName,
+			IFNULL(pi.name,i.name) pointName,
+		    wi.point_value,
+			wi.real_value,
+		    FROM_UNIXTIME(w.create_time/1000,'%H:%s:%i') createTime 
+		from workplan_info wi 
+         	LEFT JOIN workplan w on wi.workplan_code = w.code 
+			LEFT JOIN point p ON wi.point_code=p.code
+			LEFT JOIN point_info pi ON wi.point_code=pi.code
+			LEFT JOIN items i ON wi.point_code=i.code 
+ 		where wi.status=0  
+ 			<if test="transCode != null">
+ 			  and w.trans_code = #{transCode,jdbcType=VARCHAR} 
+ 			</if>
+ 			<!-- 根据配电室上下班时间查询 -->
+ 			<if test="createTime != null">
+ 				and #{createTime,jdbcType=VARCHAR} &lt; wi.create_time and #{lastUpdateTime,jdbcType=VARCHAR} &gt; wi.create_time 
+			  <!-- and FROM_UNIXTIME(wi.create_time/1000,'%Y-%m-%d') = FROM_UNIXTIME(#{createTime,jdbcType=VARCHAR}/1000,'%Y-%m-%d')  -->
+			</if>
+	</select>
+	
+	
+	
+	
+	<!-- 根据配电室编码、createTime[今日or昨日] 查询44、55用电量 -->
+	<select id="selectDayMinHou" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select (select column_code from items where code = in_code limit 0,1) in_code,in_value,real_value realValue,create_time createTime
+				from metering_meter_reading where status = 1 
+				and in_code in('zongdianliang31','zongdianliang32')
+				and real_value is not null 
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="createTime == null or createTime ==''">
+					and #{beginTime} &lt;= create_time and create_time &lt; #{endTime} ORDER BY create_time
+				</if>
+				<if test="createTime == -1">
+					and #{beginTime} &lt;= create_time and create_time &lt; #{endTime}
+					order by create_time desc limit 0,2
+				</if>
+	</select>
+	
+	<!-- 根据配电室编码、createTime[今日or昨日or指定时间] 查询44、55峰谷平总  -->
+	<select id="getCurTimeEle" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select create_time createTime,in_code,in_value,real_value realValue from metering_meter_reading 
+				where status = 1 
+				and real_value is not null 
+			 <if test='beginTime != null and endTime!=null'>
+      		 	and #{beginTime} &lt;= create_time and create_time &lt; #{endTime}  
+			 </if>
+      		 <if test='transCode != null'>
+				and trans_code = #{transCode,jdbcType=VARCHAR} 
+			 </if>
+			 <if test="inCode != null">
+			 	and in_code in(select code from items where column_code in(${inCode})) 
+			 </if>
+			 <if test="sorting != null">
+			    order by create_time ${sorting} limit 0,2 
+			 </if>
+	</select>
+	
+	<!-- 日常巡检-查询设备运行状态
+	根据配电室查询上次或指定时间段设备运行状态 -->
+	<select id="getEquipmentRunStatus" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+				select menu etype,in_code code,
+				      (select name from equipment_info where code = in_code limit 0,1) ename,in_value status,
+				      (select image_url from equipment where code = in_code limit 0,1) elogo,
+				      (select id from workplan where code = pmr.code limit 0,1) number,
+  		   			  (select create_time from workplan where code = pmr.code limit 0,1) provisionTime 
+					  from run_status pmr where code =
+					 (select code from workplan where status = 2 
+					 	and code = #{code,jdbcType=VARCHAR}
+						and trans_code = #{transCode,jdbcType=VARCHAR} 
+					  order by create_time desc limit 0,1)
+	</select>
+	
+	<!-- 日常巡检-查询巡检抄表
+	根据配电室查询当前或指定时间的巡检抄表记录 -->
+	<select id="getInspecRecord" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanInfoMap">
+		     select  (select menu from items where code = in_code limit 0,1) menu,
+				     (select name from items where code = in_code limit 0,1) in_code,
+				     (select in_unit from items where code = in_code limit 0,1) in_unit,
+					 (select column_code from items where code = in_code limit 0,1) columnCode,in_value,
+					 (select id from workplan where code = pmr.code limit 0,1) number,
+           			 (select create_time from workplan where code = pmr.code) provisionTime 
+					 from patrol_meter_reading pmr where code =
+					 (select code from workplan where status = 2 
+					 	and code = #{code,jdbcType=VARCHAR}
+						and trans_code = #{transCode,jdbcType=VARCHAR} 
+					  order by create_time desc limit 0,1)
+	</select>
+	
+	
+	<!-- 日常巡检-查询计量抄表
+	根据配电室查询当前或指定时间的计量抄表记录 -->
+	<select id="getMeterRecord" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanInfoMap">
+		select   (select menu from items where code = in_code limit 0,1) menu,
+				 (select name from items where code = in_code limit 0,1) in_code,
+				 (select in_unit from items where code = in_code limit 0,1) in_unit,
+				 (select column_code from items where code = in_code limit 0,1) columnCode,in_value,
+				 (select id from workplan where code = pmr.code) number,
+           		 (select create_time from workplan where code = pmr.code) provisionTime 
+				 from metering_meter_reading pmr where code =
+				 (select code from workplan where status=2 
+					 and code = #{code,jdbcType=VARCHAR}
+					and trans_code = #{transCode,jdbcType=VARCHAR} 
+				  order by create_time desc limit 0,1)
+	</select>
+	
+	<!-- 日常巡检-保存设备运行状态 -->
+	<insert id="saveEquipmentRunStatus" parameterType="String">
+		${_parameter}
+	</insert>
+	
+	<!-- 日常巡检-保存巡检抄表 -->
+	<insert id="saveInspecRecord" parameterType="String">
+		${_parameter}
+	</insert>
+	
+	<!-- 日常巡检-保存计量抄表 -->
+	<insert id="saveMeterRecord" parameterType="String">
+		${_parameter}
+	</insert>
+	
+	<select id="selectListForNon" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="workplanInfoMap">
+		select 
+					(select create_time from workplan 
+				      where status=#{status} and trans_code=#{transCode} 
+				      and from_unixtime(create_time/1000,#{format}) = date_format(#{createTime},#{format}) 
+				      order by create_time desc limit 1) create_time,
+				      (select name from items where code=point_code) inName,
+		w.* from workplan_info w where workplan_code = 
+				     (select code from workplan 
+				      where status=#{status} and trans_code=#{transCode} 
+				      and from_unixtime(create_time/1000,#{format}) = date_format(#{createTime},#{format}) 
+				      order by create_time desc limit 1)
+	</select>
+	
+	
+	<select id="getExceptionWorkplans" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		select 
+		(select name from transformer where code=w.trans_code) transName,
+		(select (select GROUP_CONCAT(substring_index(column_code,';',1)) from items where FIND_IN_SET(code,GROUP_CONCAT(point_code))) from workplan_info wi where wi.workplan_code=w.code and status=0 group by workplan_code) equipmentName,
+		(select (select GROUP_CONCAT(substring_index(column_code,';',-1)) from items where FIND_IN_SET(code,GROUP_CONCAT(point_code))) from workplan_info wi where wi.workplan_code=w.code and status=0 group by workplan_code) bomName,
+		(select (select GROUP_CONCAT(name) from items where FIND_IN_SET(code,GROUP_CONCAT(point_code))) from workplan_info wi where wi.workplan_code=w.code and status=0 group by workplan_code) pointName,
+		w.code,
+		(select group_concat(point_value) from workplan_info wi where wi.workplan_code=w.code and status=0 group by workplan_code) pointValue,
+		(select group_concat(real_value) from workplan_info wi where wi.workplan_code=w.code and status=0 group by workplan_code) realValue,
+		FROM_UNIXTIME(w.create_time/1000,'%Y-%m-%d %H:%s:%i') createTime, 
+		(select name from auth_user_info where code=w.user_code) userName 
+		from workplan w 
+		where w.create_time &gt;= UNIX_TIMESTAMP(#{beginTime})*1000 and w.create_time &lt;= UNIX_TIMESTAMP(#{endTime})*1000 
+		 and exists (select 1 from workplan_info wi where wi.workplan_code=w.code and status=0)
+		 and (w.executor = '' or w.executor is null) 
+		
+		<!-- 
+		select 
+		(select name from transformer where code=w.trans_code) transName,
+		(select substring_index(column_code,';',1) from items where wi.point_code=code ) equipmentName,
+		(select substring_index(column_code,';',-1) from items where wi.point_code=code ) bomName,
+		(select name from items where wi.point_code=code ) pointName,
+		FROM_UNIXTIME(w.create_time/1000,'%Y-%m-%d %H:%s:%i') createTime,
+		(select name from auth_user_info where code=wi.create_user) userName,
+		wi.workplan_code workplanCode,
+		wi.point_value pointValue,
+		wi.real_value realValue 
+		from workplan w,workplan_info wi where w.code=wi.workplan_code 
+		and wi.status=0 and w.create_time &gt;= UNIX_TIMESTAMP(#{beginTime})*1000
+		and w.create_time &lt;= UNIX_TIMESTAMP(#{endTime})*1000 
+		and (w.executor = '' or w.executor is null) order by w.code 
+		--> 
+	</select>
+	
+	
+	
+	<select id="selectDiffer" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+		<!-- select 
+			 (select sum(real_value) from workplan_info where workplan_code=#{code} and point_code in(select code from items where name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode} and create_time &lt; 
+			 (select create_time from workplan where code=#{code}) order by create_time desc limit 1) and point_code in(select code from items where name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能'))) val
+			 from dual  -->
+			 
+			select 
+			 (select count(1) from items where trans_code=concat(#{transCode,jdbcType=VARCHAR},':APPCHECK') and name='44_有功峰') flag
+			 		,
+			 ((select sum(real_value) from workplan_info where  workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('44_有功峰')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('44_有功峰'))))  44feng
+			 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('44_有功谷')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('44_有功谷'))))  44gu
+						 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('44_有功平')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('44_有功平'))))  44ping
+						 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('44_有功总'))) 
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('44_有功总'))))  44zong
+				,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('55_有功峰')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('55_有功峰'))))  55feng
+			 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('55_有功谷')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('55_有功谷'))))  55gu
+						 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('55_有功平')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('55_有功平'))))  55ping
+						 ,
+			 ((select sum(real_value) from workplan_info where   workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where code=point_code and name in('55_有功总')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where code=point_code and name in('55_有功总'))))  55zong
+				,
+			 (select (select sum(real_value) from workplan_info where  workplan_code=#{code,jdbcType=VARCHAR} and point_code in(select code from items where name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能')))
+			-(select sum(real_value) from workplan_info where workplan_code=
+			 (select code from workplan where trans_code=#{transCode,jdbcType=VARCHAR} and create_time &lt; 
+			 (select create_time from workplan where code=#{code,jdbcType=VARCHAR}) order by create_time desc limit 1) and point_code in(select code from items where name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能'))) val
+			 from dual) dianneng
+	</select>
+	
+	<select id="getEleByWorkplanInfo" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+			select 
+				(select sum(id)*1.0 from items where trans_code=concat(#{transCode},':APPCHECK') and name ='44_有功峰') JILIANG
+				,
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功峰','55_有功峰'))
+				-
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功峰','55_有功峰')) FENG
+				,
+				(select sum(win.real_value) gu from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功谷','55_有功谷')) 
+				-
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功谷','55_有功谷')) GU
+				,
+				(select sum(win.real_value) ping from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功平','55_有功平')) 
+				-
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功平','55_有功平')) PING
+				,
+				(select sum(win.real_value) jian from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功尖','55_有功尖'))
+				-
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功尖','55_有功尖')) JIAN
+				,
+				(select sum(win.real_value) zong from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功总','55_有功总')) 
+				-
+				(select sum(win.real_value) feng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('44_有功总','55_有功总')) ZONG
+				,
+				(select sum(win.real_value) zong from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(#{createTime},' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能')) 
+				-
+				(select sum(win.real_value) dianneng from workplan_info win,items i where win.workplan_code = 
+				(select w.code from workplan w where trans_code=#{transCode} and status=2 and create_time=unix_timestamp(concat(DATE_SUB(#{createTime},interval 1 day),' ',(select from_unixtime(create_time/1000,'%H:%s:%i') from workplan w where trans_code=#{transCode} and status=2 and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')=#{createTime} order by create_time desc limit 1)))*1000 order by create_time desc limit 1)
+				and i.code=win.point_code and i.name in('401有功电能','402有功电能','403有功电能','404有功电能''405有功电能','406有功电能')) DIANNENG
+				from dual
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo">
+		update workplan_info 
+		<set>
+			<if test="realValue!=null">
+				real_value = #{realValue},
+			</if>
+			<if test="lastUpdateTime!=null">
+				last_Update_Time = #{lastUpdateTime},
+			</if>
+			<if test="lastUpdateUser!=null">
+				last_Update_User = #{lastUpdateUser},
+			</if>
+		</set>
+		<where>
+			code = #{code}
+		</where>
+	</update>
+	
+	<select id="getValueByParams" parameterType="com.cloudinnov.yun.openapi.model.WorkplanInfo" resultMap="workplanInfoMap">
+		select * from workplan_info where  real_value is not null 
+				 and (create_time &lt; #{createTime} or create_time &gt; #{createTime})
+				 and point_code=(select code from items where trans_code =#{transCode} 
+				 and column_code like concat('%',#{columnCode},'%') and name=#{pointCode} limit 1)
+				 order by id desc 
+				 limit 1
+	</select>
+</mapper>

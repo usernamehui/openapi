@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.SysDictsDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.SysDicts">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, type_code, code, name, status, comment, create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from sys_dict
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		sys_dict
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<select id="selectSysDict" parameterType="com.cloudinnov.yun.openapi.model.SysDicts" resultMap="BaseResultMap">
+		select * FROM sys_dict where 
+		<if test="typeCode !=null">
+			type_code=#{typeCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.SysDicts">
+		insert into sys_dict
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="typeCode != null">
+				type_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+				status,
+			<if test="comment != null">
+				comment,
+			</if>
+			create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="typeCode != null">
+				#{typeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+				1,
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			UNIX_TIMESTAMP(NOW())*1000
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysDicts">
+		update sys_dict
+		<set>
+			<if test="typeCode != null">
+				type_code = #{typeCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+				last_update_time = UNIX_TIMESTAMP(NOW())*1000,
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="deleteByCondition" parameterType="java.lang.String">
+		update sys_dict
+		set
+		status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysDicts"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from sys_dict
+		<where>
+			<if test="typeCode != null">
+				AND type_code = #{typeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="code != null">
+				AND code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="name != null">
+				AND name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="comment != null">
+				AND comment = #{comment,jdbcType=VARCHAR}
+			</if>
+		</where>
+		limit 1
+	</select>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.SysDicts"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from sys_dict
+		<where>
+			<if test="typeCode != null">
+				AND type_code = #{typeCode,jdbcType=VARCHAR}
+			</if>
+			<if test="code != null">
+				AND code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="name != null">
+				AND name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER}
+			</if>
+			<if test="comment != null">
+				AND comment = #{comment,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+</mapper>

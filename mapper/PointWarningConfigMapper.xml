@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 点位告警配置表 -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.PointWarningConfigDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="point_code" jdbcType="VARCHAR" property="pointCode" />
+        <result column="operator" jdbcType="INTEGER" property="operator" />
+        <result column="value" jdbcType="DECIMAL" property="value" />
+        <result column="fault_channel_code" jdbcType="VARCHAR" property="faultChannelCode" />
+        <result column="fault_code" jdbcType="VARCHAR" property="faultCode" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="last_update_time" jdbcType="VARCHAR" property="lastUpdateTime" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, point_code, operator, value, fault_channel_code, fault_code, status, create_time, last_update_time
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+        INSERT INTO point_warning_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+		<if test="pointCode != null">
+            point_code,
+        </if>
+        <if test="customerCode !=null">
+        	customer_code,
+        </if>
+        <if test="operator != null">
+            operator,
+        </if>
+        <if test="value != null">
+            value,
+        </if>
+        <if test="faultChannelCode != null">
+            fault_channel_code,
+        </if>
+        <if test="faultCode != null">
+            fault_code,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createTime != null">
+            create_time,
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+		<if test="pointCode != null">
+            #{pointCode,jdbcType=VARCHAR},
+        </if>
+        <if test="customerCode !=null">
+        	#{customerCode,jdbcType=VARCHAR},
+        </if>
+        <if test="operator != null">
+            #{operator,jdbcType=INTEGER},
+        </if>
+        <if test="value != null">
+            #{value,jdbcType=DECIMAL},
+        </if>
+        <if test="faultChannelCode != null">
+            #{faultChannelCode,jdbcType=VARCHAR},
+        </if>
+        <if test="faultCode != null">
+            #{faultCode,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+        UPDATE point_warning_config
+        <set>
+        <if test="value != null">
+            value = #{value,jdbcType=DECIMAL},
+        </if>
+        <if test="faultChannelCode != null">
+            fault_channel_code = #{faultChannelCode,jdbcType=VARCHAR},
+        </if>
+        <if test="faultCode != null">
+            fault_code = #{faultCode,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+        </set>
+        <if test="pointCode !=null">
+          WHERE point_code = #{pointCode,jdbcType=VARCHAR}
+        </if>
+      	<if test="operator !=null">
+      	and operator =#{operator,jdbcType=INTEGER}
+      	</if>
+      	<if test="type !=null">
+      	and type=#{type,jdbcType=VARCHAR}
+      	</if>
+    </update>
+    
+    <update  id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+		update point_warning_config 
+		<set>
+			<if test="status !=null">
+				status =#{status,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<if test="pointCode !=null">
+			WHERE point_code = #{pointCode,jdbcType=VARCHAR}
+		</if>
+	</update >
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig" resultType="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+       select 
+		 pwc.id,point_code pointCode,(select name from point_info where code=point_code) name,
+		  operator, value, fault_channel_code, fault_code,pwc.type type, 
+		(select name from transformer where code=p.trans_code) transformerName,
+		(select name from equipment_info where code=p.object_code) equipmentName,
+		(select name from equipment_bom_info where code=p.bom_code) equipmentBomName 
+		 from point_warning_config pwc left join point p on pwc.point_code=p.code and p.status!=9 
+		 where 1 = 1 
+		    <if test="customerCode !=null and customerCode != ''">
+        		and pwc.customer_code=#{customerCode,jdbcType=VARCHAR}
+	        </if>
+	        <if test="transCode != null and transCode != ''">
+	        	and p.trans_code = #{transCode,jdbcType=VARCHAR}
+	        </if>
+	        <if test="equipmentCode !=null">
+	        	and p.object_code=#{equipmentCode,jdbcType=VARCHAR}
+	        </if>
+            <if test="pointCode !=null and pointCode != ''">
+				and point_code like CONCAT('%',#{pointCode,jdbcType = VARCHAR},'%')
+       	    </if>
+       	    order by operator
+    </select>
+    
+    <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig" resultMap="BaseResultMap">
+        SELECT 
+       	point_code, operator, value, fault_channel_code, fault_code,
+       	(select name from point_info where code=point_code limit 1) faultCode 
+        FROM point_warning_config
+        WHERE  id = #{id}
+        AND status = 1
+    </select>
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into point_warning_config (
+                        point_code, operator, value, fault_channel_code, fault_code, status, create_time, last_update_time
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.pointCode,jdbcType=VARCHAR}, 
+        #{item.operator,jdbcType=INTEGER}, 
+        #{item.value,jdbcType=DECIMAL}, 
+        #{item.faultChannelCode,jdbcType=VARCHAR}, 
+        #{item.faultCode,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=VARCHAR}, 
+        #{item.lastUpdateTime,jdbcType=VARCHAR}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM point_warning_config WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+    <select id="selectConfigBypointCode" parameterType="com.cloudinnov.yun.openapi.model.PointWarningConfig" resultType="com.cloudinnov.yun.openapi.model.PointWarningConfig">
+    	 SELECT 
+       	point_code pointCode, operator, value, fault_channel_code faultChannelCode, fault_code faultCode
+        FROM point_warning_config
+        WHERE  status = 1
+        <if test="pointCode !=null">
+        	and point_code=#{pointCode,jdbcType=VARCHAR}
+        </if>
+        <if test="type !=null">
+        	and type=#{type,jdbcType=VARCHAR}
+        </if>
+        <if test="equipmentType !=null">
+        	and equipment_type=#{equipmentType,jdbcType=VARCHAR}
+        </if>
+        order by operator
+        limit 1 
+    </select>
+    <insert id="insertAdjustRecord" parameterType="com.cloudinnov.yun.openapi.model.PointWarnConfig">
+     INSERT INTO point_adjust_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code  != null">
+	            code,
+	        </if>
+	        <if test="pointCode !=null">
+	        	point_code,
+	        </if>
+	        <if test="adjustType != null">
+	            adjust_type,
+	        </if>
+	        <if test="adjustValue != null">
+	            adjust_value,
+	        </if>
+	        <if test="balanceType != null">
+	            balance_type,
+	        </if>
+	        <if test="status != null">
+	            status,
+	        </if>
+	        <if test="createTime != null">
+	            create_time,
+	        </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code  != null">
+	            #{code,jdbcType=VARCHAR},
+	        </if>
+	        <if test="pointCode !=null">
+	        	 #{pointCode,jdbcType=VARCHAR},
+	        </if>
+	        <if test="adjustType != null">
+	             #{adjustType,jdbcType=INTEGER},
+	        </if>
+	        <if test="adjustValue != null">
+	             #{adjustValue,jdbcType=VARCHAR},
+	        </if>
+	        <if test="balanceType != null">
+	             #{balanceType,jdbcType=INTEGER},
+	        </if>
+	        <if test="status != null">
+	            #{status,jdbcType=INTEGER},
+	        </if>
+	        <if test="createTime != null">
+	            #{createTime,jdbcType=VARCHAR},
+	        </if>
+        </trim>
+    </insert>
+</mapper>

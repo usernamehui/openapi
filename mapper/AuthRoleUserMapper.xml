@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AuthRoleUserDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+		<result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="rolename" property="roleName" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="VARCHAR"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, company_code, role_code, user_code, status, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from auth_role_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		auth_role_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		insert into auth_role_user
+		(id, company_code, role_code,
+		user_code, status, create_time
+		)
+		values
+		(#{id,jdbcType=INTEGER}, #{companyCode,jdbcType=VARCHAR},
+		#{roleCode,jdbcType=VARCHAR},
+		#{userCode,jdbcType=VARCHAR},
+		#{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		insert into auth_role_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="roleCode != null">
+				role_code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleCode != null">
+				#{roleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		update auth_role_user
+		<set>
+			<if test="companyCode != null">
+				company_code = #{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleCode != null">
+				role_code = #{roleCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				user_code = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		update
+		auth_role_user
+		set company_code = #{companyCode,jdbcType=VARCHAR},
+		role_code = #{roleCode,jdbcType=VARCHAR},
+		user_code =
+		#{userCode,jdbcType=VARCHAR},
+		status = #{status,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=VARCHAR}
+		where id =
+		#{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from auth_role_user
+		where status = 1
+		and user_code = #{userCode,jdbcType=VARCHAR}
+		and
+		company_code = #{companyCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser"
+		resultMap="BaseResultMap">
+		SELECT
+		model.company_code, model.role_code, model.user_code, roleinfo.name AS rolename
+		FROM auth_role_user model
+		JOIN auth_role role ON role.code = model.role_code
+		LEFT JOIN auth_role_info roleinfo ON roleinfo.code = role.code AND roleinfo.language = #{language,jdbcType=VARCHAR}
+		WHERE model.status = 1
+		AND role.status = 1 
+		AND model.user_code = #{userCode,jdbcType=VARCHAR}
+		AND
+		model.company_code = #{companyCode,jdbcType=VARCHAR}
+		ORDER BY model.create_time DESC
+	</select>
+	
+	<select id="selectRoleList" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser" resultMap="BaseResultMap">
+		SELECT
+		group_concat(model.role_code) roleCode,
+		group_concat(roleinfo.name) roleName
+		FROM auth_role_user model
+		JOIN auth_role role ON role.code = model.role_code
+		LEFT JOIN auth_role_info roleinfo ON roleinfo.code = role.code AND roleinfo.language = #{language,jdbcType=VARCHAR}
+		WHERE model.status = 1
+		AND role.status = 1 
+		AND model.user_code = #{userCode,jdbcType=VARCHAR}
+		AND
+		model.company_code = #{companyCode,jdbcType=VARCHAR}
+		ORDER BY model.create_time DESC
+	</select>
+	
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		update auth_role_user
+		set
+		status = 9
+		where user_code = #{userCode,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectListByRole" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser" 
+	resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name loginName,ui.name,
+   	 	(select ru.role_code from auth_role_user ru where ru.user_code=u.code)roleCode 
+    	from auth_user u ,auth_user_info ui
+		where  u.code=ui.code and u.status != 9 
+		AND u.company_code = #{companyCode,jdbcType=VARCHAR}
+		
+	</select>
+	
+	<select id="selectAuthUserByRole" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser" 
+	resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name loginName,ui.name,ru.role_code roleCode from auth_role_user ru,auth_user u ,auth_user_info ui
+		where ru.user_code=u.code and u.code=ui.code and ru.status = 1 and u.status = 1 
+		and role_code in(${roleCode})
+	</select>
+	<select id="selectRoleByCode" parameterType="String" resultMap="BaseResultMap">		
+			SELECT
+				au.user_type,
+				ru.role_code
+			FROM
+				auth_user au
+			LEFT JOIN auth_role_user ru ON au. CODE = ru.user_code
+			WHERE
+				au.`status` = 1
+				and ru.status=1
+			<if test="_parameter !=null">
+			AND au.code =#{_parameter,jdbcType=VARCHAR}
+			</if>
+			limit 1
+	</select>
+	<select id="selectUserByRoleCode" parameterType="String" resultMap="BaseResultMap">
+		select user_code,role_code,company_code from auth_role_user where status=1
+		<if test="_parameter !=null">
+			AND role_code =#{_parameter,jdbcType=VARCHAR}
+		</if>
+		limit 1
+	</select>
+	<select id="selectRoleCodeByUser" parameterType="com.cloudinnov.yun.openapi.model.AuthRoleUser" resultType="com.cloudinnov.yun.openapi.model.AuthRoleUser">
+		select user_code userCode,role_code roleCode,company_code companyCode,status status,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') createTime from auth_role_user
+		where status=1
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="roleCode !=null">
+			and role_code=#{roleCode,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode !=null">
+			and company_code=#{companyCode,jdbcType=VARCHAT}
+		</if>
+		limit 1
+	</select>
+</mapper>

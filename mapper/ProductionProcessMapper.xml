@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProductionProcessDao">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" >
+		<property name="timeToIdleSeconds" value="60"/>
+		<property name="timeToLiveSeconds" value="60"/>
+		<!-- 同ehcache参数maxElementsInMemory -->
+		<property name="maxEntriesLocalHeap" value="1000"/>
+		<!-- 同ehcache参数maxElementsOnDisk -->
+		<property name="maxEntriesLocalDisk" value="10000000"/>
+		<property name="memoryStoreEvictionPolicy" value="LRU"/>
+	</cache>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.ProductionProcess">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" />
+		<result column="languages" property="languages" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="production_code" property="productionCode" jdbcType="VARCHAR" />
+		<result column="comname" property="customerName"
+			jdbcType="VARCHAR" />
+		<result column="yield_point" property="yieldPoint"
+			jdbcType="VARCHAR" />
+		<result column="schedule_id" property="scheduleId"
+			jdbcType="VARCHAR" />
+		<result column="xid" property="xid"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, customer_code, code, status, create_time, production_code, yield_point,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from production_process
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess">
+		insert into production_process
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="productionCode != null">
+				production_code,
+			</if>
+			<if test="yieldPoint != null">
+				yield_point,
+			</if>
+			status,
+			create_time
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="productionCode != null">
+				#{productionCode,jdbcType=VARCHAR},
+			</if>
+			<if test="yieldPoint != null">
+				#{yieldPoint,jdbcType=VARCHAR},
+			</if>
+			1,
+			UNIX_TIMESTAMP(NOW())*1000
+		</trim>
+	</insert>
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess">
+		insert into production_process_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess">
+		update production_process
+		<set>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time =UNIX_TIMESTAMP(NOW())*1000
+			</if>
+			<if test="productionCode != null">
+				production_code = #{productionCode,jdbcType=VARCHAR}
+			</if>
+			<if test="yieldPoint != null">
+				yield_point = #{yieldPoint,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess">
+		UPDATE production_process_info
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=VARCHAR}
+		AND language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteByCondition">
+		update production_process
+		SET
+		status = 9
+		WHERE code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+	
+
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess"
+		resultMap="BaseResultMap">
+		SELECT
+		model.code, model.customer_code, model.production_code, model.yield_point,
+		info.name,info.comment,info.language
+		FROM
+		production_process model
+		LEFT
+		JOIN production_process_info info ON info.code = model.code
+		AND
+		info.language = #{language,jdbcType=VARCHAR}
+		WHERE model.status = 1
+		<if test="code!=null and code!='' ">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcess"
+		resultMap="BaseResultMap">
+		SELECT
+			model.code, model.customer_code, model.production_code, model.yield_point,
+			info.name,info.comment,info.language ,s.schedule_id,
+			cominfo.name AS comname
+		FROM
+		production_process model
+		LEFT JOIN production_process_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN company com ON com.code = model.customer_code 
+		LEFT JOIN company_info cominfo ON cominfo.code = com.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN production_process_schedule s ON s.production_code = model.production_code
+		WHERE
+			model.status = 1
+			AND com.status = 1
+		<if test="customerCode != null and customerCode !=''">
+			AND com.code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+
+		ORDER BY model.create_time DESC 
+	</select>
+
+	<select id="search" resultMap="BaseResultMap">
+		SELECT
+			model.code, model.customer_code, model.production_code, model.yield_point,
+			info.name,info.comment,info.language,
+			cominfo.name AS comname
+		FROM
+		production_process model
+		LEFT JOIN production_process_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN company com ON com.code = model.customer_code 
+		LEFT JOIN company_info cominfo ON cominfo.code = com.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		WHERE
+			model.status = 1
+		AND
+			com.status = 1
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND
+			CONCAT(cominfo.name,'',info.name) LIKE
+			CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )
+		</if>
+		ORDER BY model.create_time DESC 
+
+	</select>
+	
+	
+	<select id="selectProductByProcessCode"  resultMap="BaseResultMap"
+	parameterType="java.lang.String">
+		SELECT * FROM production_process model
+		WHERE
+		model.`code` = #{processCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectEntityByProductCode"  resultMap="BaseResultMap"
+	parameterType="java.lang.String">
+		SELECT model.code, model.production_code, model.yield_point, point.xid
+			FROM production_process model
+			JOIN point point ON point.code = model.yield_point
+			WHERE
+			  model.status =1 
+			AND 
+			  model.production_code = #{productionCode,jdbcType=VARCHAR}
+			limit 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AlarmWorkUserDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AlarmWorkUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, user_code, role, status, create_time
+  </sql>
+  
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkUser" >
+    insert into alarm_work_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+       status,
+      <if test="createTime!=null">
+      create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=INTEGER},
+      </if>
+      1,
+      <if test="createTime !=null">
+      	#{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkUser" >
+    update alarm_work_user
+    <set >
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE code = #{code,jdbcType=VARCHAR}
+    AND user_code =  #{userCode,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT  
+			model.code, model.user_code, model.role, model.status
+		FROM alarm_work_user model,work_order wo  
+			WHERE model.code=wo.code  
+ 			and wo.status != 9 
+		<if test="code != null" >
+       		AND model.code = #{code,jdbcType=VARCHAR}
+        </if>
+        <if test="userCode != null" >
+            AND model.user_code = #{userCode,jdbcType=VARCHAR}
+        </if>
+        <if test="transCode != null">
+        	 and wo.transformer_code = #{transCode,jdbcType=VARCHAR}
+        </if>
+        <if test="orderStatus != null">
+        	and wo.order_status in(${orderStatus}) 
+        </if>
+		<!-- JOIN auth_user AS user ON model.user_code = user.code
+		JOIN auth_user_info AS info ON info.code = user.code AND info.language = #{language} -->
+	</select>
+	
+	<select id="selectEntityByCondition" resultMap="BaseResultMap">
+		SELECT  model.code, model.user_code, model.role, model.status
+		FROM alarm_work_user model		
+		WHERE
+		model.code = #{code,jdbcType=VARCHAR}
+		<if test="userCode != null">
+			AND model.user_code =  #{userCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectWorkUser" resultMap="BaseResultMap">
+		SELECT model.`code`,model.user_code,users.phone,info.`name`,users.logo FROM alarm_work_user model
+		LEFT JOIN auth_user users ON model.user_code = users.code
+		LEFT JOIN auth_user_info info ON users.code = info.code
+		WHERE 1=1
+		AND model.`code` = #{code,jdbcType=VARCHAR}
+		<if test="userCode != null">
+			AND model.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		AND model.role = 1
+		AND model.status = 1
+		
+	</select>
+	
+	<select id="selectAuthUsersByWorkCode" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkUser"
+	resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT users.*,users.login_name AS loginName,users.code AS code,roles.role_code AS roleCode from auth_user users 
+		LEFT JOIN alarm_work_user orders ON orders.user_code = users.`code` AND orders.`status` = 1
+		LEFT JOIN auth_role_user roles ON roles.user_code = users.`code` AND roles.`status` = 1
+		WHERE
+		users.`status` != 9
+		AND orders.`code` = #{code,jdbcType=VARCHAR}
+	</select>
+		
+	<update id="deleteAlarmWorkUser" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkUser">
+		<!-- UPDATE alarm_work_user SET status = 9 
+		where
+		code = #{code,jdbcType=VARCHAR}
+		AND user_code = #{userCode,jdbcType=VARCHAR}  -->
+		
+		DELETE FROM alarm_work_user
+		WHERE
+		code = #{code,jdbcType=VARCHAR}
+		AND user_code = #{userCode,jdbcType=VARCHAR} 
+	</update>
+	
+	
+	
+	</mapper>

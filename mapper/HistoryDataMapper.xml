@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.HistoryDataDao">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.HistoryData">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName"
+			jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="equipment_name" property="equipmentName"
+			jdbcType="VARCHAR" />
+		<result column="point_code" property="pointCode" jdbcType="VARCHAR" />
+		<result column="point_name" property="pointName" jdbcType="VARCHAR" />
+		<result column="value" property="value" jdbcType="LONGVARCHAR" />
+		<result column="time" property="time" jdbcType="DATE" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, oem_code, oem_name, supplier_code, supplier_name, customer_code,
+		customer_name,
+		equipment_code, equipment_name, point_code, point_name, value, time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from history_data
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectHistoryData" resultType="java.lang.String"
+		parameterType="java.util.Map">
+		SELECT
+		value
+		FROM history_data
+		WHERE point_code = #{code,jdbcType=VARCHAR} 
+		AND time &gt;= #{starttime,jdbcType=VARCHAR} 
+		AND time &lt;= #{endtime,jdbcType=VARCHAR} 
+	</select>
+	
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from history_data
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="java.util.Map">
+		insert into history_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="oemCode != null">
+				oem_code,
+			</if>
+			<if test="oemName != null">
+				oem_name,
+			</if>
+			<if test="supplierCode != null">
+				supplier_code,
+			</if>
+			<if test="supplierName != null">
+				supplier_name,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="customerName != null">
+				customer_name,
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code,
+			</if>
+			<if test="equipmentName != null">
+				equipment_name,
+			</if>
+			<if test="pointCode != null">
+				point_code,
+			</if>
+			<if test="pointName != null">
+				point_name,
+			</if>
+			<if test="value != null">
+				value,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="oemName != null">
+				#{oemName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				#{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				#{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentName != null">
+				#{equipmentName,jdbcType=VARCHAR},
+			</if>
+			<if test="pointCode != null">
+				#{pointCode,jdbcType=VARCHAR},
+			</if>
+			<if test="pointName != null">
+				#{pointName,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{value,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.HistoryData">
+		update history_data
+		<set>
+			<if test="oemCode != null">
+				oem_code = #{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="oemName != null">
+				oem_name = #{oemName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				supplier_code = #{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				supplier_name = #{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				customer_name = #{customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentName != null">
+				equipment_name = #{equipmentName,jdbcType=VARCHAR},
+			</if>
+			<if test="pointCode != null">
+				point_code = #{pointCode,jdbcType=VARCHAR},
+			</if>
+			<if test="pointName != null">
+				point_name = #{pointName,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				value = #{value,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				time = #{time,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.HistoryData">
+		update history_data
+		set oem_code = #{oemCode,jdbcType=VARCHAR},
+		oem_name = #{oemName,jdbcType=VARCHAR},
+		supplier_code = #{supplierCode,jdbcType=VARCHAR},
+		supplier_name = #{supplierName,jdbcType=VARCHAR},
+		customer_code = #{customerCode,jdbcType=VARCHAR},
+		customer_name = #{customerName,jdbcType=VARCHAR},
+		equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+		equipment_name = #{equipmentName,jdbcType=VARCHAR},
+		point_code = #{pointCode,jdbcType=VARCHAR},
+		point_name = #{pointName,jdbcType=VARCHAR},
+		value = #{value,jdbcType=VARCHAR},
+		time = #{time,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<insert id="insertHistoryList" parameterType="java.util.List">
+
+		insert into ${tableName} (code, value,
+		time) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(
+			<if test="oemCode != null">
+				#{item.oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="oemName != null">
+				#{item.oemName,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierCode != null">
+				#{item.supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				#{item.supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{item.customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerName != null">
+				#{item.customerName,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{item.equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentName != null">
+				#{item.equipmentName,jdbcType=VARCHAR},
+			</if>
+			<if test="pointCode != null">
+				#{item.pointCode,jdbcType=VARCHAR},
+			</if>
+			<if test="pointName != null">
+				#{item.pointName,jdbcType=VARCHAR},
+			</if>
+			<if test="value != null">
+				#{item.value,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{item.time,jdbcType=VARCHAR},
+			</if>
+			)
+		</foreach>
+
+	</insert>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.HistoryData" resultMap="BaseResultMap">
+		select point_code,value,time,(select name from point_info where code=point_code) pointName
+		       from history_data where 1=1 
+		 <if test="pointCode != null and status==null">
+			 and point_code = #{pointCode,jdbcType=VARCHAR} 
+		 </if>
+		 <if test="pointCode != null and status!=null">
+			 and point_code in(${pointCode})
+		 </if>
+		 <if test="beginTime != null and endTime != null">
+			and time &gt;= #{beginTime} and time &lt;= #{endTime}
+		 </if>
+		 order by time 
+	</select>
+</mapper>

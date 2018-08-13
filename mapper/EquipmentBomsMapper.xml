@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EquipmentBomsDao">
+      <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+        <property name="timeToIdleSeconds" value="120" /><!--超过2分钟未访问缓存失效 -->
+        <property name="timeToLiveSeconds" value="300" /><!--缓存最多可以存活5分钟 -->
+        <property name="maxEntriesLocalHeap" value="1000" />
+        <property name="maxEntriesLocalDisk" value="10000000" />
+        <property name="memoryStoreEvictionPolicy" value="LRU" />
+    </cache>
+	<resultMap id="bomSelect" type="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber" jdbcType="VARCHAR" />
+		<result column="category" property="category" jdbcType="VARCHAR" />
+		<result column="position" property="position" jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="install_amount" property="installAmount" jdbcType="INTEGER" />
+		<result column="stock_amount" property="stockAmount" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="life" property="life" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, customer_code, equipment_code, code, name,
+		serial_number, category,
+		position,
+		brand, model, image_url,
+		install_amount, stock_amount, status, comment,
+		create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from equipment_bom
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		equipment_bom
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		replace into equipment_bom
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="serialNumber != null">
+				serial_number,
+			</if>
+			<if test="category != null">
+				category,
+			</if>
+			<if test="installAmount != null">
+				install_amount,
+			</if>
+			<if test="stockAmount != null">
+				stock_amount,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				#{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="category != null">
+				#{category,jdbcType=VARCHAR},
+			</if>
+			<if test="installAmount != null">
+				#{installAmount,jdbcType=INTEGER},
+			</if>
+			<if test="stockAmount != null">
+				#{stockAmount,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			UNIX_TIMESTAMP(NOW())*1000
+		</trim>
+	</insert>
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		replace into equipment_bom_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				language,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<!-- <if test="equipmentCode != null">
+				equipment_code,
+			</if>  -->
+			<if test="position != null">
+				position,
+			</if>
+			<if test="brand != null">
+				brand,
+			</if>
+			<if test="model != null">
+				model,
+			</if>
+			<if test="life != null">
+				life,
+			</if>
+			<if test="imageUrl != null">
+				image_url,
+			</if>
+			<if test="comment != null">
+				comment
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<!-- <if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>  -->
+			<if test="position != null">
+				#{position,jdbcType=VARCHAR},
+			</if>
+			<if test="brand != null">
+				#{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="life != null">
+				#{life,jdbcType=VARCHAR},
+			</if>
+			<if test="imageUrl != null">
+				#{imageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		update equipment_bom
+		<set>
+			<if test="serialNumber != null">
+				serial_number = #{serialNumber,jdbcType=VARCHAR},
+			</if>
+			last_update_time = UNIX_TIMESTAMP(NOW())*1000
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+	</update>
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		update equipment_bom_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+
+			<if test="position != null">
+				position = #{position,jdbcType=VARCHAR},
+			</if>
+
+			<if test="brand != null">
+				brand = #{brand,jdbcType=VARCHAR},
+			</if>
+
+			<if test="model != null">
+				model = #{model,jdbcType=VARCHAR},
+			</if>
+
+			<if test="life != null">
+				life = #{life,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="imageUrl != null">
+				image_url = #{imageUrl,jdbcType=VARCHAR},
+			</if>
+
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where language=#{language,jdbcType=VARCHAR}
+		and code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		update
+		equipment_bom
+		set customer_code = #{customerCode,jdbcType=VARCHAR},
+		equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+		code =
+		#{code,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		serial_number = #{serialNumber,jdbcType=VARCHAR},
+		category =
+		#{category,jdbcType=VARCHAR},
+		position = #{position,jdbcType=VARCHAR},
+		brand = #{brand,jdbcType=VARCHAR},
+		model = #{model,jdbcType=VARCHAR},
+		image_url = #{imageUrl,jdbcType=VARCHAR},
+		install_amount =
+		#{installAmount,jdbcType=INTEGER},
+		stock_amount =
+		#{stockAmount,jdbcType=INTEGER},
+		status = #{status,jdbcType=INTEGER},
+		comment = #{comment,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=VARCHAR},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		update
+		equipment_bom
+		set
+		status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms"
+		resultMap="BaseResultMap">
+		SELECT
+		eb.id,eb.code,eb.customer_code,eb.equipment_code,eb.serial_number,eb.category,eb.status,
+		ebi.language,ebi.name,ebi.comment,ebi.position,ebi.brand,ebi.model,
+		(
+			select group_concat(language
+			SEPARATOR ',') as languages
+			FROM equipment_bom_info WHERE code = eb.code group by code) languages
+		FROM equipment_bom eb
+		JOIN equipment_bom_info ebi ON eb.code = ebi.code
+		WHERE eb.status = 1
+		AND 
+		eb.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+		AND ebi.language = 'cn' 
+		order by right(ebi.name,4) asc
+	</select>
+	<select id="selectListByConditions" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms" resultType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		SELECT
+		ci.short_name companyName,ei.code equipmentCode,ei.name equipmentName,t.short_name transformerName,eb.code code,eb.status status,
+		ebi.language languages,ebi.name name,ebi.comment comment,ebi.brand brand,ebi.model model
+		FROM equipment_bom eb
+		JOIN equipment_bom_info ebi ON eb.code = ebi.code
+		join company_info ci on ci.code=eb.customer_code
+		join equipment_info ei on ei.code=eb.equipment_code 
+		join equipment e on e.code=ei.code
+		join transformer t on t.code=e.trans_code
+		WHERE eb.status = 1
+		AND eb.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+		AND ebi.language = 'cn' 
+		order by right(ebi.name,4) asc
+	</select>
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentBoms"
+		resultMap="BaseResultMap">
+		SELECT
+		eb.id,eb.code,eb.customer_code,eb.equipment_code,eb.serial_number,
+		eb.category,eb.install_amount,eb.stock_amount,eb.status,
+		ebi.name,ebi.comment,ebi.position,ebi.brand,ebi.model 
+		from equipment_bom eb
+		JOIN equipment_bom_info ebi ON ebi.code = eb.code
+		where eb.status = 1
+		<if test="code != null">
+			and eb.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode != null">
+			and eb.equipment_code = #{equipmentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and stockAmount == null">
+			and ebi.name like CONCAT('%',#{name,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="name != null and stockAmount != null">
+			and ebi.name = #{name,jdbcType=VARCHAR}
+		</if>
+		and ebi.language = 'cn'
+		limit 1
+	</select>
+
+	<select id="listByEquip" resultMap="bomSelect">
+	    SELECT b.code, bi.name from equipment_bom b
+		JOIN equipment_bom_info bi ON bi.code = b.code
+		where status = 1 and
+		equipment_code=#{equipmentCode,jdbcType=VARCHAR}
+	</select>
+	<select id="listByTransformer" resultMap="bomSelect">
+	    SELECT b.code, bi.name from equipment_bom b
+		JOIN equipment_bom_info bi ON bi.code = b.code
+		where status = 1 and equipment_code in(
+			SELECT e.code FROM equipment e 
+			JOIN transformer_substation t ON t.code=e.supplier_person
+			WHERE e.status = 1 and e.supplier_person=
+			#{transformerCode,jdbcType=VARCHAR}); 
+	</select>
+	<select id="listByCompany" resultMap="bomSelect">
+	    SELECT b.code, bi.name from equipment_bom b
+		JOIN equipment_bom_info bi ON bi.code = b.code
+		where status = 1 and
+		customer_code=#{companyCode,jdbcType=VARCHAR}
+	</select>
+	<select id="listByZone" resultMap="bomSelect">
+		SELECT b.code, bi.name from equipment_bom
+		JOIN equipment_bom_info bi ON bi.code = b.code
+		where status = 1 and
+		company_code=(select company_code
+		from zone where code = #{zoneCode,jdbcType=VARCHAR})
+		and zone_code = #{zoneCode,jdbcType=VARCHAR}
+	</select>
+	<select id="selectExportBom" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.EquipmentBoms">
+		select 
+		ebi.name as name,ebi.comment as comment,(select name from equipment_info where code=eb.equipment_code)equipmentName,
+		(select name from transformer where code=e.trans_code) transformerName,
+		(select name from company_info where code=eb.customer_code)companyName
+		from equipment_bom  eb 
+		join equipment_bom_info ebi on eb.code=ebi.code
+		join equipment e on e.code=eb.equipment_code
+		where eb.status = 1 
+		<if test="_parameter !=null">
+			and e.trans_code=#{_parameter,jdbcType=VARCHAR}
+		</if>
+		ORDER BY  (select name from equipment_info where code=eb.equipment_code)
+	</select>
+</mapper>

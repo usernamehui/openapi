@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AppDauDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AppDau" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="user_ip" property="userIp" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, code, user_code, user_ip, type, count, create_time, last_update_time, status
+  </sql>
+  
+  <insert id="saveOrUpdate" parameterType="com.cloudinnov.yun.openapi.model.AppDau">
+  	<selectKey order="BEFORE" keyProperty="id" resultType="int">
+  	      select count(1) from app_dau 
+          where user_code = #{userCode,jdbcType=VARCHAR} 
+                and type = #{type,jdbcType=INTEGER} 
+    	        and date_format(create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d')
+  	</selectKey>
+  	
+   <if test="id == 0">
+   		insert into app_dau 
+	  	<trim prefix="(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			code,
+	  		</if>
+	  		<if test="userCode != null">
+	  			user_code,
+	  		</if>
+	  		<if test="userIp != null">
+	  			user_ip,
+	  		</if>
+	  		<if test="type != null">
+	  			type,
+	  		</if>
+	  		<if test="count != null">
+	  			count,
+	  		</if>
+	  		<if test="createTime != null">
+	  			create_time,
+	  		</if>
+	  		<if test="status != null">
+	  			status,
+	  		</if>
+	  	</trim>
+	  	<trim prefix="values(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			#{code,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="userCode != null">
+	  			#{userCode,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="userIp != null">
+	  			#{userIp,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="type != null">
+	  			#{type,jdbcType=INTEGER},
+	  		</if>
+	  		<if test="count != null">
+	  			#{count,jdbcType=INTEGER},
+	  		</if>
+	  		<if test="createTime != null">
+	  			#{createTime,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="status != null">
+	  			#{status,jdbcType=INTEGER},
+	  		</if>
+	  	</trim>
+   </if>
+   <if test="id > 0">
+   	   update app_dau 
+   	   <set>
+	   	   	<if test="count != null">
+	   	   		count = count + #{count,jdbcType=INTEGER},
+	   	   	</if>
+		  		last_update_time = from_unixtime(unix_timestamp(),'%Y-%m-%d %H:%i:%s'),
+   	   </set>
+   	   <where>	
+	   	   		user_code = #{userCode,jdbcType=VARCHAR} 
+	   	   		and type = #{type,jdbcType=INTEGER} 
+	   	   		and date_format(create_time,'%Y-%m-%d') = date_format(#{createTime,jdbcType=VARCHAR},'%Y-%m-%d')
+   	   </where>
+   </if>
+  </insert>
+  
+  <select id="dauCount" resultType="com.cloudinnov.yun.openapi.model.AppDau">
+  	  select 
+		au.logo,aui.name,appmodel,DATE_FORMAT(dau.create_time,'%H:%i:%s') createTime,type,count 
+		from app_dau dau 
+		inner join auth_user au on dau.user_code=au.code 
+		inner join auth_user_info aui on dau.user_code=aui.code 
+		where dau.status != 9
+		and DATE_FORMAT(dau.create_time,'%Y-%m-%d') = FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d')
+		order by createTime
+  </select>
+  
+  <select id="dauHistory" parameterType="java.lang.String" resultType="java.util.Map">
+  	select count(1) userCount,date_format(create_time,'%Y-%m-%d') createTime from app_dau where create_time &gt;= #{_parameter,jdbcType=VARCHAR} 
+  	group by date_format(create_time,'%Y-%m-%d')
+  	order by create_time asc 
+  </select>
+ 
+</mapper>

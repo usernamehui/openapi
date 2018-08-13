@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProcessRecordDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.ProcessRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="product_record_id" property="productRecordId" jdbcType="INTEGER" />
+    <result column="process_code" property="processCode" jdbcType="VARCHAR" />
+    <result column="technology_code" property="technologyCode" jdbcType="VARCHAR" />
+    <result column="begin_time" property="beginTime" jdbcType="VARCHAR" />
+    <result column="end_time" property="endTime" jdbcType="VARCHAR" />
+    <result column="run_time" property="runTime" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, product_record_id, process_code, technology_code, begin_time, end_time, run_time, 
+    status, create_time, last_update_time
+  </sql>
+ 
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProcessRecord" >
+    insert into process_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productRecordId != null" >
+        product_record_id,
+      </if>
+      <if test="processCode != null" >
+        process_code,
+      </if>
+      <if test="technologyCode != null" >
+        technology_code,
+      </if>
+      <if test="beginTime != null" >
+        begin_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="runTime != null" >
+        run_time,
+      </if>
+        status,
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productRecordId != null" >
+        #{productRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="processCode != null" >
+        #{processCode,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyCode != null" >
+        #{technologyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="runTime != null" >
+        #{runTime,jdbcType=INTEGER},
+      </if>
+      1,
+       UNIX_TIMESTAMP(NOW())*1000
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.ProcessRecord" >
+    update process_record
+    <set >
+      <if test="productRecordId != null" >
+        product_record_id = #{productRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="processCode != null" >
+        process_code = #{processCode,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyCode != null" >
+        technology_code = #{technologyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="beginTime != null" >
+        begin_time = #{beginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=VARCHAR},
+      </if>
+      <if test="runTime != null" >
+        run_time = #{runTime,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProcessRecord"
+		resultMap="BaseResultMap">
+		SELECT
+		model.*
+		FROM
+		process_record model
+		WHERE model.status = 1
+		AND model.process_code = #{processCode,jdbcType=VARCHAR}
+		AND model.product_record_id = #{productRecordId,jdbcType=INTEGER}
+		ORDER BY model.create_time DESC
+	</select>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		model.*
+		FROM
+		process_record model
+		WHERE model.status = 1
+	      AND model.technology_code = #{technologyCode,jdbcType=VARCHAR}
+         <if test="processCode != null" >
+          AND model.process_code = #{processCode,jdbcType=VARCHAR}
+         </if>
+	     <if test="beginTime != null" >
+	      AND model.begin_time = #{beginTime,jdbcType=VARCHAR}
+	     </if>
+	     <if test="endTime != null" >
+	      AND model.end_time = #{endTime,jdbcType=VARCHAR}
+	     </if>
+	</select>
+</mapper>

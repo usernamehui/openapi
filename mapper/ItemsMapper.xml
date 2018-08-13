@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ItemsDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Items" id="itemsMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="menu" property="menu" jdbcType="INTEGER"/>
+		<result column="name" property="name" jdbcType="VARCHAR"/>
+		<result column="unit" property="unit" jdbcType="VARCHAR"/>
+		<result column="column_code" property="columnCode" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	  <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Items" resultMap="itemsMap">
+	  	 select * from items where 1=1 
+	  	 <if test="transCode != null">
+	  	 	and trans_code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="menu != null and menu != 'order'">
+	  	 	and menu = #{menu,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="name != null">
+	  	 	and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+	  	 </if>
+	  	 <if test="unit != null and unit != 'order'">
+	  	 	and unit = #{unit,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="columnCode != null">
+	  	 	and column_code = #{columnCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="menu == 'order'">
+	  	 	order by menu,id asc
+	  	 </if>
+	  	 <if test="unit =='order'">
+	  	 	order by unit asc
+	  	 </if>
+	  </select>
+	  
+	  <select id="selectList" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="java.util.Map">
+	  	select code,column_code columnCode,id,name inCode,unit inUnit,null inValue,type menu,menu number,
+       (select create_time from workplan where code=#{code}) provisionTime
+ 		from items where 1=1 
+	  	 <if test="transCode != null">
+	  	 	and trans_code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="menu != null">
+	  	 	and menu = #{menu,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="name != null">
+	  	 	and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+	  	 </if>
+	  	 <if test="unit != null">
+	  	 	and unit = #{unit,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="columnCode != null">
+	  	 	and column_code = #{columnCode,jdbcType=VARCHAR}
+	  	 </if>
+	  </select>
+	  
+	  <select id="selectListHandOver" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="java.util.Map">
+	  	select  i.code,column_code columnCode,i.id,name inCode,unit inUnit,null inValue,type menu,menu number,am.items_photo itemsPhoto,
+			  	FROM_UNIXTIME((am.`now_annual_time`)/1000,'%Y-%m-%d')  AS nowAnnualTime,
+				FROM_UNIXTIME((am.`next_annual_time`)/1000,'%Y-%m-%d')  AS nextAnnualTime,
+				FROM_UNIXTIME((am.`use_time`)/1000,'%Y-%m-%d')  AS useTime,
+				am.`annual_person` AS annualPerson
+ 		from items i left join annual_message am on am.items_code= i.code where 1=1 
+	  	 <if test="transCode != null">
+	  	 	and trans_code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="menu != null">
+	  	 	and menu = #{menu,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="name != null">
+	  	 	and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+	  	 </if>
+	  	 <if test="unit != null">
+	  	 	and unit = #{unit,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="columnCode != null">
+	  	 	and column_code = #{columnCode,jdbcType=VARCHAR}
+	  	 </if>
+	  </select>
+	  
+	   <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Items" resultMap="itemsMap">
+	  	 select * from items where 1=1 
+	  	 <if test="code != null">
+	  	 	and code = #{code,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="menu != null">
+	  	 	and menu = #{menu,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="name != null">
+	  	 	and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+	  	 </if>
+	  	 <if test="unit != null">
+	  	 	and unit = #{unit,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="columnCode != null">
+	  	 	and column_code = #{columnCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="transCode != null">
+	  	 	and trans_Code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	 limit 0,1
+	  </select>
+	  
+	  <select id="selectItemsByTrans" parameterType="com.cloudinnov.yun.openapi.model.Items" resultMap="itemsMap">
+	  	 select * from items where 1=1 
+	  	 <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 <if test="transCode != null">
+	  	 	and trans_Code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	ORDER BY menu desc limit 1
+	  </select>
+	  
+	  <select id="selectByCode" resultMap="itemsMap">
+	  	SELECT items.* FROM work_plan_items work
+		LEFT JOIN items items ON `work`.items_code = items.`code`
+		WHERE 1=1
+		AND work.work_code = #{code,jdbcType=VARCHAR}
+		AND `work`.`status` = 1
+		GROUP BY items.`code`
+	  </select>
+	  
+	  <delete id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.Items">
+	  	delete from items where type = #{type,jdbcType=VARCHAR} and trans_code = #{transCode,jdbcType=VARCHAR}
+	  	<if test="code != null">
+	  		and code in(#{code,jdbcType=VARCHAR})
+	  	</if>
+	  </delete>
+	  
+	  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Items">
+	  	insert into items 
+	  	<trim prefix="(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			code,
+	  		</if>
+	  		<if test="transCode != null">
+	  			trans_code,
+	  		</if>
+	  		<if test="type != null">
+	  			type,
+	  		</if>
+	  		<if test="name != null">
+	  			name,
+	  		</if>
+	  		<if test="unit != null">
+	  			unit,
+	  		</if>
+	  		<if test="menu !=null">
+	  			menu,
+	  		</if>
+	  		<if test="columnCode != null">
+	  			column_code,
+	  		</if>
+	  	</trim>
+	  	<trim prefix="values(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			#{code,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="transCode != null">
+	  			#{transCode,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="type != null">
+	  			#{type,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="name != null">
+	  			#{name,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="unit != null">
+	  			#{unit,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="menu !=null">
+	  			#{menu,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="columnCode != null">
+	  			#{columnCode,jdbcType=VARCHAR},
+	  		</if>
+	  	</trim>
+	  </insert>
+	  
+	  <select id="selectNameByType" resultType="com.cloudinnov.yun.openapi.model.Items">
+	  	select * from items i where i.type=7
+	  </select>
+	  
+	  <select id="selectPatrolInfo" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="itemsMap">
+	  	select i.code,i.trans_code,i.type,i.menu,i.name,i.unit,
+			(select status from patrol_inspection_info pii where pii.pi_code=#{code,jdbcType=VARCHAR} and pii.item_code=i.code)column_code 
+			from items i 
+			where i.type=3 
+			 <if test="transCode !=null">
+			 	and i.trans_code=#{transCode,jdbcType=VARCHAR}
+			 </if>
+			 <if test="menu !=null">
+			 	and i.menu=#{menu,jdbcType=VARCHAR}
+			 </if>
+			 <if test="menu ==null">
+			 	and i.menu!=0
+			 </if>
+			 order by menu asc
+	  </select>
+	  <select id="selectPatrolInfo2" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="itemsMap">
+	  	select i.code,i.trans_code,i.type,i.menu,i.name,i.unit,i.column_code as columnsCode,
+			(select status from patrol_inspection_info pii where pii.pi_code=#{code,jdbcType=VARCHAR} and pii.item_code=i.code)column_code 
+			from items i 
+			where i.type=10
+			 <if test="transCode !=null">
+			 	and i.trans_code=#{transCode,jdbcType=VARCHAR}
+			 </if>
+			 <if test="menu !=null">
+			 	and i.menu=#{menu,jdbcType=VARCHAR}
+			 </if>
+			 <if test="menu ==null">
+			 	and i.menu!=0
+			 </if>
+			 <if test="columnCode !=null">
+			 	and i.column_code=#{columnCode,jdbcType=VARCHAR}
+			 </if>
+			 order by menu asc
+	  </select>
+	  <select id="selectPatrolInfoByPiCode" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="itemsMap">
+				SELECT
+					i. CODE,
+					i. NAME,
+					i.unit,
+					i.type,
+					i.menu
+				FROM
+					patrol_inspection_info pii
+				LEFT JOIN items i ON i. CODE = pii.item_code
+				LEFT JOIN patrol_inspection_logs pil on pil.pi_code=pii.pi_code
+				WHERE
+			<if test="code !=null">
+				  pil.code=#{code,jdbcType=VARCHAR}
+			</if>
+	  </select>
+	  <select id="selectPatrolInfoByPiCodes" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="itemsMap">
+	  	SELECT
+					i. CODE,
+					i. NAME,
+					i.unit,
+					i.type,
+					i.menu
+				FROM
+					patrol_inspection_info pii
+					LEFT JOIN items i ON i. CODE = pii.item_code
+				where 
+				<if test="code !=null">
+					pii.pi_code=#{code,jdbcType=VARCHAR}
+				</if>
+	  </select>
+	  <select id="selectItemsListPage" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="com.cloudinnov.yun.openapi.model.Items">
+	  	select code as code,(select name from transformer where code =trans_code)transName,menu as menu,name as name ,column_code as columnCode from items where 1=1
+	  	 <if test="transCode != null">
+	  	 	and trans_code = #{transCode,jdbcType=VARCHAR}
+	  	 </if>
+	  	  <if test="type != null">
+	  	 	and type = #{type,jdbcType=INTEGER}
+	  	 </if>
+	  	 	order by  menu 
+	  </select>
+	  <delete id="deleteItemsByCode" parameterType="com.cloudinnov.yun.openapi.model.Items">
+	  	delete from items where
+	  	<if test="code != null">
+	  		code =#{code,jdbcType=VARCHAR}
+	  	</if>
+	  </delete>
+	  
+	  <!-- 根据巡检中的编码查询巡检项名称 -->
+	  <select id="getNameByCode" parameterType="java.lang.String" resultType="java.lang.String">
+	  		select IF((select count(1) from point_info where code=#{_parameter})>0,(select name from point_info where code=#{_parameter}),(select name from items where code=#{_parameter})) name from dual
+	  </select>
+	  
+	  <select id="selectType8Group" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="com.cloudinnov.yun.openapi.model.Items">
+	  	select GROUP_CONCAT(column_code) columnCode,GROUP_CONCAT(name) name from items where trans_code = #{transCode} and type=#{type}
+	  </select>
+</mapper>

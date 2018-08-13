@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AuthRoleDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthRole">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="grade" property="grade" jdbcType="INTEGER" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="portal" property="portal" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="languages" property="languages" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, company_code, code, parent_id, grade, order_id,portal,
+		status,role_type,
+		create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from auth_role
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		auth_role
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AuthRole">
+		insert into auth_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="roleType != null">
+				role_type,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="portal != null">
+				portal,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="roleType != null">
+				#{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="portal != null">
+				#{portal,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.AuthRole">
+		insert into auth_role_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthRole">
+		UPDATE auth_role
+		<set>
+			<if test="companyCode != null">
+				company_code = #{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="roleType != null">
+				role_type = #{roleType,jdbcType=INTEGER},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=INTEGER},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="portal != null">
+				portal = #{portal,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=VARCHAR};
+		UPDATE auth_role_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code ,jdbcType=VARCHAR}
+		AND language = #{language ,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.AuthRole">
+		update auth_role
+		set company_code = #{companyCode,jdbcType=VARCHAR},
+		code =
+		#{code,jdbcType=VARCHAR},
+		parent_id = #{parentId,jdbcType=INTEGER},
+		grade = #{grade,jdbcType=INTEGER},
+		order_id =
+		#{orderId,jdbcType=INTEGER},
+		status = #{status,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=VARCHAR},
+		last_update_time =
+		#{lastUpdateTime,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthRole"
+		resultMap="BaseResultMap">
+		SELECT
+			ar.*,ari.name,ari.comment,ari.language
+		from auth_role ar 
+		LEFT JOIN auth_role_info ari ON ar.code = ari.code   AND ari.language = #{language,jdbcType=VARCHAR}
+		WHERE ar.status = 1
+		<if test="code!=null and code!='' ">
+			AND ar.code = #{code,jdbcType=VARCHAR}
+		</if>
+		limit 1
+	</select>
+
+	<update id="deleteByCondition" parameterType="java.lang.String">
+		update
+		auth_role
+		set
+		status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+			ar.*,ari.name,ari.comment,ari.language,
+			(select group_concat(language SEPARATOR ',') as languages
+			FROM
+			auth_role_info
+			WHERE code = ar.code group by code) languages
+			FROM auth_role ar 
+		LEFT JOIN auth_role_info ari ON ar.code = ari.code  AND ari.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		ar.company_code = #{companyCode,jdbcType=VARCHAR}
+		<if test="roleType!=null">
+			and ar.role_type= #{roleType,jdbcType=INTEGER}
+		</if>		
+		AND ar.status = 1
+		and ar.code != '${@com.cloudinnov.yun.openapi.common.CommonUtils@SYSADMIN}'
+	</select>
+	
+	
+	<select id="selectDefaultRoleList" resultMap="BaseResultMap">
+		SELECT
+			ar.*,ari.name,ari.comment,ari.language,
+			(select group_concat(language SEPARATOR ',') as languages
+			FROM
+			auth_role_info
+			WHERE code = ar.code group by code) languages
+			FROM auth_role ar 
+		LEFT JOIN auth_role_info ari ON ar.code = ari.code  AND ari.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		ar.status = 1
+		AND ar.portal= #{portal,jdbcType=INTEGER}
+	</select>
+</mapper>

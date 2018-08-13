@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.TransPointTemplateDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.TransPointTemplate">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="point_code1" property="pointCode1" jdbcType="VARCHAR" />
+		<result column="point_code2" property="pointCode2" jdbcType="VARCHAR" />
+		<result column="point_code3" property="pointCode3" jdbcType="VARCHAR" />
+		<result column="point_code4" property="pointCode4" jdbcType="VARCHAR" />
+		<result column="point_code5" property="pointCode5" jdbcType="VARCHAR" />
+		<result column="point_code6" property="pointCode6" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultMap="BaseResultMap">
+		select * from trans_point_template where status=1
+		<if test="code !=null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="type!=null">
+			and type = #{type,jdbcType=INTEGER}
+		</if>
+		order by code,type asc 
+	</select>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultMap="BaseResultMap">
+		select * from trans_point_template where status = 1 
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="type !=null">
+			and type = #{type,jdbcType=INTEGER}
+		</if>
+		limit 1
+	</select>
+	
+	<select id="selectTable" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT group_concat(distinct TABLE_NAME) tableName FROM information_schema.TABLES WHERE table_name in(${_parameter})
+	</select>
+	
+	<insert id="insert" parameterType="java.lang.String">
+		${_parameter}
+	</insert>
+	
+	<select id="getTypesCount" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultType="java.lang.Integer">
+		select 
+			count(distinct type) count  
+		from trans_point_template where code=#{transCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getTypes2" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultType="com.cloudinnov.yun.openapi.model.TransPointTemplate">
+		select 
+		  distinct
+		  (
+			case type 
+			when 1 then '高压201三项线电压'
+		    when 2 then '高压201三项电流'
+		    when 3 then '高压202三项线电压'
+			when 4 then '高压202三项电流'
+			when 5 then '低压401三项线电压'
+			when 6 then '低压401三项电流'
+			when 7 then '低压401功率因数'
+			when 8 then '低压402三项线电压'
+			when 9 then '低压402三项电流'
+			when 10 then '低压402功率因数'
+			when 11 then '一号变压器三项温度'
+			when 12 then '二号变压器三项温度'
+			when 13 then '环境三项(温湿漏)'
+			end
+		  ) typeComment,type
+		from trans_point_template where code = #{transCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getTypes6" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultType="com.cloudinnov.yun.openapi.model.TransPointTemplate">
+		select 
+		  distinct
+		  (
+			case type 
+			when 1  then '高压201三项线电压' 
+			when 2  then '高压201三项电流'
+			when 3  then '高压202三项线电压' 
+			when 4  then '高压202三项电流'
+			when 5  then '低压401三项线电压'
+			when 6  then '低压401三项电流' 
+			when 7  then '低压401功率因数' 
+			when 8  then '低压402三项线电压'
+			when 9  then '低压402三项电流' 
+			when 10 then '低压402功率因数' 
+			when 11 then '低压403三项线电压'
+			when 12 then '低压403三项电流' 
+			when 13 then '低压403功率因数' 
+			when 14 then '低压404三项线电压'
+			when 15 then '低压404三项电流' 
+			when 16 then '低压404功率因数' 
+			when 17 then '低压405三项线电压'
+			when 18 then '低压405三项电流' 
+			when 19 then '低压405功率因数' 
+			when 20 then '低压406三项线电压'
+			when 21 then '低压406三项电流' 
+			when 22 then '低压406功率因数' 
+			when 23 then '一号变压器三项温度'
+			when 24 then '二号变压器三项温度' 
+			when 25 then '三号变压器三项温度'
+			when 26 then '四号变压器三项温度' 
+			when 27 then '五号变压器三项温度'
+			when 28 then '六号变压器三项温度' 
+			when 29 then '环境三项(温湿漏)'
+			end
+		  ) typeComment,type
+		from trans_point_template where code = #{transCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="list" parameterType="com.cloudinnov.yun.openapi.model.TransPointTemplate" resultType="com.cloudinnov.yun.openapi.model.TransPointTemplate">
+		select type,time,null beginTime,null endTime,pcode1 pointValue1,pcode2 pointValue2,pcode3 pointValue3,pcode4 pointValue4,pcode5 pointValue5,pcode6 pointValue6 
+			 from ${tableName} 
+			where type = #{type} 
+				and date_format(time,'%Y-%m-%d') &gt;= #{beginTime} 
+				and date_format(time,'%Y-%m-%d') &lt;= #{endTime} 
+				order by type,time asc 
+	</select>
+</mapper>

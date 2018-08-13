@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.SendSmsDao">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!-- 1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!-- 1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<resultMap id="int" type="java.lang.Integer"></resultMap>
+	<resultMap id="string" type="java.lang.String"></resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.SendSms">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="smstemplate" property="smstemplate" jdbcType="VARCHAR" />
+		<result column="sendnum" property="sendnum" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	
+
+	<insert id="inserts" parameterType="com.cloudinnov.yun.openapi.model.SendSms">
+	  insert into sendsms (code,phone,smstemplate,sendnum,create_time,state) 
+	  values(#{code,jdbcType=VARCHAR},
+	  		 #{phone,jdbcType=VARCHAR},
+	  		 #{smstemplate,jdbcType=VARCHAR},
+	  		 #{sendnum,jdbcType=INTEGER},
+	  		 #{createTime,jdbcType=VARCHAR},
+	  		 #{state,jdbcType=VARCHAR}
+	  		) 
+	</insert>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.SendSms">
+			insert into sendsms
+			 <trim prefix="(" suffix=")" suffixOverrides="," >
+			 	<if test="code != null">
+					code,			 	
+			 	</if>
+			 	<if test="phone != null">
+			 		phone,
+			 	</if>
+			 	<if test="smstemplate != null">
+			 		smstemplate,
+			 	</if>
+			 	<if test="content !=null">
+			 		content,
+			 	</if>
+			 	<if test="sendnum != null">
+			 		sendnum,
+			 	</if>
+			 	<if test="createTime != null">
+			 		create_time,
+			 	</if>
+			 	state
+			 </trim>
+			 <trim prefix="values (" suffix=")" suffixOverrides="," >
+			 	<if test="code != null">
+					#{code,jdbcType=VARCHAR},			 	
+			 	</if>
+			 	<if test="phone != null">
+			 		#{phone,jdbcType=VARCHAR},
+			 	</if>
+			 	<if test="smstemplate != null">
+			 		#{smstemplate,jdbcType=VARCHAR},
+			 	</if>
+			 	<if test="content !=null">
+			 		#{content,jdbcType=VARCHAR},
+			 	</if>
+			 	<if test="sendnum != null">
+			 		#{sendnum,jdbcType=VARCHAR},
+			 	</if>
+			 	<if test="createTime != null">
+			 		#{createTime,jdbcType=VARCHAR},
+			 	</if>
+			 	1
+			 </trim>
+	</insert>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.SendSms" resultMap="BaseResultMap">
+		select * from sendsms where state = 1 
+		<if test="phone != null and phone !=''">
+			and phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="smstemplate != null and smstemplate != ''">
+			and smstemplate = #{smstemplate,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null and createTime != ''">
+			and #{createTime,jdbcType=VARCHAR} &lt;= create_time and create_time &lt; ${@com.cloudinnov.yun.openapi.common.TimeUtils@addOneDayMill(createTime)} 
+		</if>
+		limit 0,1
+	</select>
+	
+	
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.SendSms">
+		select * from sendsms where state = 1 
+		<if test="phone != null and phone !=''">
+			and phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="smstemplate != null and smstemplate != ''">
+			and smstemplate = #{smstemplate,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime != null and createTime != ''">
+			and #{createTime,jdbcType=VARCHAR} &lt;= create_time and create_time &lt; ${@com.cloudinnov.yun.openapi.common.TimeUtils@addOneDayMill(createTime)} 
+		</if>
+		limit 0,1
+	</select>
+	<select id="selectSendSms" parameterType="com.cloudinnov.yun.openapi.model.SendSms" resultMap="BaseResultMap">
+		select * from sendsms where state=1
+		<if test="phone != null and phone !=''">
+			and phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="smstemplate != null and smstemplate != ''">
+			and smstemplate = #{smstemplate,jdbcType=VARCHAR}
+		</if>
+		ORDER BY create_time DESC LIMIT 1
+	</select>
+</mapper>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkOrderLogsDao">
+
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="BaseResultMap"
+		type="com.cloudinnov.yun.openapi.model.WorkOrderLogs">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="work_code" property="workCode" jdbcType="VARCHAR" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+		<result column="submit_time" property="submitTime" jdbcType="VARCHAR" />
+		<result column="operation" property="operation" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="target_company" property="target_company"
+			jdbcType="VARCHAR" />
+		<result column="target_user" property="target_user" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="solution" property="solution" jdbcType="VARCHAR" />
+		<result column="targetusername" property="targetUserName"
+			jdbcType="VARCHAR" />
+		<result column="username" property="user.name" jdbcType="VARCHAR" />
+		<result column="userlogo" property="user.logo" jdbcType="VARCHAR" />
+		<result column="usercode" property="user.code" jdbcType="VARCHAR" />
+		<result column="record" property="record" jdbcType="INTEGER" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="arrive_time" property="arriveTime" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		work_code, customer_code, user_code, submit_time,
+		operation, target_company,
+		target_user, content, solution,type
+	</sql>
+
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.WorkOrderLogs"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into work_order_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="workCode != null">
+				work_code,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="submitTime != null">
+				submit_time,
+			</if>
+			<if test="operation != null">
+				operation,
+			</if>
+			<if test="targetCompany != null">
+				target_company,
+			</if>
+			<if test="targetUser != null">
+				target_user,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="solution != null">
+				solution,
+			</if>
+			<if test="record != null">
+				record,
+			</if>
+			<if test="arriveTime != null">
+				arrive_time,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="workCode != null">
+				#{workCode,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="submitTime != null">
+				#{submitTime,jdbcType=VARCHAR},
+			</if>
+			<if test="operation != null">
+				#{operation,jdbcType=INTEGER},
+			</if>
+			<if test="targetCompany != null">
+				#{targetCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="targetUser != null">
+				#{targetUser,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="solution != null">
+				#{solution,jdbcType=VARCHAR},
+			</if>
+			<if test="record != null">
+				#{record,jdbcType=INTEGER},
+			</if>
+			<if test="arriveTime != null">
+				#{arriveTime,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		log.id,log.submit_time,log.operation,log.content,log.solution,log.type,
+		(select name AS targetusername
+		FROM
+		auth_user_info
+		WHERE code =
+		log.target_user
+		AND language = info.language group by code)
+		targetusername,
+		info.code AS usercode,
+		info.name AS username,
+		user.logo
+		AS userlogo
+		FROM work_order_log log
+		JOIN auth_user_info as info ON
+		log.user_code = info.code
+		JOIN auth_user as
+		user ON log.user_code =
+		user.code
+		WHERE
+		info.language = #{language}
+		AND
+		log.work_code =
+		#{workCode}
+		<!-- ORDER BY log.submit_time desc -->
+	</select>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap">
+		SELECT
+		log.submit_time,log.operation,log.content,log.solution,log.type,
+		(select name as targetusername
+		FROM
+		auth_user_info
+		WHERE code =
+		log.target_user
+		AND language = info.language group by code)
+		targetusername,
+		info.name as username,
+		user.logo as userlogo
+		FROM
+		work_order_log log
+		JOIN auth_user_info as info ON log.user_code =
+		info.code
+		JOIN auth_user as
+		user ON log.user_code = user.code
+		WHERE
+		info.language = #{language,jdbcType=VARCHAR}
+		<if test="workCode != null">
+			AND
+			log.work_code = #{workCode,jdbcType=VARCHAR}
+		</if>
+		<if test="id != null">
+			AND
+			log.id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="userCode != null">
+			AND
+			log.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="operation != null">
+			AND
+			log.operation = #{operation,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			AND
+			log.type = #{type,jdbcType=INTEGER}
+		</if>
+		ORDER BY log.submit_time DESC
+		LIMIT 1
+	</select>
+	
+	<select id="selectList" resultMap="BaseResultMap">
+		SELECT log.id,log.submit_time,log.operation,log.content,log.solution,log.type,
+		(select name AS targetusername
+			FROM
+			auth_user_info
+			WHERE code = log.target_user
+			AND language = info.language group by code) targetusername,	
+			info.code AS usercode,
+			info.name AS username,
+			user.logo AS userlogo
+		FROM work_order_log log
+		
+		JOIN auth_user_info as info ON log.user_code = info.code
+		JOIN auth_user as user ON log.user_code = user.code
+		WHERE
+			info.language = #{language}
+		AND
+		 log.work_code = #{workCode}
+		<!-- ORDER BY  log.submit_time desc  -->
+	</select>
+	
+	<select id="selectWorkOrderLogs" resultMap="BaseResultMap">
+		SELECT
+		log.submit_time  AS submitTime,
+ 		log.work_code,log.operation FROM work_order_log log
+		WHERE 
+		log.operation = 2
+		AND log.work_code = #{workCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectworkOrderLogsSolution" resultMap="BaseResultMap">
+	SELECT * FROM work_order_log WHERE work_code = #{workCode,jdbcType=VARCHAR} 
+	AND operation = 3
+	</select>
+	
+	<select id="selectWorkOrderLogsByWorkCode" resultMap="BaseResultMap">
+		
+		SELECT log.*,users.logo,info.`name` FROM work_order_log log 
+		LEFT JOIN auth_user users ON users.`code` = log.user_code AND users.`status` != 9
+		LEFT JOIN auth_user_info info ON info.code = users.`code`
+		where
+		log.work_code = #{workCode,jdbcType=VARCHAR}
+		AND log.record = 1
+		ORDER BY log.order_id ASC
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkOrderLogs">
+		update work_order_log
+		<set>
+			
+			<if test="submitTime != null">
+				submit_time = #{submitTime,jdbcType=VARCHAR},
+			</if>
+			<if test="record != null">
+				record = #{record,jdbcType=INTEGER},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode !=null">
+				user_code=#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="operation != null">
+				operation = #{operation,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="arriveTime != null">
+				arrive_time = #{arriveTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where work_code = #{workCode,jdbcType=VARCHAR}
+		AND operation = #{operation,jdbcType=INTEGER}
+	</update>	
+	
+	<select id="selectWorkOrderLogsByWorkCodeAndOrderStatus" resultMap="BaseResultMap">
+		SELECT * FROM work_order_log log
+		where 
+		log.work_code = #{workCode,jdbcType=VARCHAR}
+		AND log.operation = #{operation,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectWorkOrderLogsByOrderStatus" resultMap="BaseResultMap">
+		select * from work_order_log model
+		WHERE 1=1
+		<if test="workCode !=null">
+			AND model.work_code = #{workCode,jdbcType=VARCHAR}
+		</if>
+		<if test="operation !=null">
+			AND model.operation = #{operation,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus !=null">
+			AND model.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+	</select>
+	</mapper>

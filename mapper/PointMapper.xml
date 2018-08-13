@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.PointDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="java.lang.String" id="string"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Points" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="customer_code" property="customerCode" jdbcType="VARCHAR"/>
+	 	<result column="object_code" property="equipmentCode" jdbcType="VARCHAR"/>
+	 	<result column="type" property="type" jdbcType="VARCHAR"/>
+	 	<result column="config" property="config" jdbcType="VARCHAR"/>
+	 	<result column="bom_code" property="bomCode" jdbcType="VARCHAR"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+
+	
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Points">
+			select p.* from point p
+			LEFT JOIN point_info pi on p.code=pi.CODE
+			where  p.status=1
+			<if test="code !=null">
+			and p.code=#{code,jdbcType=VARCHAR}
+			</if>
+			<if test="transCode !=null">
+			and trans_code=#{transCode,jdbcType=VARCHAR} 
+			</if>
+			<if test="type !=null">
+			and p.type=#{type,jdbcType=VARCHAR}
+			</if>
+			<if test="bomCode != null">
+			and bom_code = #{bomCode,jdbcType=VARCHAR}
+			</if>
+			<if test="name !=null">
+			and pi.name like CONCAT('%',#{name},'%') 
+			</if>
+	</select>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Points" resultMap="BaseResultMap">
+		select p.* from point p inner join point_info pi on p.code=pi.code where status = 1 
+		<if test="code != null">
+			and p.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode != null">
+			and object_code = #{equipmentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			and name like CONCAT('%',#{name},'%')
+		</if>
+		<if test="bomCode != null">
+			and bom_code = #{bomCode,jdbcType=VARCHAR}
+		</if>
+		limit 0,1
+	</select>
+	
+	<select id="selectCodes" parameterType="com.cloudinnov.yun.openapi.model.Equipments" resultType="java.util.Map">
+		select 
+			(select group_concat(p.code) from equipment e join equipment_info ei on e.code=ei.code and e.status=1 
+			<if test="name != null">
+				and ei.name like concat('%',#{name,jdbcType=VARCHAR})  
+			</if>
+			<if test="categoryCode != null">
+				and e.category_code=#{categoryCode,jdbcType=VARCHAR} 
+			</if>
+			<if test="transCode != null">
+				and e.trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			join point p on p.object_code = e.code and p.status = 1
+			join point_info pi on pi.code = p.code and pi.name like concat('%',#{model,jdbcType=VARCHAR},'%')) pointCode
+		from dual
+	</select>
+	
+	<select id="selectParams" parameterType="java.util.Map" resultType="java.util.Map">
+		select pi.* from point p 
+			join point_info pi on p.code=pi.code and p.status=1
+			join equipment e on e.code=p.object_code and e.status=1
+			join equipment_info ei on e.code=ei.code
+		where e.trans_code=#{transCode,jdbcType=VARCHAR} 
+		and substring_index(ei.name,'_',1) = #{equipmentName,jdbcType=VARCHAR} 
+		and pi.name like CONCAT('',#{pointName,jdbcType=VARCHAR},'')
+		limit 1
+	</select>
+	
+	<select id="getPointList" parameterType="java.util.Map" resultType="java.util.Map">
+		select p.code,(select name from equipment_bom_info where code=p.bom_code limit 1) ename,
+		(select name from point_info pi where pi.code=p.code limit 1) pname,SUBSTRING_INDEX(p.config,'|',1) unit 
+		from point p  where trans_code=#{transCode} and p.status=1 limit #{index},#{size}
+	</select>
+	
+	<select id="getPointCodes" parameterType="string" resultType="string">
+		select GROUP_CONCAT(pi.code) from point_info pi where  pi.name = #{pointName,jdbcType=VARCHAR}
+		
+		<!-- 
+				select CONCAT(GROUP_CONCAT(pi.code),";",GROUP_CONCAT(CONCAT(IFNULL(t.radio,"")))) from point p left join point_info pi on p.code=pi.code left join transformer t on p.trans_code=t.code 
+				where  pi.name = #{pointName,jdbcType=VARCHAR}
+		 -->
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT * from point where status = 1 and type ='mn' and trans_code in(select code from transformer where unattend in(0,1))
+		order by id
+	</select>
+	<select id="selectPointByTransCode" parameterType="String" resultType="String">
+				select p.code from point p
+				join point_info pi on p.code=pi.code
+				where  1=1
+				<if test="_parameter !=null">
+				and p.trans_code=#{_paramter,jdbcType=VARCHAR}
+				</if>
+				and pi.name like '环境%温度%' ORDER BY p.create_time desc  limit 1
+	</select>
+	<select id="selectVoltage" parameterType="com.cloudinnov.yun.openapi.model.Points" resultType="com.cloudinnov.yun.openapi.model.Points">
+		select tp.point_code as code,tp.name as name,ei.code equipmentCode,ei.name equipmentName from trans_runcondition_point tp
+		LEFT JOIN point p on p.code=tp.point_code
+		LEFT JOIN equipment_info ei on ei.code=p.object_code
+		where tp.status=1 and tp.type=1
+		<if test="transCode !=null">
+			and tp.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY ei.name,orders
+	</select>
+	<select id="selectHeightCoilIn" parameterType="com.cloudinnov.yun.openapi.model.Points" resultType="com.cloudinnov.yun.openapi.model.Points">
+		select tp.point_code as code,tp.name as name,ei.code equipmentCode,ei.name equipmentName from trans_runcondition_point tp
+		LEFT JOIN point p on p.code=tp.point_code
+		LEFT JOIN equipment_info ei on ei.code=p.object_code
+		where tp.status=1 and tp.type=2
+		<if test="transCode !=null">
+			and tp.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY ei.name,orders
+	</select>
+	<select id="selectDepressionCoilIn" parameterType="com.cloudinnov.yun.openapi.model.Points" resultType="com.cloudinnov.yun.openapi.model.Points">
+		select tp.point_code as code,tp.name as name,ei.code equipmentCode,ei.name equipmentName from trans_runcondition_point tp
+		LEFT JOIN point p on p.code=tp.point_code
+		LEFT JOIN equipment_info ei on ei.code=p.object_code
+		where tp.status=1 and tp.type=3
+		<if test="transCode !=null">
+			and tp.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY ei.name,orders
+	</select>
+	<select id="selectEnvironment" parameterType="com.cloudinnov.yun.openapi.model.Points" resultType="com.cloudinnov.yun.openapi.model.Points">
+		select tp.point_code as code,tp.name as name,ei.code equipmentCode,ei.name equipmentName from trans_runcondition_point tp
+		LEFT JOIN point p on p.code=tp.point_code
+		LEFT JOIN equipment_info ei on ei.code=p.object_code
+		where tp.status=1 and tp.type=4
+		<if test="transCode !=null">
+			and tp.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY ei.name,orders
+	</select>
+	<select id="selectWarnPoint" parameterType="com.cloudinnov.yun.openapi.model.Points" resultType="com.cloudinnov.yun.openapi.model.Points">
+		select point_code code,name ,type from trans_runcondition_point where status=1
+		<if test="transCode !=null">
+		and trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="type !=null">
+		and type=#{type,jdbcType=VARCHAR}
+		</if>
+		 limit 5
+	</select>
+</mapper>

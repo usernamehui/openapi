@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.DutyDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<!-- 值班日志 -->
+	<resultMap type="com.cloudinnov.yun.openapi.model.Duty" id="dutyMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="hand_user" property="handUser" jdbcType="VARCHAR"/>
+		<result column="succ_user" property="succUser" jdbcType="VARCHAR"/>
+		<result column="successfini" property="successfini" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="common" property="common" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+		<result column="unworkorder" property="unworkorder" jdbcType="INTEGER"/>
+		<result column="inworkorder" property="inworkorder" jdbcType="INTEGER"/>
+		<result column="acworkorder" property="acworkorder" jdbcType="INTEGER"/>
+		<result column="unwork" property="unwork" jdbcType="INTEGER"/>
+		<result column="inwork" property="inwork" jdbcType="INTEGER"/>
+		<result column="acwork" property="acwork" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Duty" >
+		insert into duty 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="handUser != null">
+				hand_user,
+			</if>
+			<if test="succUser != null">
+				succ_user,
+			</if>
+			<if test="successfini != null">
+				successfini,
+			</if>
+			<if test="common != null">
+				common,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+				status
+		</trim>
+		<trim prefix="values(" suffix=");"  suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="handUser != null">
+				#{handUser,jdbcType=VARCHAR},
+			</if>
+			<if test="succUser != null">
+				#{succUser,jdbcType=VARCHAR},
+			</if>
+			<if test="successfini != null">
+				#{successfini,jdbcType=INTEGER},
+			</if>
+			<if test="common != null">
+				#{common,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime!=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+				1
+		</trim>
+		insert into duty_works 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="unworkorder != null">
+				unworkorder,
+			</if>
+			<if test="inworkorder != null">
+				inworkorder,
+			</if>
+			<if test="acworkorder != null">
+				acworkorder,
+			</if>
+			<if test="unwork != null">
+				unwork,
+			</if>
+			<if test="inwork != null">
+				inwork,
+			</if>
+			<if test="acwork != null">
+				acwork,
+			</if>
+			<if test="createTime!=null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="unworkorder != null">
+				#{unworkorder,jdbcType=INTEGER},
+			</if>
+			<if test="inworkorder != null">
+				#{inworkorder,jdbcType=INTEGER},
+			</if>
+			<if test="acworkorder != null">
+				#{acworkorder,jdbcType=INTEGER},
+			</if>
+			<if test="unwork != null">
+				#{unwork,jdbcType=INTEGER},
+			</if>
+			<if test="inwork != null">
+				#{inwork,jdbcType=INTEGER},
+			</if>
+			<if test="acwork != null">
+				#{acwork,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Duty">
+		update duty 
+		<set>
+			<if test="successfini != null">
+				successfini = #{successfini,jdbcType=INTEGER} 
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Duty" resultMap="dutyMap">
+			 select * from duty WHERE status = 1
+				 <if test="code != null">
+					 and code = #{code,jdbcType=VARCHAR}
+				 </if>
+				 <if test="transCode != null">
+				 	and trans_code = #{transCode,jdbcType=VARCHAR}
+				 </if>
+				 <if test="handUser != null">
+				 	and hand_user = #{handUser,jdbcType=VARCHAR}
+				 </if>
+				 <if test="succUser != null">
+				 	and succ_user = #{succUser,jdbcType=VARCHAR}
+				 </if>
+				 <if test="successfini != null">
+				 	and successfini = #{successfini,jdbcType=INTEGER}
+				 </if>
+				 <if test="beginTime != null and endTime != null">
+				 	and #{beginTime} &lt;= create_time and create_time &lt; #{endTime}
+				 </if>
+				 limit 0,1
+	</select>
+	
+	<select id="getCount" parameterType="String" resultType="int">
+		select count(id) from duty where trans_code=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getCurrentCount" parameterType="String" resultType="int">
+		select count(id) from duty where trans_code=#{_parameter,jdbcType=VARCHAR} 
+		and ${@com.cloudinnov.yun.openapi.common.CommonUtils@yestTimeStamp} &lt;= create_time 
+		and create_time &lt; ${@com.cloudinnov.yun.openapi.common.CommonUtils@currTimeStamp}
+	</select>
+	<insert id="saveAnnualMessage" parameterType="com.cloudinnov.yun.openapi.model.AnnualMessage">
+		insert into annual_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemsCode != null">
+				items_code,
+			</if>
+			<if test="useTime != null">
+				use_time,
+			</if>
+			<if test="nowAnnualTime != null">
+				now_annual_time,
+			</if>
+			<if test="nextAnnualTime != null">
+				next_annual_time,
+			</if>
+			<if test="annualPerson != null">
+				annual_person,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+				status
+		</trim>
+		<trim prefix="values(" suffix=");"  suffixOverrides=",">
+			<if test="itemsCode != null">
+				#{itemsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="useTime != null">
+				#{useTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nowAnnualTime != null">
+				#{nowAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nextAnnualTime != null">
+				#{nextAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="annualPerson != null">
+				#{annualPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+				1
+		</trim>
+	</insert>
+	<select id="selectTransCode" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.Items">
+		select 
+			i.trans_code as transCode
+		from items i where i.code=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	 <select id="selectUserByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+    	select u.*,u.login_name AS loginName,ui.name,u.user_type userType  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code=#{transCode,jdbcType=VARCHAR} 
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type userType from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND model.trans_code = #{transCode,jdbcType=VARCHAR} 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			        union all
+			select u.*,u.login_name AS loginName,ui.name,u.user_type userType from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9 
+					and company_code=#{comCode,jdbcType=VARCHAR}  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+    </select>
+    <select id="selectUseTime" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.Transformer">
+    	SELECT t.`power_time` as powerTime FROM transformer t
+    	WHERE t.`code`=#{_parameter,jdbcType=VARCHAR}
+    </select>
+    
+    <update id="updataItems" parameterType="com.cloudinnov.yun.openapi.model.Items">
+    		update items i
+			join annual_message am on i.code=am.items_code
+			<set>
+				<if test="unit !=null">
+					i.unit=#{unit,jdbcType=VARCHAR},
+				</if>
+				<if test="menu !=null">
+					i.menu=#{menu,jdbcType=VARCHAR},
+				</if>
+				<if test="userTime !=null">
+					am.use_time=#{userTime,jdbcType=VARCHAR},
+				</if>
+				<if test="nowAnnualTime !=null">
+					am.now_annual_time=#{nowAnnualTime,jdbcType=VARCHAR},
+				</if>
+				<if test="nextAnnualTime !=null">
+					am.next_annual_time=#{nextAnnualTime,jdbcType=VARCHAR},
+				</if>
+				<if test="annualPerson !=null">
+					am.annual_person=#{annualPerson,jdbcType=VARCHAR},
+				</if>
+				<if test="lastUpdateTime !=null">
+					am.last_update_time=#{lastUpdateTime,jdbcType=VARCHAR},
+				</if>
+				<if test="itemsPhoto !=null">
+					am.items_photo=#{itemsPhoto,jdbcType=VARCHAR},
+				</if>
+			</set> 
+			where i.type=4 
+			and i.`code`=#{code,jdbcType=VARCHAR}
+    </update>
+    <select id="selectItemsByCode" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="com.cloudinnov.yun.openapi.model.Items">
+		    	SELECT
+			i. CODE AS CODE,
+			i. NAME AS NAME,
+			i.unit AS unit,
+		am.annual_person as annualPerson,
+			am.items_photo as itemsPhoto,
+			FROM_UNIXTIME((am.use_time)/1000,'%Y-%m-%d')as userTime,
+			FROM_UNIXTIME((am.now_annual_time)/1000,'%Y-%m-%d')as nowAnnualTime,
+			FROM_UNIXTIME((am.next_annual_time)/1000,'%Y-%m-%d')as nextAnnualTime,
+				FROM_UNIXTIME((am.create_time)/1000,'%Y-%m-%d')as createTime
+		FROM
+			items i
+		LEFT JOIN annual_message am ON i. CODE = am.items_code
+		WHERE
+			i.type = 4
+			<if test="code !=null">
+			and 	i.code =#{code,jdbcType=VARCHAR}
+			</if>
+			<if test="transCode !=null">
+			and i.trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+    </select>
+    <insert id="insertItemsMessage" parameterType="com.cloudinnov.yun.openapi.model.AnnualMessage">
+    	insert into annual_message
+	  	<trim prefix="(" suffix=")" suffixOverrides=",">
+	  		<if test="itemsCode != null">
+	  			items_code,
+	  		</if>
+	  		<if test="useTime != null">
+	  			use_time,
+	  		</if>
+	  		<if test="nowAnnualTime != null">
+	  			now_annual_time,
+	  		</if>
+	  		<if test="nextAnnualTime != null">
+	  			next_annual_time,
+	  		</if>
+	  		<if test="annualPerson != null">
+	  			annual_person,
+	  		</if>
+	  		<if test="createTime !=null">
+	  			create_time,
+	  		</if>
+	  		<if test="itemsPhoto !=null">
+	  			items_photo,
+	  		</if>
+	  		status
+	  	</trim>
+	  	<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="itemsCode != null">
+				#{itemsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="useTime != null">
+				#{useTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nowAnnualTime != null">
+				#{nowAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nextAnnualTime != null">
+				#{nextAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="annualPerson != null">
+				#{annualPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="itemsPhoto !=null">
+				#{itemsPhoto,jdbcType=VARCHAR},
+			</if>
+				1
+	  	</trim>
+    </insert>
+    <select id="selectItemsCountByCode" parameterType="com.cloudinnov.yun.openapi.model.Items" resultType="int">
+    	select count(1) from annual_message where `status` =1 
+    	<if test="code  !=null">
+    		and items_code=#{code,jdbcType=VARCHAR}
+    	</if>
+    </select>
+</mapper>

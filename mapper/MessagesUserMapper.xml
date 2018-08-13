@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.MessagesUserDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.MessagesUser" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="mcode" property="mcode" jdbcType="VARCHAR"/>
+		<result column="ucode" property="ucode" jdbcType="VARCHAR"/>
+	 	<result column="type" property="type" jdbcType="INTEGER"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, code, mcode, ucode, type, create_time create_time, status
+	</sql>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.MessagesUser">
+		insert into messages_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="mcode != null">
+				mcode,
+			</if>
+			<if test="ucode != null">
+				ucode,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+				status,
+				create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="mcode != null">
+				#{mcode,jdbcType=VARCHAR},
+			</if>
+			<if test="ucode != null">
+				#{ucode,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+				1,
+				unix_timestamp()*1000
+		</trim>
+	</insert>
+	
+	<delete id="deleteByCondition">
+		update messages_user
+		set status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.MessagesUser">
+		update messages_user
+		<set>
+			<if test="mcode != null">
+				mcode = #{mcode,jdbcType=VARCHAR},
+			</if>
+			<if test="ucode != null">
+				ucode = #{ucode,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	
+	<select id="selectEntityByCondition" resultMap="BaseResultMap" 
+	    parameterType="com.cloudinnov.yun.openapi.model.MessagesUser">
+		select
+		<include refid="Base_Column_List" />
+		from messages_user
+		where status = 1 
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="mcode != null">
+			AND mcode = #{mcode,jdbcType = VARCHAR}
+		</if>
+		<if test="ucode != null">
+			AND ucode = #{ucode,jdbcType = VARCHAR}
+		</if>
+		<if test="type != null">
+			AND type = #{type,jdbcType=INTEGER}
+		</if>
+		limit 1
+	</select>
+	
+	<select id="selectListByCondition" resultMap="BaseResultMap" 
+	    parameterType="com.cloudinnov.yun.openapi.model.MessagesUser">
+		select
+		<include refid="Base_Column_List" />
+		from messages_user
+		where 
+		status = 1
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="mcode != null">
+			AND mcode = #{mcode,jdbcType = VARCHAR}
+		</if>
+		<if test="ucode != null">
+			AND ucode = #{ucode,jdbcType = VARCHAR}
+		</if>
+		<if test="type != null">
+			AND type = #{type,jdbcType=INTEGER}
+		</if>
+	</select>
+	
+	<select id="getMessagesUserList" resultType="com.cloudinnov.yun.openapi.model.MessagesUser"
+		parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		SELECT
+			m.id, m.code, m.mcode, m.ucode, m.type, m.create_time, m.status,
+			(select name from auth_user_info where code=m.ucode) uname ,
+			(select logo from auth_user where code=m.ucode) ulogo ,
+			m.last_update_time lastUpdateTime
+			FROM 
+			messages_user m
+		left join messages mu on m.mcode=mu.code
+		WHERE
+		m.status = 1
+		<if test="code != null">
+			AND mu.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="title != null">
+			AND mu.title = #{title,jdbcType=VARCHAR}
+		</if>
+		<if test="context !=null">
+			AND au.context = #{context,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			and m.type = #{userType}
+		</if>
+	</select>
+	
+	
+</mapper>

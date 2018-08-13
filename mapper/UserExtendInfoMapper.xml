@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.UserExtendInfoDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    <id column="code" property="code" jdbcType="VARCHAR" />
+    <result column="functional_type" property="functionalType" jdbcType="VARCHAR" />
+    <result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
+    <result column="pro_qual" property="proQual" jdbcType="VARCHAR" />
+    <result column="work_year" property="workYear" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="attr6" property="attr6" jdbcType="VARCHAR" />
+    <result column="attr7" property="attr7" jdbcType="VARCHAR" />
+    <result column="attr8" property="attr8" jdbcType="VARCHAR" />
+    <result column="attr9" property="attr9" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    code, functional_type, job_title, pro_qual, work_year, type, attr6, attr7, attr8, attr9
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_extend_info
+    where code = #{code,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_extend_info
+    where code = #{code,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    insert into user_extend_info (code, functional_type, job_title, pro_qual, work_year,
+                type, attr6, attr7, attr8, attr9)
+    values (#{code,jdbcType=VARCHAR}, #{functionalType,jdbcType=VARCHAR}, #{jobTitle,jdbcType=VARCHAR}, 
+      #{proQual,jdbcType=VARCHAR}, #{workYear,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{attr6,jdbcType=VARCHAR}, #{attr7,jdbcType=VARCHAR}, #{attr8,jdbcType=VARCHAR}, 
+      #{attr9,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    insert into user_extend_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="functionalType != null" >
+        functional_type,
+      </if>
+      <if test="jobTitle != null" >
+        job_title,
+      </if>
+      <if test="proQual != null" >
+        pro_qual,
+      </if>
+      <if test="workYear != null" >
+        work_year,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="attr6 != null" >
+        attr6,
+      </if>
+      <if test="attr7 != null" >
+        attr7,
+      </if>
+      <if test="attr8 != null" >
+        attr8,
+      </if>
+      <if test="attr9 != null" >
+        attr9,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="functionalType != null" >
+        #{functionalType,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTitle != null" >
+        #{jobTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="proQual != null" >
+        #{proQual,jdbcType=VARCHAR},
+      </if>
+      <if test="workYear != null" >
+        #{workYear,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="attr6 != null" >
+        #{attr6,jdbcType=VARCHAR},
+      </if>
+      <if test="attr7 != null" >
+        #{attr7,jdbcType=VARCHAR},
+      </if>
+      <if test="attr8 != null" >
+        #{attr8,jdbcType=VARCHAR},
+      </if>
+      <if test="attr9 != null" >
+        #{attr9,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    update user_extend_info
+    <set >
+      <if test="functionalType != null" >
+        functional_type = #{functionalType,jdbcType=VARCHAR},
+      </if>
+      <if test="jobTitle != null" >
+        job_title = #{jobTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="proQual != null" >
+        pro_qual = #{proQual,jdbcType=VARCHAR},
+      </if>
+      <if test="workYear != null" >
+        work_year = #{workYear,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="attr6 != null" >
+        attr6 = #{attr6,jdbcType=VARCHAR},
+      </if>
+      <if test="attr7 != null" >
+        attr7 = #{attr7,jdbcType=VARCHAR},
+      </if>
+      <if test="attr8 != null" >
+        attr8 = #{attr8,jdbcType=VARCHAR},
+      </if>
+      <if test="attr9 != null" >
+        attr9 = #{attr9,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    update user_extend_info
+    set functional_type = #{functionalType,jdbcType=VARCHAR},
+      job_title = #{jobTitle,jdbcType=VARCHAR},
+      pro_qual = #{proQual,jdbcType=VARCHAR},
+      work_year = #{workYear,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      attr6 = #{attr6,jdbcType=VARCHAR},
+      attr7 = #{attr7,jdbcType=VARCHAR},
+      attr8 = #{attr8,jdbcType=VARCHAR},
+      attr9 = #{attr9,jdbcType=VARCHAR}
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+</mapper>

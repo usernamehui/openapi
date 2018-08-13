@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.RobotInspectionDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="java.lang.String" id="String"></resultMap>
+	<!-- 机器人巡检 -->
+	<resultMap type="com.cloudinnov.yun.openapi.model.RobotInspection" id="RobotInspectionMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="workplan_code" property="workplanCode" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR"/>
+		<result column="equipment_temp" property="equipmentTemp" jdbcType="VARCHAR"/>
+		<result column="thermal_img" property="thermalImg" jdbcType="VARCHAR"/>
+		<result column="equipment_img" property="equipmentImg" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="last_update_time" property="lastUpdateTime" jdbcType="INTEGER"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<resultMap type="com.cloudinnov.yun.openapi.model.RobotInspectionInfo" id="RobotInspectionInfoMap">
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="point_ame" property="pointName" jdbcType="VARCHAR"/>
+		<result column="point_value" property="pointValue" jdbcType="VARCHAR"/>
+		<result column="real_value" property="realValue" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
+</mapper>

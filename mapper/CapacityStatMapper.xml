@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloudinnov.yun.openapi.dao.CapacityStatDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.CapacityStat">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="customer_code" jdbcType="VARCHAR" property="customerCode" />
+		<result column="production_line_code" jdbcType="VARCHAR"
+			property="productionLineCode" />
+		<result column="material_code" jdbcType="VARCHAR" property="materialCode" />
+		<result column="product_code" jdbcType="VARCHAR" property="productCode" />
+		<result column="production_time" jdbcType="VARCHAR" property="productionTime" />
+		<result column="yield" jdbcType="VARCHAR" property="yield" />
+		<result column="other_cost" jdbcType="VARCHAR" property="otherCost" />
+		<result column="material_cost" jdbcType="VARCHAR" property="materialCost" />
+		<result column="sale_price" jdbcType="VARCHAR" property="salePrice" />
+		<result column="profit" jdbcType="VARCHAR" property="profit" />
+		
+		<!-- <result column="equipmentname" property="equipment.name"
+			jdbcType="VARCHAR" /> -->
+		<result column="customername" property="company.name" jdbcType="VARCHAR" />
+		<result column="prolinename" property="proline.name" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, customer_code, production_line_code, material_code, product_code,
+		production_time,
+		yield, other_cost, material_cost, sale_price, profit
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		insert into capacity_stat
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="productionLineCode != null">
+				production_line_code,
+			</if>
+			<if test="materialCode != null">
+				material_code,
+			</if>
+			
+			<if test="productCode != null">
+				product_code,
+			</if>
+			<if test="productionTime != null">
+				production_time,
+			</if>
+			<if test="yield != null">
+				yield,
+			</if>
+			<if test="otherCost != null">
+				other_cost,
+			</if>
+			<if test="materialCost != null">
+				material_cost,
+			</if>			
+			<if test="salePrice != null">
+				sale_price,
+			</if>
+			<if test="profit != null">
+				profit
+			</if>			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="customerCode != null">
+				#{customerCode},
+			</if>
+			<if test="productionLineCode != null">
+				#{productionLineCode},
+			</if>
+			<if test="materialCode != null">
+				#{materialCode},
+			</if>			
+			<if test="productCode != null">
+				#{productCode},
+			</if>
+			<if test="productionTime != null">
+				#{productionTime},
+			</if>
+			<if test="yield != null">
+				#{yield},
+			</if>
+			<if test="otherCost != null">
+				#{otherCost},
+			</if>
+			<if test="materialCost != null">
+				#{materialCost},
+			</if>			
+			<if test="salePrice != null">
+				#{salePrice},
+			</if>
+			<if test="profit != null">
+				#{profit}
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectCapacityStatsDetailByCondition" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT 
+			model.id,model.yield,model.profit,model.production_time,model.sale_price,materinfo.name as
+			materialname,model.material_cost, productinfo.name as productname,cominfo.name as
+			customername,prolineinfo.name as prolinename
+		FROM capacity_stat model
+		
+		LEFT JOIN material_info materinfo ON materinfo.code = model.material_code AND materinfo.language = #{language}	
+		LEFT JOIN product_info productinfo ON productinfo.code = model.product_code AND productinfo.language =  #{language}	
+		LEFT JOIN company_info cominfo ON cominfo.code = model.customer_code AND cominfo.language =  #{language}	
+		LEFT JOIN production_line_info prolineinfo ON prolineinfo.code = model.production_line_code  AND prolineinfo.language =  #{language}	
+		WHERE 1=1			
+		<if test="customerCode != null">
+			AND cominfo.code IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="lineCode != null">
+			AND lineinfo.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="equCode != null">
+			AND equ.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		AND
+		FROM_UNIXTIME(model.production_time / 1000, '%Y-%m-%d%H') &gt;= #{startTime}
+		AND
+		FROM_UNIXTIME(model.production_time / 1000, '%Y-%m-%d%H') &lt;= #{endTime}
+	</select>
+
+	<select id="selectCapacityStatsHourByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.CapacityStat">
+
+		<if test="customerCode == null and lineCode==null and materialCode==null and productCode==null">
+		SELECT FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d %H')
+			`hour`, '' serieName, SUM(cap.yield) AS yield
+			FROM capacity_stat cap
+			WHERE
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d %H')
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000,  '%Y-%m-%d %H')
+				`hour`, ci.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN company_info ci ON cap.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND	FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time  /
+			1000,
+			'%Y-%m-%d %H'),cap.customer_code
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000,  '%Y-%m-%d %H')
+				`hour`, pli.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN production_line_info pli ON
+			cap.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000,
+			'%Y-%m-%d %H'),cap.production_line_code
+		</if>
+		
+		<if test="materialCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000,  '%Y-%m-%d %H')
+				`hour`, materinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN material_info materinfo ON
+			cap.material_code
+			= materinfo.code
+			WHERE materinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND materinfo.language = #{language}
+			AND FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time  / 1000,
+			'%Y-%m-%d %H'),cap.production_line_code
+		</if>
+		
+		<if test="productCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d %H:%i:%s')
+				`hour`, productinfo.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN product_info productinfo ON
+			cap.product_code
+			= productinfo.code
+			WHERE productinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND productinfo.language = #{language}
+			AND FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000,
+			'%Y-%m-%d %H'),cap.production_line_code
+		</if>
+	</select>
+
+
+	<select id="selectCapacityStatsDayByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.CapacityStat">
+		
+		<if test="customerCode == null and lineCode==null and materialCode==null and productCode==null">
+		SELECT FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d')
+			`day`, '' serieName, SUM(cap.yield) AS yield
+			FROM capacity_stat cap
+			WHERE
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d')
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d')
+				`day`, ci.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN company_info ci ON cap.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time/ 1000, '%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000,'%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time  /
+			1000,
+			'%Y-%m-%d'),cap.customer_code
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000,  '%Y-%m-%d')
+				`day`, pli.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN production_line_info pli ON
+			cap.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time/ 1000,'%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000,'%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000,
+			'%Y-%m-%d'),cap.production_line_code
+		</if>
+		
+		<if test="materialCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000, '%Y-%m-%d')
+				`day`, materinfo.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN material_info materinfo ON
+			cap.material_code
+			= materinfo.code
+			WHERE materinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND materinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time/ 1000,'%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000,'%Y-%m-%d')&lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000,
+			'%Y-%m-%d'),cap.production_line_code
+		</if>
+		
+		<if test="productCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time  / 1000,'%Y-%m-%d')
+				`day`, productinfo.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN product_info productinfo ON
+			cap.product_code
+			= productinfo.code
+			WHERE productinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND productinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time/ 1000,'%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000,'%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000,'%Y-%m-%d'),cap.production_line_code
+		</if>
+	</select>
+	<select id="selectCapacityStatsWeekByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.CapacityStat">
+		<if test="customerCode == null and lineCode==null and materialCode==null and productCode==null">
+		SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) `week`, '' serieName, SUM(cap.yield) AS yield
+			FROM capacity_stat cap
+			WHERE
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear} AND 
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startWeek} AND 
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000))
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) `week`,  ci.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN company_info ci ON cap.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear} AND 
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startWeek} AND 
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)),cap.customer_code
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) `week`, pli.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN production_line_info pli ON
+			cap.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear} AND 
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startWeek} AND 
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)),cap.production_line_code
+		</if>
+		
+		<if test="materialCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) `week`,materinfo.name serieName, SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN material_info materinfo ON
+			cap.material_code
+			= materinfo.code
+			WHERE materinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND materinfo.language = #{language}
+			AND
+				FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear} AND 
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startWeek} AND 
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)),cap.material_code
+		</if>
+		
+		<if test="productCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) `week`,  productinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN product_info productinfo ON
+			cap.product_code
+			= productinfo.code
+			WHERE productinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND productinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear} AND 
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startWeek} AND 
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(cap.production_time / 1000)),cap.product_code
+		</if>
+	</select>
+
+	<select id="selectCapacityStatsMonthByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.CapacityStat">
+		
+		<if test="customerCode == null and lineCode==null and materialCode==null and productCode==null">
+		SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(cap.production_time / 1000)) `month`,'' serieName,SUM(cap.yield) AS yield
+			FROM capacity_stat cap
+			WHERE
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(cap.production_time / 1000))
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(cap.production_time / 1000)) `month`,ci.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN company_info ci ON cap.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(cap.production_time / 1000)),cap.customer_code
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(cap.production_time / 1000)) `month`,pli.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN production_line_info pli ON
+			cap.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(cap.production_time / 1000)),cap.production_line_code
+		</if>
+		
+		<if test="materialCode != null">
+			SELECT  FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(cap.production_time / 1000)) `month`,materinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN material_info materinfo ON
+			cap.material_code
+			= materinfo.code
+			WHERE materinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND materinfo.language = #{language}
+			AND FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(cap.production_time / 1000)),cap.material_code
+		</if>
+		
+		<if test="productCode != null">
+			SELECT  FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(cap.production_time / 1000)) `month`,productinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN product_info productinfo ON
+			cap.product_code
+			= productinfo.code
+			WHERE productinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND productinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(cap.production_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(cap.production_time / 1000)),cap.product_code
+		</if>
+	</select>
+
+	<select id="selectCapacityStatsYearByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.CapacityStat">
+			
+		<if test="customerCode == null and lineCode==null and materialCode==null and productCode==null">
+		SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			'' serieName,SUM(cap.yield) AS yield
+			FROM capacity_stat cap
+			WHERE
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time / 1000, '%Y')
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			ci.name as  serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN company_info ci ON cap.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time /1000, '%Y') &gt;= #{startYear}
+			AND FROM_UNIXTIME(cap.production_time /1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time /1000,'%Y')
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			pli.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN production_line_info pli ON
+			cap.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time /1000, '%Y') &gt;= #{startYear}
+			AND FROM_UNIXTIME(cap.production_time /1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time /1000,'%Y')
+		</if>
+		
+		<if test="materialCode != null">
+			SELECT  FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			materinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN material_info materinfo ON
+			cap.material_code
+			= materinfo.code
+			WHERE materinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND materinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time /1000, '%Y') &gt;= #{startYear}
+			AND FROM_UNIXTIME(cap.production_time /1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time /1000,'%Y')
+		</if>
+		
+		<if test="productCode != null">
+			SELECT  FROM_UNIXTIME(cap.production_time / 1000, '%Y') `year`,
+			productinfo.name serieName,SUM(cap.yield) AS yield
+				FROM capacity_stat cap
+			JOIN product_info productinfo ON
+			cap.product_code
+			= productinfo.code
+			WHERE productinfo.code IN
+			<foreach item="item" index="index" collection="materialCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND productinfo.language = #{language}
+			AND
+			FROM_UNIXTIME(cap.production_time /1000, '%Y') &gt;= #{startYear}
+			AND FROM_UNIXTIME(cap.production_time /1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(cap.production_time /1000,'%Y')
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ExaminationTopicDao">
+	<resultMap id="ExaminationTopicMap" type="com.cloudinnov.yun.openapi.model.ExaminationTopic">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="topic" property="topic" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="topic_type" property="topicType" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		
+		<collection property="examinationAnswerList" resultMap="ExaminationAnswerMap"></collection>
+	</resultMap>
+	
+	<resultMap id="ExaminationAnswerMap" type="com.cloudinnov.yun.openapi.model.ExaminationAnswer">
+		<id column="aid" property="aid" jdbcType="INTEGER" />
+		<result column="acode" property="acode" jdbcType="VARCHAR" />
+		<result column="topic_code" property="topicCode" jdbcType="VARCHAR" />
+		<result column="answer" property="answer" jdbcType="VARCHAR" />
+		<result column="correct" property="correct" jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<select id="selectListRandom" parameterType="com.cloudinnov.yun.openapi.model.ExaminationTopic" resultMap="ExaminationTopicMap">
+		     select * from (
+				 select et.*,ea.aid,ea.acode,ea.topic_code,ea.answer,ea.correct
+				 from (select * from examination_topic where type = #{type,jdbcType=INTEGER} 
+				       and status = 1 order by rand() limit #{size,jdbcType=INTEGER}) et 
+				 join examination_answer ea on et.code = ea.topic_code 
+			  ) top  order by top.id 
+	</select>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.ExaminationTopic" resultMap="ExaminationTopicMap">
+		  select et.*,ea.aid,ea.acode,ea.topic_code,ea.answer,ea.correct
+				 from examination_topic et join examination_answer ea on et.code = ea.topic_code 
+				  where et.status = 1 
+				 <if test="type != null">
+				 	and et.type = #{type,jdbcType=INTEGER} 
+				 </if>
+				 <if test="code != null">
+				 	and et.code = #{code,jdbcType=VARCHAR}
+				 </if>
+				 <if test="topicType != null">
+				 	et.topic_type = #{topicType,jdbcType=INTEGER}
+				 </if>
+				 order by et.id
+	</select>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.ExaminationTopic" resultMap="ExaminationTopicMap">
+		select top.*,ea.aid,ea.acode,ea.topic_code,ea.answer,ea.correct from 
+				(select * from examination_topic limit ${index},${size}) top join examination_answer ea 
+				 on top.code = ea.topic_code where top.status = 1
+				 <if test="type != null">
+				 	and top.type = #{type,jdbcType=INTEGER} 
+				 </if>
+				 <if test="code != null">
+				 	and top.code = #{code,jdbcType=VARCHAR}
+				 </if>
+				 <if test="topicType != null">
+				 	top.topic_type = #{topicType,jdbcType=INTEGER}
+				 </if>
+	</select>
+	
+	<select id="selectTopCount" resultType="int">
+		select count(1) from examination_topic where status = 1
+	</select>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ExaminationTopic">
+		insert into examination_topic 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="topic != null">
+				topic,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="topicType != null">
+				topic_type,
+			</if>
+			score,create_time,status
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="topic != null">
+				#{topic,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="topicType != null">
+				#{topicType,jdbcType=INTEGER},
+			</if>
+			1,unix_timestamp(now())*1000,1
+		</trim>
+	</insert>
+	
+	<insert id="saveAnswer" parameterType="com.cloudinnov.yun.openapi.model.ExaminationAnswer">
+		insert into examination_answer 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="acode != null">
+				acode,
+			</if>
+			<if test="topicCode != null">
+				topic_code,
+			</if>
+			<if test="answer != null">
+				answer,
+			</if>
+			<if test="correct != null">
+				correct,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="acode != null">
+				#{acode,jdbcType=VARCHAR},
+			</if>
+			<if test="topicCode != null">
+				#{topicCode,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				#{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="correct != null">
+				#{correct,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="deleteByCode" parameterType="com.cloudinnov.yun.openapi.model.ExaminationTopic">
+		update examination_topic set status = 9 where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

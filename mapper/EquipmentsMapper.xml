@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EquipmentsDao">
+      <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+        <property name="timeToIdleSeconds" value="120" /><!--超过2分钟未访问缓存失效 -->
+        <property name="timeToLiveSeconds" value="600" /><!--缓存最多可以存活10分钟 -->
+        <property name="maxEntriesLocalHeap" value="1000" />
+        <property name="maxEntriesLocalDisk" value="10000000" />
+        <property name="memoryStoreEvictionPolicy" value="LRU" />
+    </cache>
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="string" type="java.lang.String">
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber"
+			jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="place_of_origin" property="placeOfOrigin"
+			jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="production_date" property="productionDate"
+			jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="purchase_date" property="purchaseDate"
+			jdbcType="VARCHAR" />
+		<result column="guarantee_begin_date" property="guaranteeBeginDate"
+			jdbcType="VARCHAR" />
+		<result column="warranty_period" property="warrantyPeriod"
+			jdbcType="INTEGER" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="oem_person_name" property="oemPersonName"
+			jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="supplier_person_name" property="supplierPersonName"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName"
+			jdbcType="VARCHAR" />
+		<result column="customer_phone" property="customerPhone"
+			jdbcType="VARCHAR" />
+		<result column="customer_person_name" property="customerPersonName"
+			jdbcType="VARCHAR" />
+		<result column="current_state" property="currentState"
+			jdbcType="INTEGER" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="qrUrl" property="qrUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="modelname" property="modelName" jdbcType="VARCHAR" />
+		<result column="trans_code" property="transCode" jdbcType="INTEGER" />
+		<result column="beginTime" property="beginTime" jdbcType="INTEGER" />
+		<result column="comcode" property="company.code" jdbcType="INTEGER" />
+		<result column="comname" property="company.name" jdbcType="VARCHAR" />
+		<result column="agentname" property="agentName" jdbcType="VARCHAR" />
+		<result column="agentcode" property="agentCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.EquipmentAttr" id="attrsMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="attrtype" property="attrtype" jdbcType="INTEGER"/>
+		<result column="attrname" property="attrname" jdbcType="VARCHAR"/>
+		<result column="attrvalue" property="attrvalue" jdbcType="VARCHAR"/>
+		<result column="attrunit" property="attrunit" jdbcType="VARCHAR"/>
+		<result column="attr_order" property="attrOrder" jdbcType="VARCHAR"/>
+		<result column="attrorigin" property="attrorigin" jdbcType="VARCHAR"/>
+		<result column="attrspec" property="attrspec" jdbcType="VARCHAR"/>
+		<result column="time" property="time" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="year" property="year" jdbcType="INTEGER"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, customer_code, code, name, serial_number,
+		category_code,trans_code,
+		category_name, brand,
+		model, place_of_origin, image_url,
+		oem_code, oem_name, production_date,
+		supplier_code,
+		supplier_name,
+		purchase_date, guarantee_begin_date, warranty_period, oem_person,
+		supplier_person, customer_person, country, province, city,
+		location,current_state,
+		status, comment,
+		create_time, last_update_time
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		insert into equipment
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="serialNumber != null">
+				serial_number,
+			</if>
+			<if test="categoryCode != null">
+				category_code,
+			</if>
+
+			<if test="oemCode != null">
+				oem_code,
+			</if>
+			<if test="productionDate != null">
+				production_date,
+			</if>
+			<if test="supplierCode != null">
+				supplier_code,
+			</if>
+			<if test="supplierName != null">
+				supplier_name,
+			</if>
+			<if test="purchaseDate != null">
+				purchase_date,
+			</if>
+			<if test="guaranteeBeginDate != null">
+				guarantee_begin_date,
+			</if>
+			<if test="warrantyPeriod != null">
+				warranty_period,
+			</if>
+			<if test="oemPerson != null">
+				oem_person,
+			</if>
+			<if test="supplierPerson != null">
+				supplier_person,
+			</if>
+			<if test="customerPerson != null">
+				customer_person,
+			</if>
+			<if test="currentState != null">
+				current_state,
+			</if>
+			<if test="imageUrl != null">
+				image_url,
+			</if>
+
+			<if test="location != null">
+				location,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime !=null">
+			create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				#{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryCode != null">
+				#{categoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productionDate != null">
+				#{productionDate,jdbcType=DATE},
+			</if>
+			<if test="supplierCode != null">
+				#{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierName != null">
+				#{supplierName,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseDate != null">
+				#{purchaseDate,jdbcType=DATE},
+			</if>
+			<if test="guaranteeBeginDate != null">
+				#{guaranteeBeginDate,jdbcType=DATE},
+			</if>
+			<if test="warrantyPeriod != null">
+				#{warrantyPeriod,jdbcType=INTEGER},
+			</if>
+			<if test="oemPerson != null">
+				#{oemPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierPerson != null">
+				#{supplierPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="customerPerson != null">
+				#{customerPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="currentState != null">
+				#{currentState,jdbcType=INTEGER},
+			</if>
+			<if test="imageUrl != null">
+				#{imageUrl,jdbcType=DATE},
+			</if>
+
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime !=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		insert into equipment_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="brand != null">
+				brand,
+			</if>
+			<if test="model != null">
+				model,
+			</if>
+			<if test="categoryName != null">
+				category_name,
+			</if>
+			<if test="placeOfOrigin != null">
+				place_of_origin,
+			</if>
+			<if test="country != null">
+				country,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="qrUrl != null">
+				image_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="brand != null">
+				#{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				#{model,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryName != null">
+				#{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="placeOfOrigin != null">
+				#{placeOfOrigin,jdbcType=VARCHAR},
+			</if>
+
+			<if test="country != null">
+				#{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=DATE},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=DATE},
+			</if>
+			<if test="qrUrl != null">
+				#{qrUrl},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		update equipment
+		<set>
+			<if test="transCode != null">
+				trans_code = #{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				serial_number = #{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="categoryCode != null">
+				category_code = #{categoryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="productionDate != null">
+				production_date = #{productionDate,jdbcType=DATE},
+			</if>
+			<if test="supplierCode != null">
+				supplier_code = #{supplierCode,jdbcType=VARCHAR},
+			</if>
+			<if test="purchaseDate != null">
+				purchase_date = #{purchaseDate,jdbcType=DATE},
+			</if>
+			<if test="guaranteeBeginDate != null">
+				guarantee_begin_date =
+				#{guaranteeBeginDate,jdbcType=DATE},
+			</if>
+			<if test="warrantyPeriod != null">
+				warranty_period = #{warrantyPeriod,jdbcType=INTEGER},
+			</if>
+			<if test="oemPerson != null">
+				oem_person = #{oemPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="supplierPerson != null">
+				supplier_person = #{supplierPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="customerPerson != null">
+				customer_person = #{customerPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="imageUrl != null and imageUrl!=''">
+				image_url = #{imageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="currentState != null">
+				current_state = #{currentState,jdbcType=VARCHAR},
+			</if>
+
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+		update equipment_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="brand != null">
+				brand = #{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				model = #{model,jdbcType=VARCHAR},
+			</if>
+			<if test="placeOfOrigin != null">
+				place_of_origin = #{placeOfOrigin,jdbcType=VARCHAR},
+			</if>
+
+			<if test="categoryName != null">
+				category_name = #{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType = VARCHAR}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		update equipment_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="brand != null">
+				brand = #{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="model != null">
+				model = #{model,jdbcType=VARCHAR},
+			</if>
+			<if test="placeOfOrigin != null">
+				place_of_origin = #{placeOfOrigin,jdbcType=VARCHAR},
+			</if>
+
+			<if test="categoryName != null">
+				category_name = #{categoryName,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType = VARCHAR}
+	</update>
+
+	<update id="updateCurrentStateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		update equipment
+		<set>
+			<if test="currentState != null">
+				current_state = #{currentState,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+
+	</update>
+
+	<update id="deleteByCondition">
+		update equipment
+		set
+		status = 9
+		where code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		SELECT
+		e.customer_code, e.code, e.serial_number,
+		e.image_url,ei.image_url qrUrl,
+		e.oem_code, e.production_date,
+		e.purchase_date,
+		e.guarantee_begin_date, e.warranty_period,
+		e.oem_person, e.customer_person,trans_code,
+		(select name from transformer where code=trans_code) transName,
+		e.location,e.current_state,e.category_code,
+
+		ei.name,ei.language,ei.brand,ei.model,ei.place_of_origin,ei.country,ei.province,ei.city,ei.comment,eci.name
+		AS category_name,emi.name AS modelname,
+		c.telephone as
+		customer_phone,attach.url AS qrUrl
+		FROM equipment e
+		LEFT JOIN
+		equipment_info ei ON e.code = ei.code 
+		LEFT JOIN company_info ci on ci.code = e.customer_code 
+		LEFT
+		JOIN company c on c.code = e.customer_code 
+		LEFT JOIN attach attach ON
+		attach.object_code = e.code AND attach.type='equipment'
+
+		LEFT JOIN equipments_category ec on ec.code = e.category_code
+		LEFT JOIN
+		equipments_category_info eci on eci.code = ec.code 
+		LEFT JOIN equipment_model em on em.equipment_category_code = ec.code 
+		AND em.code = ei.model
+		LEFT JOIN equipment_model_info emi on emi.code = em.code 
+		WHERE
+		e.status = 1
+		AND e.code =
+		#{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		e.*,ei.name,ei.language,ei.brand,ei.model,ei.place_of_origin,ei.country,ei.province,ei.city,ei.comment,cominfo.code
+		as comcode,cominfo.name as comname,trans_code,ei.image_url qrUrl,
+		(select group_concat(language
+		SEPARATOR ',') as languages
+		FROM
+		equipment_info
+		WHERE code = e.code group
+		by code) languages,
+		(select
+		name from company_info where code
+		=e.oem_code and `language` =
+		ei.`language`) as oem_name,
+		(select
+		name
+		from company_info where code
+		=e.supplier_code and `language` =
+		ei.`language`) as supplier_name,
+		(select name from auth_user_info where
+		code = e.oem_person and
+		`language` = ei.`language`) as oem_person_name,
+		(select name from
+		auth_user_info where code = e.supplier_person and
+		`language` =
+		ei.`language`) as supplier_person_name,
+		(select name from
+		auth_user_info where code = e.customer_person and
+		`language` =
+		ei.`language`) as customer_person_name
+		FROM
+		equipment e
+		LEFT JOIN
+		equipment_info ei ON e.code = ei.code AND
+		ei.language=#{language,jdbcType=VARCHAR}
+		LEFT JOIN company com ON
+		e.customer_code = com.code
+		LEFT JOIN company_info cominfo ON
+		cominfo.code = com.code AND
+		cominfo.language=#{language,jdbcType=VARCHAR}
+		WHERE
+		e.status = 1
+		<if test="proLineCode != null and proLineCode!=''">
+			AND prolineequ.status = 1
+		</if>
+		<if test="customerCode != null">
+			AND e.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="code != null">
+			AND e.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND ei.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="serialNumber != null">
+			AND e.serial_number = #{serialNumber,jdbcType=VARCHAR}
+		</if>
+		<if test="categoryCode != null and id!=null">
+			AND e.category_code in(select code from equipments_category where type in(${categoryCode})) 
+		</if>
+		<if test="categoryCode != null and id==null">
+			AND e.category_code = #{categoryCode,jdbcType=VARCHAR}
+		</if>
+		<if test="categoryName != null">
+			AND e.category_name = #{categoryName,jdbcType=VARCHAR}
+		</if>
+		<if test="brand != null">
+			AND ei.brand = #{brand,jdbcType=VARCHAR}
+		</if>
+		<if test="model != null">
+			AND ei.model = #{model,jdbcType=VARCHAR}
+		</if>
+		<if test="placeOfOrigin != null">
+			AND ei.place_of_origin = #{placeOfOrigin,jdbcType=VARCHAR}
+		</if>
+		<if test="imageUrl != null">
+			AND e.image_url = #{imageUrl,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode != null">
+			AND e.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="proLineCode != null">
+			AND prolineequ.production_line_code =
+			#{proLineCode,jdbcType=VARCHAR}
+			AND prolineequ.customer_code =
+			e.customer_code
+		</if>
+		<if test="productionDate != null">
+			AND e.production_date = #{productionDate,jdbcType=DATE}
+		</if>
+		<if test="supplierCode != null">
+			AND e.supplier_code = #{supplierCode,jdbcType=VARCHAR}
+		</if>
+		<if test="supplierName != null">
+			AND e.supplier_name = #{supplierName,jdbcType=VARCHAR}
+		</if>
+		<if test="purchaseDate != null">
+			AND e.purchase_date = #{purchaseDate,jdbcType=DATE}
+		</if>
+		<if test="transCode != null">
+			AND e.trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="guaranteeBeginDate != null">
+			AND e.guarantee_begin_date =
+			#{guaranteeBeginDate,jdbcType=DATE}
+		</if>
+		<if test="warrantyPeriod != null">
+			AND e.warranty_period = #{warrantyPeriod,jdbcType=INTEGER}
+		</if>
+		<if test="oemPerson != null">
+			AND e.oem_person = #{oemPerson,jdbcType=VARCHAR}
+		</if>
+		<if test="supplierPerson != null">
+			AND e.supplier_person = #{supplierPerson,jdbcType=VARCHAR}
+		</if>
+		<if test="customerPerson != null">
+			AND e.customer_person = #{customerPerson,jdbcType=VARCHAR}
+		</if>
+		<if test="country != null">
+			AND ei.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null">
+			AND ei.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null">
+			AND ei.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="location != null">
+			AND e.location = #{location,jdbcType=VARCHAR}
+		</if>
+		<if test="comment != null">
+			AND ei.comment = #{comment,jdbcType=VARCHAR}
+		</if>
+		<if test="currentStates != null and currentStates !=''">
+			AND
+			<foreach collection="currentStates" item="item" separator="OR">
+				find_in_set(#{item},e.current_state)
+			</foreach>
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		order by order_id
+	</select>
+
+
+	<select id="selectEquipmentListWhere" parameterType="com.cloudinnov.yun.openapi.model.Equipments"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from equipment
+		<where>
+			<if test="code!=null and code!='' ">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="name!=null and name!='' ">
+				name = #{name,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="listByCustomer" resultMap="BaseResultMap">
+		SELECT info.name,e.image_url,e.code,e.current_state,info.image_url qrUrl
+		FROM equipment e
+		JOIN company c ON c.code=e.customer_code
+		JOIN equipment_info info ON
+		info.code= e.`code`
+		WHERE e.status = 1 AND
+		info.language=
+		#{language,jdbcType=VARCHAR}
+		<if test="customerCode!=null and customerCode!='' ">
+			AND e.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+<select id="listByEquipments"   parameterType="string" resultMap="BaseResultMap">
+			SELECT
+			info. NAME,
+			e.trans_code,
+			(select name from company_info where code=e.customer_code)customer_name,
+			(select name from transformer where code=e.trans_code) AS customerPersonName,
+			(select attrvalue from equipment_attr where code=e.code and attrname='出厂日期')createTime,
+			info.brand,
+			info.model,
+			info.place_of_origin,
+			info.category_name,
+			(select FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') from transformer where code=e.trans_code) AS beginTime,
+			e.warranty_period AS warrantyPeriod,
+			e.status			
+			FROM
+				equipment e
+			JOIN equipment_info info ON info. CODE = e.`code`
+			WHERE
+			e.`status`=1 and  e.`trans_code` =#{code,jdbcType=VARCHAR}
+			ORDER BY
+				`name`
+</select>
+	<select id="listByCustomers" resultMap="BaseResultMap">
+		SELECT info.name,e.image_url,e.code,e.current_state,ci.name as
+		customer_name,info.image_url qrUrl
+		FROM
+		equipment e
+		JOIN company_info ci ON
+		ci.code=e.customer_code
+		JOIN
+		equipment_info info ON
+		info.code= e.`code`
+		WHERE e.status = 1 AND
+		info.language=
+		#{language,jdbcType=VARCHAR}
+		and
+		ci.language=#{language,jdbcType=VARCHAR}
+		AND e.customer_code IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectEquStateListByCustomCode" resultMap="BaseResultMap">
+		SELECT
+		e.code,e.current_state,info.image_url qrUrl,info.name
+		FROM equipment e
+		JOIN company c ON
+		c.code=e.customer_code
+		JOIN
+		equipment_info info ON info.code= e.`code`
+		WHERE
+		info.language= #{language,jdbcType=VARCHAR}
+		<if test="oemCode!=null and oemCode!='' ">
+			AND e.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode!=null and customerCode!='' ">
+			AND e.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="currentState!=null ">
+			AND e.current_state = #{currentState,jdbcType=INTEGER}
+		</if>
+	</select>
+
+
+	<select id="selectCustomerCodeByEquipmentCode" resultMap="string">
+		select
+		customer_code from equipment
+		where code =
+		#{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="search" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		models.*,info.language,info.name,info.brand,info.model,<!-- infoc.name category_name, -->info.place_of_origin,info.country,info.province,info.city,info.comment,
+		(select name from transformer where code = models.trans_code ) as transName,info.image_url qrUrl,
+		(select coi.name from company co,company_info coi where co.code=coi.code and co.code=models.customer_code) as customer_person_name
+		,(select au.name from auth_user_info au where au.code = models.customer_person) as customer_name,
+		(select group_concat(language SEPARATOR ',') as languages
+		FROM
+		equipment_info
+		WHERE code = models.code group by code) languages
+		FROM equipment models
+		JOIN
+		equipment_info info ON info.code =
+		models.code
+	   <!--  join 
+	    equipments_category_info infoc on infoc.code = 
+	    models.category_code -->
+		WHERE models.status = 1
+		<!-- AND models.oem_code = #{oemCode,jdbcType=VARCHAR} -->
+		AND info.language ='cn' 
+		<if test="country != null and country !=''">
+			and info.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			and info.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			and info.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="brand != null and brand != ''">
+			and info.brand = #{brand,jdbcType=VARCHAR}
+		</if>
+		<if test="categoryCode != null and categoryCode != ''">
+			and models.category_code =
+			#{categoryCode,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode != null and customerCode != ''">
+			and models.customer_code =
+			#{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name != ''">
+			AND info.name like CONCAT('%',#{name,jdbcType = VARCHAR},'%')
+		</if>
+		<if test="currentState != null and currentState != ''">
+			AND models.current_state = #{currentState,jdbcType=INTEGER}
+		</if>
+		<!-- <if test="type != null and type != ''">
+			AND models.type = #{type,jdbcType=INTEGER}
+		</if> -->
+		<if test="transCode != null and transCode != 'null' and transCode != ''">
+			AND models.trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY models.current_state DESC
+	</select>
+
+	<select id="selectEquipmentsByUser" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		SELECT
+		model.*,info.*,info.image_url qrUrl,cominfo.code as
+		comcode,cominfo.name as comname
+		FROM equipment model
+		JOIN equipment_info
+		info ON info.code = model.code
+		JOIN company_info cominfo ON
+		cominfo.code = model.customer_code
+		WHERE
+		find_in_set(#{customerPerson,jdbcType=VARCHAR},model.customer_person)
+		AND info.language = #{language,jdbcType=VARCHAR}
+		AND cominfo.language =
+		#{language,jdbcType=VARCHAR}
+		AND model.status = 1
+		ORDER BY
+		model.current_state
+	</select>
+
+
+
+	<select id="selectEquipmentListByOemCode" resultMap="int">
+		SELECT
+		count(1)
+		FROM equipment e
+		JOIN company c ON c.code =
+		e.customer_code
+		WHERE e.status = 1
+		AND c.status = e.status
+		<if test="oemCode != null and oemCode != ''">
+			AND e.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode != null and integratorCode != ''">
+			AND c.integrator_code = #{integratorCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="selectEquipmentsStateByCondition" resultMap="int"
+		parameterType="com.cloudinnov.yun.openapi.model.Company">
+		SELECT
+		COUNT(0)
+		FROM equipment model
+		JOIN company com ON com.code =
+		model.customer_code
+		WHERE
+		model.status = 1
+		AND model.current_state =
+		#{currentState,jdbcType=INTEGER}
+		<if test="oemCode != null and oemCode != ''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode != null and agentCode != ''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="listEquipment" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		SELECT e.code,ei.name
+		FROM equipment e
+		LEFT JOIN equipment_info ei ON ei.code = e.code
+		WHERE e.status = 1 
+	</select>
+	
+	<select id="selectListByTrans" parameterType="com.cloudinnov.yun.openapi.model.Equipments" resultType="java.util.Map">
+		select 		e.code,
+					(select type from equipments_category ec where ec.code=e.category_code) etype,
+				     ei.name ename,1 status,ei.image_url qrUrl,
+				     e.image_url elogo,
+				     (select id from workplan where code = #{proLineCode,jdbcType=VARCHAR}) number,
+  		   			(select create_time from workplan where code = #{proLineCode,jdbcType=VARCHAR}) provisionTime 
+					 from equipment e left join equipment_info ei on e.code=ei.code
+					where trans_code=#{transCode,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectListByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select e.*,ei.name,ei.image_url qrUrl,
+		status  
+		 from equipment e,equipment_info ei 
+		where e.code=ei.code 
+		  and trans_code=#{transCode,jdbcType=VARCHAR} 
+		  and status!=9
+		  <if test="pageIndex != null and pageSize != null">
+		  	 limit #{pageIndex},#{pageSize}
+		  </if>
+		  <if test="name != null">
+		  	and substring_index(ei.name,'_',1) = #{name} limit 0,1
+		  </if>
+	</select>
+	
+	
+	<select id="selectEquipmentTotalByCustomerCode" resultType="Integer"
+		parameterType="java.lang.String">
+		SELECT
+		count(1) from equipment
+		WHERE status = 1
+		<if test="_parameter != null">
+			AND customer_code = #{_parameter,jdbcType=VARCHAR}
+		</if>
+	</select>
+		<select id="listByEquipmentBoms" resultMap="BaseResultMap">
+		SELECT
+		count(1) from equipment
+		WHERE status = 1
+		<if test="_parameter != null">
+			AND customer_code = #{_parameter,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="listAttrs" parameterType="com.cloudinnov.yun.openapi.model.Equipments" resultMap="attrsMap">
+		select * from equipment_attr where code = #{code,jdbcType=VARCHAR} and attrtype=#{attrType,jdbcType=INTEGER}
+	</select>
+	
+	<select id="getTransCapacity" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="int">
+		select sum(ifnull(ea.attrvalue,0)) from equipment_attr ea 
+			join equipment e on ea.code=e.code 
+			join equipment_info ei on e.code=ei.code
+			join transformer t on e.trans_code = t.code 
+		where t.code=#{code,jdbcType=VARCHAR} and ea.attrname='额定容量'
+	</select>
+		
+	<insert id="insertAttr" parameterType="com.cloudinnov.yun.openapi.model.EquipmentAttr">
+		insert into equipment_attr 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="attrtype != null">
+				attrtype,
+			</if>
+			<if test="attrname != null">
+				attrname,
+			</if>
+			<if test="attrvalue != null">
+				attrvalue,
+			</if>
+			<if test="attrunit != null">
+				attrunit,
+			</if>
+			<if test="attrOrder != null">
+				attr_order,
+			</if>
+			<if test="attrorigin != null">
+				attrorigin,
+			</if>
+			<if test="attrspec != null">
+				attrspec,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="attrtype != null">
+				#{attrtype,jdbcType=INTEGER},
+			</if>
+			<if test="attrname != null">
+				#{attrname,jdbcType=VARCHAR},
+			</if>
+			<if test="attrvalue != null">
+				#{attrvalue,jdbcType=VARCHAR},
+			</if>
+			<if test="attrunit != null">
+				#{attrunit,jdbcType=VARCHAR},
+			</if>
+			<if test="attrOrder != null">
+				#{attr_order,jdbcType=INTEGER},
+			</if>
+			<if test="attrorigin != null">
+				#{attrorigin,jdbcType=VARCHAR},
+			</if>
+			<if test="attrspec != null">
+				#{attrspec,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="listByTransCode" parameterType="string" resultMap="attrsMap">
+		SELECT * FROM equipment_attr ea 
+		JOIN equipment e ON e.`code`=ea.`code`
+		WHERE ea.`attrtype`=1 AND e.`trans_code`=#{code,jdbcType=VARCHAR}
+	</select>
+	<select id="findByTransCode" parameterType="com.cloudinnov.yun.openapi.model.Equipments" resultMap="BaseResultMap">
+	select e.*,ei.name,ei.language,ei.brand,ei.model,ei.place_of_origin,ei.country,ei.province,ei.city,ei.comment,trans_code,ei.image_url qrUrl from equipment e
+	join equipment_info ei on e.code=ei.code
+	<if test="transCode !=null">
+	where e.trans_code=#{transCode,jdbcType=VARCHAR}
+	</if>
+	</select>
+	
+	<select id="getTransCodeByEquipmentCode" parameterType="string" resultType="string">
+		select trans_code from equipment where code = #{_parameter,jdbcType=VARCHAR}
+	</select>
+</mapper>

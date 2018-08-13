@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AlarmWorkOrdersDao">
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+
+	<resultMap id="string" type="java.lang.String">
+	</resultMap>
+	<resultMap id="AlarmResultMap" type="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="fault_channel_code" property="faultChannelCode"
+			jdbcType="VARCHAR" />
+		<result column="fault_code" property="faultCode" jdbcType="VARCHAR" />
+		<result column="first_time" property="firstTime" jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+		<result column="is_create_order" property="isCreateOrder" jdbcType="INTEGER" />
+		<result column="em_group_id" property="emGroupId" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="padding_by" property="paddingBy" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="handing_suggestion" property="handingSuggestion"
+			jdbcType="LONGVARCHAR" />
+
+		<result column="equcode" property="equipment.code" jdbcType="VARCHAR" />
+		<result column="equname" property="equipment.name" jdbcType="VARCHAR" />
+		<result column="imageurl" property="equipment.imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="faultCount" property="faultCount"
+			jdbcType="INTEGER" />
+
+
+		<result column="comcode" property="company.code" jdbcType="VARCHAR" />
+		<result column="comname" property="company.name" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="fault_channel_code" property="faultChannelCode"
+			jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="fault_code" property="faultCode" jdbcType="VARCHAR" />
+		<result column="first_time" property="firstTime" jdbcType="VARCHAR" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="count" property="count" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+		<result column="padding_by" property="paddingBy" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="handing_suggestion" property="handingSuggestion"
+			jdbcType="LONGVARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="em_group_id" property="emGroupId" jdbcType="VARCHAR" />
+		
+		<collection property="company" resultMap="ComResultMap" />
+		<collection property="equipment" resultMap="EquResultMap" />
+		<collection property="productline" resultMap="LineResultMap" />
+	</resultMap>
+
+
+	<resultMap id="LineResultMap" type="com.cloudinnov.yun.openapi.model.ProductionLines">
+
+		<result column="linecode" property="code" jdbcType="VARCHAR" />
+		<result column="linename" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="ComResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="comcode" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="comname" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<resultMap id="EquResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<result column="equcode" property="code" jdbcType="VARCHAR" />
+		<result column="equname" property="name" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber"
+			jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="place_of_origin" property="placeOfOrigin"
+			jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="production_date" property="productionDate"
+			jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="purchase_date" property="purchaseDate"
+			jdbcType="VARCHAR" />
+		<result column="guarantee_begin_date" property="guaranteeBeginDate"
+			jdbcType="VARCHAR" />
+		<result column="warranty_period" property="warrantyPeriod"
+			jdbcType="INTEGER" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, customer_code, equipment_code,language,
+		fault_channel_code, fault_code,
+		first_time,
+		count, status,order_status,
+		padding_by, comment, create_time,
+		last_update_time,description,
+		handing_suggestion,level,type,em_group_id
+	</sql>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		insert into alarm_work_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code,
+			</if>
+			<if test="faultChannelCode != null">
+				fault_channel_code,
+			</if>
+			<if test="faultCode != null">
+				fault_code,
+			</if>
+			<if test="firstTime != null">
+				first_time,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="status != null ">
+				status,
+			</if>
+			<if test="orderStatus != null">
+				order_status,
+			</if>
+			<if test="paddingBy != null">
+				padding_by,
+			</if>
+			<!-- <if test="ignoreStatus != null">
+				ignore_status,
+			</if> -->
+			<if test="level != null">
+				level,
+			</if>
+			<if test="emGroupId != null">
+				em_group_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="faultChannelCode != null">
+				#{faultChannelCode,jdbcType=VARCHAR},
+			</if>
+			<if test="faultCode != null">
+				#{faultCode,jdbcType=VARCHAR},
+			</if>
+			<if test="firstTime != null">
+				#{firstTime,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="orderStatus != null">
+				#{orderStatus,jdbcType=INTEGER},
+			</if>
+			<if test="paddingBy != null">
+				#{paddingBy,jdbcType=VARCHAR},
+			</if>
+			<if test="emGroupId != null">
+				#{emGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		insert into alarm_work_order_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="handingSuggestion != null">
+				handing_suggestion,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="handingSuggestion != null">
+				#{handingSuggestion,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		update alarm_work_order
+		<set>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="faultChannelCode != null">
+				fault_channel_code =
+				#{faultChannelCode,jdbcType=VARCHAR},
+			</if>
+			<if test="faultCode != null">
+				fault_code = #{faultCode,jdbcType=VARCHAR},
+			</if>
+			<if test="firstTime != null">
+				first_time = #{firstTime,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus,jdbcType=INTEGER},
+			</if>
+			<if test="paddingBy != null">
+				padding_by = #{paddingBy,jdbcType=VARCHAR},
+			</if>
+			<if test="emGroupId != null">
+				em_group_id = #{emGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=INTEGER},
+			</if>
+			last_update_time = #{lastUpdateTime,jdbcType=VARCHAR}
+		</set>
+		where code = #{code,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateCountByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		update alarm_work_order
+		<set>
+			count = count+1
+		</set>
+		where code = #{code,jdbcType=INTEGER} AND fault_channel_code =
+		#{faultChannelCode,jdbcType=INTEGER}
+	</update>
+
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		update
+		alarm_work_order
+		set status = 9 where code = #{code,jdbcType=VARCHAR}
+	</update>
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		SELECT
+		alarm.code,alarm.order_status,alarm.last_update_time,alarm.em_group_id
+		FROM
+		alarm_work_order alarm
+
+		WHERE
+		alarm.status = 1
+		AND alarm.code = #{code,jdbcType=VARCHAR}
+	</select>
+
+
+
+	<select id="selectOrderStatusByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders"
+		resultMap="AlarmResultMap">
+		SELECT
+			model.code, model.customer_code, model.equipment_code,
+			model.fault_channel_code,model.last_update_time,
+			model.fault_code,
+			model.first_time,model.status,model.order_status,model. padding_by,model.em_group_id,
+			info.comment,
+			model.create_time,model.level,
+			model.last_update_time,info.description, info.handing_suggestion,
+			equ.name as equname,
+			fault.type
+		FROM
+		alarm_work_order model
+		LEFT JOIN alarm_work_order_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = model.fault_code
+		JOIN company com ON model.customer_code = com.code	
+		LEFT JOIN equipment_info equ ON equ.code = model.equipment_code AND equ.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		model.status = 1
+		AND com.status = 1 
+		<if test="code!=null and code!='' ">
+			AND model.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode!=null and oemCode!='' ">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode!= null and equipmentCode!= '' ">
+			AND model.equipment_code =
+			#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null ">
+			AND model.order_status = #{orderStatus,jdbcType=INTEGER}
+		</if>
+		<if test="customerCode != null ">
+			AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="paddingBy != null ">
+			AND
+			find_in_set(#{paddingBy,jdbcType=VARCHAR},model.padding_by)
+		</if>
+		GROUP BY model.code
+	</select>
+
+	<select id="selectMapByCondition" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		SELECT
+			alarm.code ,alarm.fault_code AS fcode ,alarm.fault_channel_code,alarm.count,
+			alarm.fault_channel_code AS channelcode,alarm.level,
+			alarm.last_update_time,info.description,info.handing_suggestion,
+			alarm.first_time AS firstTime,alarm.status,alarm.order_status AS
+			orderStatus,alarm.padding_by,alarm.em_group_id,
+			info.comment,alarm.last_update_time,
+			equ.name,equ.code as
+			equcode,equmodel.image_url,equ.model,
+			equmodel.oem_person AS oems,
+			equmodel.supplier_person AS suppliers,
+			equmodel.customer_person AS customers,
+			equmodel.production_date AS productionDate,
+			equmodel.warranty_period AS warrantyPeriod,
+			equmodel.current_state AS currentState,
+			equmodel.guarantee_begin_date AS guaranteeBeginDate,
+			equ.brand AS brand,equ.place_of_origin AS placeOfOrigin,
+			com.name AS comname,com.code AS comcode,
+			fault.type
+		FROM
+		alarm_work_order alarm
+		LEFT JOIN alarm_work_order_info info ON info.code = alarm.code   AND info.language = #{language,jdbcType=VARCHAR} 
+		JOIN equipment_fault_channel channel ON channel.code = alarm.fault_channel_code
+		JOIN fault_code fault ON fault.fault_code = alarm.fault_code AND fault.library_code = channel.library_code
+		LEFT JOIN equipment AS equmodel ON equmodel.code = alarm.equipment_code
+		LEFT JOIN equipment_info AS equ ON equ.code = equmodel.code AND equ.language = #{language,jdbcType=VARCHAR}		
+		LEFT JOIN company_info AS com ON alarm.customer_code = com.code  AND com.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE
+		alarm.code = #{code,jdbcType=VARCHAR}
+		
+		AND channel.`status` =1 
+		
+		AND fault.`status` =1 
+
+	</select>
+	<select id="selectListProLineByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders"
+		resultMap="BaseResultMap">
+		SELECT
+		alarm.id,alarm.code,alarm.last_update_time,info.description,info.handing_suggestion,alarm.fault_code,alarm.first_time,alarm.level,
+		equ.name as equname,eq.image_url,cominfo.name as
+		comname,alarm.status,alarm.order_status,prolineinfo.code as
+		linecode,prolineinfo.name as linename,fault.type
+		FROM
+		alarm_work_order alarm
+		LEFT
+		JOIN
+		alarm_work_order_info info ON info.code = alarm.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = alarm.fault_code
+		LEFT JOIN company_info AS cominfo ON alarm.customer_code = cominfo.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		JOIN company AS com ON com.code = cominfo.code
+		LEFT JOIN equipment_info as equ on alarm.equipment_code = equ.code AND equ.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN equipment as eq on alarm.equipment_code = eq.code
+		LEFT JOIN production_line_equipment as proline on proline.equipment_code = equ.code
+		LEFT JOIN production_line_info as prolineinfo on prolineinfo.code = proline.production_line_code AND prolineinfo.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE 1=1
+		<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode != null and customerCode !=''">
+			AND com.code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+
+		AND
+		alarm.status=1
+		ORDER BY
+		alarm.order_status,
+		alarm.create_time desc
+	</select>
+
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders"
+		resultMap="BaseResultMap">
+		SELECT
+		alarm.id,alarm.code,alarm.last_update_time,info.description,info.handing_suggestion,alarm.fault_code,alarm.first_time,alarm.level,alarm.em_group_id,
+		equ.name as equname,eq.image_url,eq.code as equcode,cominfo.name as
+		comname,cominfo.code as comcode,alarm.status,alarm.order_status,fault.type
+		FROM
+		alarm_work_order alarm
+		LEFT JOIN alarm_work_order_info info ON info.code = alarm.code AND info.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN company_info AS cominfo ON alarm.customer_code = cominfo.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		JOIN company AS com ON com.code = cominfo.code
+		LEFT JOIN equipment AS eq ON eq.code = alarm.equipment_code
+		LEFT JOIN equipment_info as equ on alarm.equipment_code = equ.code AND equ.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = alarm.fault_code
+		WHERE 1=1
+		<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode != null and customerCode !=''">
+			AND com.code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="paddingBy != null and paddingBy  !=''">
+			AND
+			find_in_set(#{paddingBy,jdbcType=VARCHAR},alarm.padding_by)
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND alarm.order_status = #{orderStatus,jdbcType=VARCHAR}
+		</if>
+	<!-- 	<if test="ignoreStatus != null">
+			AND alarm.ignore_status = #{ignoreStatus,jdbcType=INTEGER}
+		</if> -->
+		AND
+		alarm.status=1
+		GROUP BY alarm.code
+		ORDER BY
+		alarm.order_status,
+		alarm.create_time desc
+	</select>
+	<select id="selectWorkOrdersTotalByCustomerCode" resultMap="int"
+		parameterType="java.lang.String">
+		SELECT
+		count(1) from alarm_work_order
+		where status = 1 and
+		customer_code = #{0}
+	</select>
+	<select id="selectUndoneWorkOrdersTotalByOemCode" resultMap="int"
+		parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		SELECT
+		count(1) from alarm_work_order awo
+		JOIN company c ON
+		awo.customer_code = c.code
+		LEFT JOIN alarm_work_order_info info ON
+		info.code = awo.code AND info.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		awo.status = 1
+		AND
+		awo.order_status= '0'
+		<if test="oemCode!=null and oemCode!='' ">
+			AND c.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode!=null and agentCode!='' ">
+			AND c.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		AND c.type = 'customer'
+	</select>
+
+	<select id="search" resultMap="BaseResultMap">
+		SELECT
+			alarm.id,alarm.code,alarm.last_update_time,info.description,info.handing_suggestion,alarm.first_time,alarm.level,alarm.em_group_id,
+			alarm.fault_code,alarm.order_status,
+			equ.name as equname,eq.image_url,cominfo.name as
+			comname,alarm.status,fault.type
+		FROM
+		alarm_work_order as alarm
+		LEFT JOIN alarm_work_order_info info ON info.code = alarm.code AND info. LANGUAGE = #{language,jdbcType=VARCHAR}
+		JOIN company com ON com.code = alarm.customer_code
+		LEFT JOIN company_info cominfo ON cominfo.code = com.code AND cominfo. LANGUAGE = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = alarm.fault_code
+		JOIN equipment as eq on alarm.equipment_code = eq.code
+		LEFT JOIN equipment_info equ on alarm.equipment_code = equ.code AND equ.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE 1=1
+		AND alarm.status = 1
+		<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="orderstatus != null and orderstatus != ''">
+			AND alarm.order_status = #{orderstatus,jdbcType=VARCHAR}
+		</if>
+		<if test="level != null">
+			AND alarm.level = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			AND fault.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND
+			CONCAT(alarm.fault_code,'',alarm.order_status,'',info.description,'',
+			info.handing_suggestion,'',equ.name,'',cominfo.name) LIKE
+			CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )
+		</if>
+		<if test="paddingBy != null and paddingBy  !=''">
+			AND
+			alarm.padding_by = #{paddingBy,jdbcType=VARCHAR}
+		</if>
+		<!-- <if test="ignoreStatus != null">
+			AND alarm.ignore_status = #{ignoreStatus,jdbcType=INTEGER}
+		</if> -->
+
+		GROUP BY alarm.code
+		ORDER BY
+		alarm.order_status,
+		alarm.first_time desc
+
+	</select>
+	
+	<select id="selectAgencyWorkOrderList" resultMap="BaseResultMap">
+		SELECT
+			alarm.id,alarm.code,alarm.last_update_time,info.description,info.handing_suggestion,alarm.first_time,alarm.level,alarm.em_group_id,
+			alarm.fault_code,alarm.order_status,
+			equ.name as equname,eq.image_url,cominfo.name as
+			comname,alarm.status,fault.type
+		FROM
+		alarm_work_order as alarm
+		LEFT JOIN company_info as cominfo on cominfo.code = alarm.customer_code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = alarm.fault_code
+		JOIN company as com on com.code = cominfo.code
+		LEFT JOIN alarm_work_order_info info on info.code = alarm.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN equipment as eq on alarm.equipment_code = eq.code
+		LEFT JOIN equipment_info equ on alarm.equipment_code = equ.code AND equ.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE 1=1
+		AND alarm.status = 1
+		<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+			AND alarm.order_status &lt;&gt;  #{orderstatus,jdbcType=VARCHAR}
+		<if test="level != null">
+			AND alarm.level = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			AND fault.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND
+			CONCAT(alarm.fault_code,'',alarm.order_status,'',info.description,'',
+			info.handing_suggestion,'',equ.name,'',cominfo.name) LIKE
+			CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )
+		</if>
+		<!-- <if test="ignoreStatus != null">
+			AND alarm.ignore_status = #{ignoreStatus,jdbcType=INTEGER}
+		</if> -->
+
+		GROUP BY alarm.code
+		ORDER BY
+		alarm.order_status,
+		alarm.first_time desc
+
+	</select>
+	
+	<select id="searchAlarmAndHelp" resultMap="BaseResultMap">
+		SELECT model.type,model.order_status,model.code, model.first_time, model.image_url,model.equname,model.comname,model.handing_suggestion FROM (
+			SELECT alarm.type,alarm.order_status,alarm.code,alarm.first_time,equ.image_url,equ.name as equname,cominfo.name as comname,info.handing_suggestion  from alarm_work_order alarm
+			JOIN company com ON com.code = alarm.customer_code
+			LEFT JOIN company_info cominfo ON cominfo.code = com.code  AND cominfo.language = #{language,jdbcType=VARCHAR}
+			
+			LEFT JOIN alarm_work_order_info info ON info.code = alarm.code  AND info.language = #{language,jdbcType=VARCHAR}
+			JOIN equipment eq ON  eq.code = alarm.equipment_code
+			LEFT JOIN equipment_info equ ON equ.code =  eq.code  AND equ.language = #{language,jdbcType=VARCHAR}
+			WHERE 1=1
+
+		<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND alarm.order_status = #{orderStatus,jdbcType=INTEGER}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND	concat(equ.name,'',alarm.fault_code,'',info.description,'',
+			info.handing_suggestion,'',equ.name) LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )  
+		</if>
+		<if test="paddingBy != null and paddingBy  !=''">
+			AND
+			find_in_set(#{paddingBy,jdbcType=VARCHAR},alarm.padding_by)
+		</if>
+		AND
+		alarm.status = 1
+		GROUP BY alarm.code
+			
+		UNION ALL
+	
+		SELECT helpmodel.type,helpmodel.order_status,helpmodel.code,helpmodel.create_time as first_time,equ.image_url,equinfo.name as equname,cominfo.name as comname,info.content as handing_suggestion  from help_work_order helpmodel 
+			LEFT JOIN help_work_order_info info ON info.code = helpmodel.code AND info.language = #{language,jdbcType=VARCHAR}
+			JOIN company com ON com.code = helpmodel.customer_code
+			LEFT JOIN company_info cominfo ON cominfo.code = com.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+			JOIN equipment equ ON equ.code = helpmodel.equipment_code
+			LEFT JOIN equipment_info equinfo ON equinfo.code = equ.code AND equinfo.language = #{language,jdbcType=VARCHAR}
+			
+		WHERE 1=1 
+			<if test="oemCode != null and oemCode !=''">
+			AND com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="orderStatus != null">
+			AND helpmodel.order_status = #{orderStatus,jdbcType=INTEGER}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND	concat(info.content,'',equinfo.name) LIKE CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )  
+		</if>
+		<if test="paddingBy!=null and paddingBy!='' ">
+			AND (
+		 	helpmodel.padding_by = #{paddingBy,jdbcType=VARCHAR}  OR helpmodel.sponsor = #{paddingBy,jdbcType=VARCHAR} 
+			)
+		</if>
+			AND
+			helpmodel.status = 1
+			GROUP BY helpmodel.code
+			
+			)  model	
+			ORDER BY model.order_status ,
+					 model.first_time DESC
+	</select>
+	
+	<select id="selectFaultInfoByChannelAndFaultCode" resultMap="AlarmResultMap">
+		SELECT
+			cominfo.code as comcode,
+			cominfo.name as comname,
+			equinfo.code as
+			equcode,
+			equinfo.name as equname,
+			e.oem_person,
+			e.supplier_person,
+			e.customer_person,
+			fci.description,
+			fci.handling_suggestion AS
+			handing_suggestion,
+			fci.language,
+			efc.code AS fault_channel_code,
+			fc.fault_code AS fault_code,
+			fc.level,fc.is_create_order
+		FROM
+		fault_code fc
+		JOIN fault_code_info fci ON fc.code = fci.code
+		JOIN fault_translation_library ftl ON fc.library_code = ftl.code
+		JOIN equipment_fault_channel efc ON efc.library_code = ftl.code
+		JOIN equipment e ON efc.equipment_code = e.code
+		JOIN equipment_info equinfo ON equinfo.code = e.code
+		JOIN company com ON com.code = e.customer_code
+		JOIN company_info cominfo ON cominfo.code = com.code
+		WHERE
+			fc.status = 1
+		AND
+			e.status = 1
+		AND
+			com.status = 1
+		AND
+			efc.code = #{0}
+		AND 
+			fc.fault_code = CAST(#{1} AS signed)
+		AND 
+			cominfo.language = fci.language
+		AND 
+			equinfo.language = fci.language
+		GROUP BY fci.language
+	</select>
+
+	<select id="selectAlarmWorksByUser" resultMap="AlarmResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkOrders">
+		SELECT
+		model.code,model.first_time,model.fault_code,model.order_status,info.description,model.level,
+		info.handing_suggestion,
+		equinfo.code as equcode,equinfo.name as
+		equname,eq.image_url as imageurl
+		,cominfo.code as comcode,cominfo.name
+		as comname,fault.type
+		FROM alarm_work_order
+		model
+		LEFT JOIN alarm_work_order_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = model.fault_code
+		LEFT JOIN equipment_info equinfo ON equinfo.code = model.equipment_code AND equinfo.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN equipment eq ON eq.code = model.equipment_code
+		LEFT JOIN company_info cominfo ON cominfo.code = model.customer_code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE
+		find_in_set(#{paddingBy,jdbcType=VARCHAR},model.padding_by)
+		AND
+		model.customer_code =
+		#{customerCode,jdbcType=VARCHAR}
+		GROUP BY
+		model.code
+		ORDER BY
+		model.order_status
+	</select>
+	
+	
+	<select id="selectEquipmentFaultProportion" parameterType="java.util.Map"
+		resultMap="AlarmResultMap">
+		SELECT
+			equ.code AS equcode,equinfo.name AS equname,COUNT(model.fault_code) AS faultCount
+		FROM
+		alarm_work_order model
+		LEFT JOIN company com ON model.customer_code = com.code
+		LEFT JOIN equipment equ ON equ.code = model.equipment_code
+		JOIN equipment_info equinfo ON equinfo.code = equ.code AND equinfo.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		model.status = 1
+		AND com.status = 1 
+		AND equ.status = 1
+		<if test="oemCode!=null and oemCode!='' ">
+			AND com.oem_code = #{oemCode}
+		</if>
+		<if test="equipmentCode!= null and equipmentCode!= '' ">
+			AND model.equipment_code = #{equipmentCode}
+		</if>
+		<if test="orderStatus != null ">
+			AND model.order_status = #{orderStatus}
+		</if>
+		<if test="customerCode != null ">
+			AND model.customer_code = #{customerCode}
+		</if>
+		<if test="startTime != null ">
+			AND model.first_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null ">
+			AND model.first_time &lt;= #{endTime}
+		</if>
+			
+	</select>
+</mapper>

@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EquipmentPointsDao">
+     <cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+        <property name="timeToIdleSeconds" value="120" /><!--超过2分钟未访问缓存失效 -->
+        <property name="timeToLiveSeconds" value="300" /><!--缓存最多可以存活5分钟 -->
+        <property name="maxEntriesLocalHeap" value="1000" />
+        <property name="maxEntriesLocalDisk" value="10000000" />
+        <property name="memoryStoreEvictionPolicy" value="LRU" />
+    </cache>
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="EquPointResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="object_code" property="equipmentCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="range" property="range" jdbcType="INTEGER" />
+		<result column="view_type" property="viewType" jdbcType="INTEGER" />
+		<result column="is_crucial" property="isCrucial" jdbcType="INTEGER" />
+		<result column="relation_equipment" property="relationEquipment" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="config" property="config" jdbcType="VARCHAR" />
+		<result column="bom_code" property="bomCode" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="index_type" property="indexType" jdbcType="VARCHAR" />
+		 <result column="value_type" property="valueType" jdbcType="INTEGER" />
+    	<result column="is_user_customer_report" property="isUserCustomerReport" jdbcType="INTEGER" />
+		
+	</resultMap>
+
+
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="object_code" property="equipmentCode" jdbcType="VARCHAR" />
+		<result column="range" property="range" jdbcType="INTEGER" />
+		<result column="view_type" property="viewType" jdbcType="INTEGER" />
+		<result column="is_crucial" property="isCrucial" jdbcType="INTEGER" />
+		<result column="is_productivity" property="isProductivity"
+			jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="config" property="config" jdbcType="VARCHAR" />
+		<result column="bom_code" property="bomCode" jdbcType="VARCHAR" />
+		<result column="bom_name" property="bomName" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="relation_equipment" property="relationEquipment" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="index_type" property="indexType" jdbcType="VARCHAR" />
+		
+		<result column="indextypeunit" property="unit" jdbcType="VARCHAR" />
+	    <result column="data_type" property="dataType" jdbcType="INTEGER" />
+	    <result column="digits" property="digits" jdbcType="INTEGER" />
+	    <result column="chart_type" property="chartType" jdbcType="VARCHAR" />
+	    <result column="monitor_type" property="monitorType" jdbcType="INTEGER" />  
+		<result column="value_type" property="valueType" jdbcType="INTEGER" />
+    	<result column="is_user_customer_report" property="isUserCustomerReport" jdbcType="INTEGER" />
+		
+		<collection property="equipment" resultMap="EquResultMap" />
+		<collection property="company" resultMap="ComResultMap" />
+	</resultMap>
+
+	<resultMap id="ComResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="comname" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<resultMap id="EquResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="equname" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="IndexResultMap" type="com.cloudinnov.yun.openapi.model.SysIndexType" >
+   		<result column="indextypeunit" property="unit" jdbcType="VARCHAR" />
+	    <result column="data_type" property="dataType" jdbcType="INTEGER" />
+	    <result column="digits" property="digits" jdbcType="INTEGER" />
+	    <result column="chart_type" property="chartType" jdbcType="VARCHAR" />
+	    <result column="monitor_type" property="monitorType" jdbcType="INTEGER" />  
+	    <result column="value_type" property="valueType" jdbcType="INTEGER" />
+    	<result column="is_user_customer_report" property="isUserCustomerReport" jdbcType="INTEGER" />
+  </resultMap>
+
+	<sql id="Base_Column_List">
+		id, customer_code, object_code, code, name,
+		type,range,view_type,
+		config, bom_code,
+		status, comment,
+		create_time,
+		last_update_time,order_id,index_type
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from point
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectSimulationAllPoint" resultMap="EquPointResultMap"
+		parameterType="java.lang.Integer">
+		select
+		code
+		from point
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		point
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		insert into point
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="equipmentCode != null">
+				object_code,
+			</if>
+			<if test="transformerCode != null">
+				trans_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="range != null">
+				`range`,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="config != null">
+				config,
+			</if>
+			<if test="bomCode != null">
+				bom_code,
+			</if>
+
+			<if test="isCrucial != null">
+				is_crucial,
+			</if>
+			<if test="isProductivity != null">
+				is_productivity,
+			</if>
+			<if test="viewType != null">
+				view_type,
+			</if>
+			<if test="relationEquipment != null">
+				relation_equipment,
+			</if>
+			<if test="orderId != null">
+				order_id,
+			</if>
+			<if test="indexType != null">
+				index_type,
+			</if>
+				status,
+			<if test="createTime!=null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transformerCode != null">
+				#{transformerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="range != null">
+				#{range,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="config != null">
+				#{config,jdbcType=VARCHAR},
+			</if>
+			<if test="bomCode != null">
+				#{bomCode,jdbcType=VARCHAR},
+			</if>
+
+
+			<if test="isCrucial != null">
+				#{isCrucial,jdbcType=INTEGER},
+			</if>
+			<if test="isProductivity != null">
+				#{isProductivity,jdbcType=INTEGER},
+			</if>
+			<if test="viewType != null">
+				#{viewType,jdbcType=INTEGER},
+			</if>
+			<if test="relationEquipment != null">
+				#{relationEquipment,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				#{orderId,jdbcType=INTEGER},
+			</if>
+			<if test="indexType != null">
+				#{indexType,jdbcType=VARCHAR},
+			</if>
+			1,
+			<if test="createTime!=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		insert into point_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		update point
+		<set>
+			<if test="config != null">
+				config=#{config,jdbcType=VARCHAR},
+			</if>
+			<if test="bomCode != null">
+				bom_code = #{bomCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isCrucial != null">
+				is_crucial = #{isCrucial,jdbcType=INTEGER},
+			</if>
+			<if test="viewType != null">
+				view_type = #{viewType,jdbcType=INTEGER},
+			</if>
+			<if test="relationEquipment != null">
+				relation_equipment = #{relationEquipment,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="indexType != null">
+				index_type = #{indexType,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		update point_info
+		<set>
+			<if test="name != null and name!='null'">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null and comment!='null'">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language= #{language,jdbcType
+		= VARCHAR}
+	</update>
+	
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		update
+		point
+		set
+		status = 9
+		where code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectEntityByCondition" resultMap="EquPointResultMap">
+		SELECT
+		ep.id,ep.code,ep.customer_code,ep.object_code,ep.type,ep.config,ep.bom_code,ep.status,ep.create_time,ep.order_id,ep.index_type,
+		epi.language,epi.name,epi.comment
+		FROM point ep
+		JOIN point_info epi ON
+		epi.code = ep.code
+		WHERE ep.status = 1 and
+		ep.code =
+		#{code,jdbcType=VARCHAR}
+		AND
+		epi.language=#{language,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT 
+			point.*,epi.name,epi.comment,equ.name as equname,com.name as
+			comname, epi.language,
+			qbi.name as bom_name,
+			(select
+			group_concat(language SEPARATOR ',') as
+			languages
+			FROM point_info
+			WHERE
+			code = point.code group by code)
+			languages,
+			indextype.unit AS indextypeunit,indextype.data_type,indextype.digits,indextype.chart_type,indextype.monitor_type,
+			indextype.value_type,indextype.is_user_customer_report
+		FROM
+		point point
+		JOIN
+		point_info epi on
+		point.code=epi.code
+		LEFT JOIN equipment_info equ ON equ.code = point.object_code AND  equ.language = #{language,jdbcType=VARCHAR}
+		JOIN company_info com ON com.code = point.customer_code
+		LEFT JOIN equipment_bom_info qbi on qbi.`code`=
+		point.bom_code and qbi.language=#{language,jdbcType=VARCHAR}
+		LEFT JOIN sys_index_type indextype ON indextype.code = point.index_type AND indextype.status = 1 
+		WHERE point.status = 1
+		
+		AND
+		epi.language = #{language,jdbcType=VARCHAR}		
+		AND com.language = #{language,jdbcType=VARCHAR}
+		<if test="equipmentCode != null">
+			AND point.object_code =
+			#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="isCrucial != null">
+			AND point.is_crucial =
+			#{isCrucial,jdbcType=INTEGER}
+		</if>
+		<if test="customerCode != null">
+			AND point.customer_code =
+			#{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="bomCode != null">
+			AND point.bom_code =
+			#{bomCode,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND epi.name =
+			#{name,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			AND point.type =
+			#{type,jdbcType=VARCHAR}
+		</if>
+		order by epi.name
+	</select>
+	<select id="selectListByConditions" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints" resultType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		SELECT
+	ci.short_name customerName,
+	ei.code equipmentCode,
+	ei. name equipmentName,
+	t.short_name transformerName,
+	bi.code bomCode,
+	bi.name bomName,
+	p. CODE CODE,
+	pi. NAME `name`,
+	p.type  type,
+	p.view_type viewType,
+	p.`range` range,
+	p.config config,
+	p.status status,
+	p.is_crucial isCrucial,
+	pi.language language
+	FROM
+	point p
+	JOIN company_info ci ON ci.`code` = p.customer_code
+	JOIN point_info pi ON p. CODE = pi. CODE
+	JOIN transformer t ON t. CODE = p.trans_code
+	JOIN equipment_info ei ON ei. CODE = p.object_code
+	LEFT JOIN equipment_bom_info bi on bi.code=p.bom_code
+	where  
+	p.status=1
+	<if test="equipmentCode !=null">
+	and ei.code=#{equipmentCode,jdbcType=VARCHAR}
+	</if>
+	</select>
+
+	<select id="selectProductionLineListPage" resultMap="BaseResultMap">
+		SELECT 
+		point.*,epi.name,epi.comment,com.name as
+			comname,pli.name as
+			equname,
+			(select group_concat(language SEPARATOR ',') as languages
+			FROM
+			point_info
+			WHERE code = point.code group by code) languages
+		FROM
+		point point
+		LEFT JOIN point_info epi ON point. CODE = epi. CODE AND epi. LANGUAGE = #{language,jdbcType=VARCHAR}
+		LEFT JOIN company_info com ON com. CODE = point.customer_code AND com. LANGUAGE = #{language,jdbcType=VARCHAR}
+		LEFT JOIN production_line_info pli ON pli. CODE = point.object_code AND pli.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		point.status = 1
+		<if test="equipmentCode != null">
+		AND point.object_code =
+		#{equipmentCode,jdbcType=VARCHAR}
+		</if>
+
+	</select>
+	<select id="selectEquipmentPointListWhere" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints"
+		resultMap="EquPointResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from point
+		<where>
+			<if test="code!=null and code!='' ">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+
+	<select id="listAll" resultMap="int">
+		SELECT count(1) from
+		point
+		where
+		status = 1 and customer_code=(select
+		customer_code from equipment
+		where
+		id = #{0}) and
+		object_code =
+		(select code from equipment where
+		id = #{0})
+	</select>
+	<select id="listByCode" resultMap="BaseResultMap">
+		SELECT
+		model.id,model.customer_code, model.object_code,
+		model.code,model.view_type,
+		info.name, model.type,
+		model.config,
+		model.bom_code,
+		model.status,
+		info.comment,
+		model.create_time,model.order_id,model.index_type,
+		model.last_update_time,ci.name as comname,
+		indextype.unit AS indextypeunit,indextype.data_type,indextype.digits,indextype.chart_type,indextype.monitor_type
+		FROM
+		point model
+		LEFT JOIN point_info info ON info.code =
+		model.code AND info.language = #{language,jdbcType= VARCHAR}
+		LEFT JOIN
+		company_info ci ON model.customer_code = ci.`code` AND ci.language =
+		info.language
+		LEFT JOIN
+		sys_index_type indextype ON indextype.code = model.index_type
+		WHERE model.status = 1
+		AND model.code IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		ORDER BY info.name
+	</select>
+
+	<select id="monitorEqusPoints" resultMap="BaseResultMap">
+		SELECT p.*,pi.`name`,pi.`comment`
+		FROM point p
+		 JOIN point_info pi ON p.`code`=pi.`code` AND pi.`language`=
+		#{language,jdbcType=VARCHAR}
+		WHERE
+		p.status = 1
+		and
+		p.object_code IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectProductivityPoint" resultMap="BaseResultMap">
+		SELECT
+		point.id,point.code,point.customer_code,point.object_code,point.order_id,point.index_type
+		FROM point
+		JOIN
+		point_info info ON info.code = point.code
+		WHERE
+		point.is_productivity = 1
+		AND point.status = 1
+		GROUP BY point.object_code
+	</select>
+	
+	<select id="selectEquipmentStatePoints" resultMap="BaseResultMap">
+		SELECT
+			id,code,relation_equipment
+		FROM point
+		WHERE relation_equipment  IS NOT NULL
+		AND status = 1
+		<if test="customerCode != null">
+			AND customerCode = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode != null">
+			AND object_code = #{equipmentCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectListByIndexType" resultMap="EquPointResultMap">
+		SELECT
+		model.code,model.object_code,indextype.is_user_customer_report,indextype.value_type
+		FROM point model
+		JOIN sys_index_type indextype ON indextype.code = model.index_type
+		WHERE indextype.code = #{indexType,jdbcType=VARCHAR}
+
+	</select>
+	
+	<select id="selectBomByEq" parameterType="String" resultMap="EquPointResultMap">
+		SELECT ebi.code,ebi.name,ebi.comment from equipment_bom eb inner join equipment_bom_info ebi on eb.code=ebi.code
+		where equipment_code=#{_parameter}  order by name
+	</select>
+	<update id="updatePointInfo" parameterType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		update point
+		<set>
+			<if test="config != null">
+				config=#{config,jdbcType=VARCHAR},
+			</if>
+			<if test="bomCode != null">
+				bom_code = #{bomCode,jdbcType=VARCHAR},
+			</if>
+			<if test="isCrucial != null">
+				is_crucial = #{isCrucial,jdbcType=INTEGER},
+			</if>
+			<if test="viewType != null">
+				view_type = #{viewType,jdbcType=INTEGER},
+			</if>
+			<if test="relationEquipment != null">
+				relation_equipment = #{relationEquipment,jdbcType=VARCHAR},
+			</if>
+			<if test="orderId != null">
+				order_id = #{orderId,jdbcType=VARCHAR},
+			</if>
+			<if test="indexType != null">
+				index_type = #{indexType,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+		update point_info
+		<set>
+			<if test="name != null and name!='null'">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null and comment!='null'">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getAllPoints" resultType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		select code,name from point_info 
+	</select>
+	
+	<select id="getPointDetailByCode" resultType="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		select 
+		code,
+		(select name from point_info where code=p.code) name,
+		(select name from equipment_bom_info where code=p.bom_code) bomName,
+		(select name from equipment_info where code=p.object_code) equipmentName,
+		(select name from transformer where code=p.trans_code) transformerName 
+		from point p where code = #{code,jdbcType=VARCHAR} 
+	</select>
+</mapper>

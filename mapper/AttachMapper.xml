@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AttachDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.Attach">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="object_id" property="objectId" jdbcType="INTEGER" />
+		<result column="object_code" property="objectCode" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="file_type" property="fileType" jdbcType="VARCHAR" />
+		<result column="size" property="size" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		type, object_id, object_code, name, file_type, size, url,
+		create_time
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Attach"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into attach
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="type != null">
+				type,
+			</if>
+			<if test="objectId != null">
+				object_id,
+			</if>
+			<if test="objectCode != null">
+				object_code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="fileType != null">
+				file_type,
+			</if>
+			<if test="size != null">
+				size,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="objectId != null">
+				#{objectId,jdbcType=INTEGER},
+			</if>
+			<if test="objectCode != null">
+				#{objectCode,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="fileType != null">
+				#{fileType,jdbcType=VARCHAR},
+			</if>
+			<if test="size != null">
+				#{size,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime!=null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		type,
+		object_id, object_code, name, file_type ,url
+		FROM attach 
+		WHERE 1 =1 
+		<if test="fileType != null">
+			AND file_type =	#{fileType,jdbcType=VARCHAR}
+		</if>
+		AND object_id = #{objectId}
+		OR object_code = #{objectCode}
+		AND type =
+		#{type,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectEntityByCondition" resultMap="BaseResultMap">
+		SELECT
+		type,
+		object_id, object_code, name, file_type ,url
+		FROM attach 
+		WHERE 1 =1 
+		<if test="fileType != null">
+			AND file_type =	#{fileType,jdbcType=VARCHAR}
+		</if>
+		AND object_id = #{objectId}
+		OR object_code = #{objectCode}
+		AND type = #{type,jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Attach">
+		update attach
+		set url = #{url,jdbcType=VARCHAR}
+		where 
+		object_id = #{objectId}
+		OR object_code
+		= #{objectCode}
+		AND type =
+		#{type,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectList" resultMap="BaseResultMap">
+		SELECT type,object_code,name,file_type,url FROM attach 
+		WHERE 
+		object_code = #{objectCode,jdbcType=VARCHAR}
+		<if test="name != null">
+			AND name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="name == null">
+			AND name is null
+		</if>
+	</select>
+	
+	<select id="getObjectUrls" parameterType="com.cloudinnov.yun.openapi.model.Attach" resultType="String">
+		SELECT group_concat(url) urls FROM attach 
+		WHERE 
+		object_code = #{objectCode,jdbcType=VARCHAR}
+		<if test="type != null">
+			AND type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="fileType != null">
+			AND file_type = #{fileType,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.HelpWorkOrderDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.HelpWorkOrder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="customer_code" property="customerCode" jdbcType="VARCHAR" />
+    <result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR" />
+    <result column="sponsor" property="sponsor" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="padding_by" property="paddingBy" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    
+    <result column="comcode" property="company.code" jdbcType="VARCHAR" />
+    <result column="comname" property="company.name" jdbcType="VARCHAR" />
+    <result column="equcode" property="equipment.code" jdbcType="VARCHAR" />
+    <result column="equname" property="equipment.name" jdbcType="VARCHAR" />
+    <result column="image_url" property="equipment.imageUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, code, customer_code, equipment_code, sponsor, title, order_status, padding_by, 
+    status, comment, create_time, last_update_time,content
+  </sql>
+  
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder" >
+    insert into help_work_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="customerCode != null" >
+        customer_code,
+      </if>
+      <if test="equipmentCode != null" >
+        equipment_code,
+      </if>
+      <if test="sponsor != null" >
+        sponsor,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="paddingBy != null" >
+        padding_by,
+      </if>
+        status,
+      	<if test="createTime != null">
+			  create_time,
+		</if>
+		<if test="lastUpdateTime != null">
+			 last_update_time,
+		</if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCode != null" >
+        #{customerCode,jdbcType=VARCHAR},
+      </if>
+      <if test="equipmentCode != null" >
+        #{equipmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="sponsor != null" >
+        #{sponsor,jdbcType=VARCHAR},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="paddingBy != null" >
+        #{paddingBy,jdbcType=VARCHAR},
+      </if>
+    		1,
+	<if test="createTime != null">
+		#{createTime,jdbcType=VARCHAR},
+	</if>
+
+	<if test="lastUpdateTime != null">
+		#{lastUpdateTime,jdbcType=VARCHAR},
+	</if>
+    </trim>
+  </insert>
+   <insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder" >
+    insert into help_work_order_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    <if test="language != null" >
+        language,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="language != null" >
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        #{comment,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder" >
+    update help_work_order
+    <set >
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="paddingBy != null" >
+        padding_by = #{paddingBy,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder" >
+    update help_work_order_info
+    <set>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+
+      <if test="comment != null" >
+        comment =  #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+	
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder">
+		SELECT 	
+			model.id,model.code,model.last_update_time,model.padding_by,info.language,info.title,info.content,info.comment,
+			equinfo.name as equname,equ.image_url,equ.code as equcode,cominfo.name as
+			comname,cominfo.code as comcode,model.status,model.order_status,model.type,
+			userinfo.name AS paddingbyname,userinfo2.name AS sponsorname,
+			(select group_concat(language SEPARATOR ',') as languages
+			FROM help_work_order_info 
+			WHERE code = model.code group by code) languages	
+		FROM help_work_order model
+		LEFT JOIN help_work_order_info info ON info.code = model.code AND info.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN company com ON com. CODE = model.customer_code
+		LEFT JOIN company_info cominfo ON cominfo. CODE = com.code AND cominfo. LANGUAGE =  #{language,jdbcType=VARCHAR}
+		JOIN equipment equ ON equ. CODE = model.equipment_code
+		LEFT JOIN equipment_info equinfo ON equinfo. CODE = equ.code AND equinfo.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN auth_user_info userinfo ON userinfo.code = model.padding_by AND userinfo.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN auth_user_info userinfo2 ON userinfo2.code = model.sponsor AND userinfo2.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN work_order_log log ON log.alarm_work_code = model.code
+		WHERE 
+		 1=1
+		<if test="paddingBy!=null and paddingBy!='' ">
+		AND	(
+		 	model.padding_by = #{paddingBy,jdbcType=VARCHAR}  OR model.sponsor = #{paddingBy,jdbcType=VARCHAR}  OR log.user_code = #{paddingBy,jdbcType=VARCHAR} OR log.target_user =#{paddingBy,jdbcType=VARCHAR}
+			)
+		</if>
+		  AND  model.status = 1
+		<if test="customerCode != null" >
+	        AND model.customer_code =  #{customerCode,jdbcType=VARCHAR}
+	     </if>
+	      <if test="sponsor != null" >
+	      	OR
+			find_in_set(#{sponsor,jdbcType=VARCHAR},model.sponsor)
+	      </if>
+	    GROUP BY model.code
+		ORDER BY model.create_time DESC
+	</select>
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder">
+		UPDATE help_work_order
+		SET
+		status = 9   
+		WHERE code = #{code,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.HelpWorkOrder">
+		SELECT 	
+		model.code,model.order_status,model.padding_by,model.status,
+		info.language,info.content,info.comment,model.sponsor,info.title,
+		cominfo.code as comcode,cominfo.name as comname,equ.image_url,
+		equinfo.code as equcode,equinfo.name as equname,
+			(select group_concat(language SEPARATOR ',') as languages
+			FROM help_work_order_info 
+			WHERE code = model.code group by code) languages	
+		FROM help_work_order model
+		JOIN help_work_order_info info ON info.code = model.code
+	  	JOIN company_info cominfo ON cominfo. CODE = model.customer_code AND cominfo.language = info. LANGUAGE
+		JOIN equipment_info equinfo ON equinfo. CODE = model.equipment_code AND equinfo.language = info. LANGUAGE
+		JOIN equipment equ ON equ.code = equinfo.code
+		WHERE model.status = 1
+		AND info.language = #{language,jdbcType=VARCHAR}
+		AND model.customer_code = #{customerCode,jdbcType=VARCHAR}
+		AND model.code = #{code,jdbcType=VARCHAR}
+	</select>
+
+
+</mapper>

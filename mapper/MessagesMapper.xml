@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.MessagesDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Messages" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="title" property="title" jdbcType="VARCHAR"/>
+	 	<result column="type" property="type" jdbcType="INTEGER"/>
+	 	<result column="context" property="context" jdbcType="VARCHAR"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	 	<result column="work_code" property="workCode" jdbcType="VARCHAR"/>
+	 	<result column="em_group_id" property="emGroupId" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, code, title, type,context, create_time create_time, status
+	</sql>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		insert into messages
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="context != null">
+				context,
+			</if>
+				status,
+				create_time,
+			<if test="workCode != null">
+				work_code,
+			</if>
+			<if test="emGroupId != null">
+				em_group_id,
+			</if>
+			<if test="messagePhoto !=null and messagePhoto!=''">
+				message_photo,
+			</if>
+			<if test="pushPerson !=null">
+				push_person
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="context != null">
+				#{context,jdbcType=VARCHAR},
+			</if>
+				1,
+				unix_timestamp(now())*1000,
+			<if test="workCode != null">
+				#{workCode,jdbcType=VARCHAR},
+			</if>
+			<if test="emGroupId != null">
+				#{emGroupId,jdbcType=VARCHAR},
+			</if>
+			<if test="messagePhoto !=null and messagePhoto!=''">
+				#{messagePhoto,jdbcType=VARCHAR},
+			</if>
+			<if test="pushPerson !=null">
+				#{pushPerson,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	
+	<delete id="deleteByCondition">
+		update messages
+		set status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</delete>
+	<update id="updateMessage" parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		update messages
+		<set>
+			<if test="status !=null">
+				status=#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="context !=null">
+				context=#{context,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where status=1
+		<if test="code !=null">
+			and code=#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="workCode !=null">
+			and work_code=#{workCode,jdbcType=VARCHAR}
+		</if>
+	</update>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		update messages
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="context != null">
+				context = #{context,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectEntityByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		select
+			m.code, m.title,m.work_code, m.type,m.context, m.create_time create_time, m.status,m.message_photo messagePhoto,
+			(select name from auth_user_info where code=m.push_person)pushPerson,
+			(case pwh.status when 1 then -1 when 2 then -2 end) warnStatus,
+			pwh.point_url warnUrl,pwh.point_explain warnExplain,pwh.last_update_time lastUpdateTime,
+			ui.name warnUserName,u.logo warnUserLogo,pwh.`experts_recommend` expertsRecommend,pwh.warn_type warnType,pwh.point_name pointName
+		from messages m
+		left JOIN point_warn_history pwh on pwh.code=m.work_code and pwh.status !=9 
+		left JOIN auth_user u on u.code=pwh.check_user 
+		left JOIN auth_user_info ui on u.code=ui.code 
+		where m.status !=9
+		<if test="code != null">
+			AND m.code = #{code,jdbcType = VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectListByCondition" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.Messages">
+		select
+		<include refid="Base_Column_List" />
+		from messages
+		where 
+		status = 1
+		<if test="code != null">
+			AND code = #{code,jdbcType = VARCHAR}
+		</if>
+		<if test="title != null">
+			AND title like CONCAT(#{title,jdbcType = VARCHAR},'%')
+		</if>
+		<if test="context != null">
+			AND context like CONCAT(#{context,jdbcType = VARCHAR},'%')
+		</if>
+	</select>
+	
+	<select id="selectListByPointWarn" resultMap="BaseResultMap" parameterType="com.cloudinnov.yun.openapi.model.PointWarn">
+		select m.code,m.title,m.type,m.context,m.work_code,m.em_group_id,m.create_time,p.status 
+		from messages m inner join point_warn_history p on m.work_code=p.code 
+		where  m.type=3 
+		<if test="transCode != null">
+			and p.trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			and p.status = #{status,jdbcType=INTEGER} 
+		</if>
+		order by p.status asc,m.create_time desc limit 7
+	</select>
+	<select id="selectAuthUserByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name AS loginName,ui.name,u.user_type userType  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code in(${transCode})
+					and status=1)))
+	</select>
+	<select id="listWorkOrderUser" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name AS loginName,ui.name from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code in (${transCode})
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)) or role_code in(${roleBossCodes}))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND (model.trans_code in (${transCode}) or model.spare in (${transCode})) 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			        union all
+			select u.*,u.login_name AS loginName,ui.name from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+	</select>
+	<select id="selectMessage" parameterType="com.cloudinnov.yun.openapi.model.Messages" resultType="com.cloudinnov.yun.openapi.model.Messages">
+		select 
+			m.code, m.title,m.work_code, m.type,m.context, m.create_time create_time, m.status
+		from messages m
+		where m.status = 1 
+		<if test="code !=null">
+			and m.code=#{code,jdbcType=VARCHAR}
+		</if>
+		<if test="workCode !=null">
+			and work_code=#{workCode,jdbcType=VARCHAR}
+		</if>
+		order by create_time desc limit 1
+	</select>
+</mapper>

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ElectricityDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Electricity" id="electricityMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="feng" property="feng" jdbcType="VARCHAR"/>
+		<result column="gu" property="gu" jdbcType="VARCHAR"/>
+		<result column="ping" property="ping" jdbcType="VARCHAR"/>
+		<result column="jian" property="jian" jdbcType="VARCHAR"/>
+		<result column="zong" property="zong" jdbcType="VARCHAR"/>
+		<result column="temp" property="temp" jdbcType="VARCHAR"/>
+		<result column="humidity" property="humidity" jdbcType="VARCHAR"/>
+		<result column="pm" property="pm" jdbcType="VARCHAR"/>
+		<result column="time" property="time" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Electricity">
+		insert into electricity 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="feng != null">
+				feng,
+			</if>
+			<if test="gu != null">
+				gu,
+			</if>
+			<if test="ping != null">
+				ping,
+			</if>
+			<if test="jian != null">
+				jian,
+			</if>
+			<if test="zong != null">
+				zong,
+			</if>
+			<if test="temp != null">
+				temp,
+			</if>
+			<if test="humidity != null">
+				humidity,
+			</if>
+			<if test="pm != null">
+				pm,
+			</if>
+			<if test="time != null">
+				time,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code},
+			</if>
+			<if test="transCode != null">
+				#{transCode},
+			</if>
+			<if test="feng != null">
+				#{feng},
+			</if>
+			<if test="gu != null">
+				#{gu},
+			</if>
+			<if test="ping != null">
+				#{ping},
+			</if>
+			<if test="jian != null">
+				#{jian},
+			</if>
+			<if test="zong != null">
+				#{zong},
+			</if>
+			<if test="temp != null">
+				#{temp},
+			</if>
+			<if test="humidity != null">
+				#{humidity},
+			</if>
+			<if test="pm != null">
+				#{pm},
+			</if>
+			<if test="time != null">
+				#{time},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Electricity">
+		update electricity 
+		<set>
+			<if test="feng != null">
+				feng = #{feng,jdbcType=VARCHAR},
+			</if>
+			<if test="gu != null">
+				gu = #{gu,jdbcType=VARCHAR},
+			</if>
+			<if test="ping != null">
+				ping = #{ping,jdbcType=VARCHAR},
+			</if>
+			<if test="jian != null">
+				jian = #{jian,jdbcType=VARCHAR},
+			</if>
+			<if test="zong != null">
+				zong = #{zong,jdbcType=VARCHAR},
+			</if>
+			<if test="temp != null">
+				temp = #{temp,jdbcType=VARCHAR},
+			</if>
+			<if test="humidity != null">
+				humidity = #{humidity,jdbcType=VARCHAR},
+			</if>
+			<if test="pm != null">
+				pm = #{pm,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<where>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</update>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultMap="electricityMap">
+		select * from electricity where 1=1
+		<if test="code != null">
+			and code = #{code}
+		</if>
+		<if test="transCode != null">
+			and trans_code = #{transCode}
+		</if>
+		<if test="time != null">
+			and time = #{time}
+		</if>
+		limit 0,1
+	</select>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultMap="electricityMap">
+		select 
+		    time,
+			truncate(sum(feng),2) feng,
+			truncate(sum(gu),2) gu,
+			truncate(sum(ping),2) ping,
+			truncate(sum(jian),2) jian,
+			truncate(sum(zong),2) zong,
+       		truncate(max(temp),2) temp,
+       		truncate(avg(humidity),2) humidity,
+       		truncate(avg(pm),2) pm from (
+				select DATE_FORMAT(time,${type}) time,
+				sum(IFNULL(zong,0)) zong,
+				sum(IFNULL(feng,0)) feng,
+				sum(IFNULL(gu,0)) gu,
+				sum(IFNULL(ping,0)) ping,
+				sum(IFNULL(jian,0)) jian,
+			    max(ifnull(temp,0)) temp,
+			    sum(ifnull(humidity,0)) humidity,
+			    sum(ifnull(pm,0)) pm
+				from (select * from electricity where trans_code=#{transCode,jdbcType=VARCHAR}
+					  <if test="beginTime != null and endTime != null">
+					  	  and DATE_FORMAT(time,${type})&lt;=${beginTime} and DATE_FORMAT(time,${type})&gt;=${endTime} 
+					  </if>
+					  <if test="time != null and year == null and month == null">
+					  	  and DATE_FORMAT(time,${type})=#{time}
+					  </if>
+					  <if test="time != null and year != null">
+					  	  and DATE_FORMAT(time,${year})=#{time}
+					  </if>
+					  <if test="time != null and month != null">
+					  	  and DATE_FORMAT(time,${month})=#{time}
+					  </if>
+				      ) electricity group by time
+		    ) yeah group by time
+		    order by time asc
+	</select>
+	
+	
+	<select id="selectListByTrans" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultMap="electricityMap">
+		select 
+			 db.trans_code,sum(ifnull(zong,0)) zong,sum(ifnull(gu,0)) gu,sum(ifnull(jian,0)) jian,sum(ifnull(feng,0)) feng,sum(ifnull(ping,0)) ping
+			 ,max(ifnull(temp,0)) temp,max(ifnull(humidity,0)) humidity,max(ifnull(pm,0)) pm,DATE_FORMAT(time,'%Y-%m-%d') time,
+			 db.monthFeng,db.monthGu,db.monthPing,db.monthZong, db.monthJian 
+		    from (
+			select 
+			(select sum(ifnull(feng,0)) from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>) monthFeng,
+			
+			(select sum(ifnull(gu,0)) from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>) monthGu,
+			
+			(select sum(ifnull(ping,0)) from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>) monthPing,
+			
+			(select sum(ifnull(jian,0)) from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>) monthJian,
+			
+			(select sum(ifnull(zong,0)) from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>) monthZong,
+			
+			e.* from electricity e where 1=1 
+			<if test="transCode != null">
+			  and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			  and DATE_FORMAT(time,'%Y-%m-%d') &gt;= ${beginTime} and DATE_FORMAT(time,'%Y-%m-%d') &lt;= ${endTime}
+			</if>
+			) db group by DATE_FORMAT(db.time,'%Y-%m-%d')
+	</select>
+	
+	<!-- 查询配电室电量统计列表 -->
+	<select id="listTransElectricity" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select 
+		    (select name from transformer where code=trans_code) transName,
+			DATE_FORMAT(time,'%Y-%m-%d') time, 
+			truncate(sum(IFNULL(zong,0)),2) zong, 
+			truncate(sum(IFNULL(feng,0)),2) feng, 
+			truncate(sum(IFNULL(gu,0)),2) gu,
+			truncate(sum(IFNULL(ping,0)),2) ping, 
+			truncate(sum(IFNULL(jian,0)),2) jian, 
+			truncate(avg(ifnull(temp,0)),2) temp, 
+			truncate(avg(ifnull(humidity,0)),2) humidity, 
+			truncate(avg(ifnull(pm,0)),2) pm,
+			trans_code,
+			code 
+			 from (
+				select * from electricity where 1=1 
+				<if test="time != null">
+					and DATE_FORMAT(time,'%Y-%m-%d')=#{time,jdbcType=VARCHAR} 
+				</if>
+				<if test="transCode != null">
+					and trans_code=#{transCode,jdbcType=VARCHAR} 
+				</if>
+			) ele
+			group by trans_code order by time desc 
+	</select>
+	
+	<delete id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.Electricity">
+		delete from electricity where 
+		trans_code = #{transCode,jdbcType=VARCHAR}
+		and date_format(time,'%Y-%m-%d') = #{time,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectTotal" resultType="java.util.Map">
+		select 
+		<!-- (select sum(ifnull(zong,0)) from electricity where DATE_FORMAT(time,'%Y')=DATE_FORMAT(now(),'%Y')) totalYear,
+		(select sum(ifnull(zong,0)) from electricity) total, -->
+		(select sum(ifnull(attrvalue,0)) from equipment_attr where attrname='额定容量') capacity 
+		from dual
+	</select>
+	
+	<select id="selectTotalByTrans" parameterType="String" resultType="java.util.Map">
+		select 
+		(select sum(ifnull(attrvalue,0)) from equipment_attr where attrname='额定容量' 
+		and code in(select code from equipment where trans_code=#{_parameter,jdbcType=VARCHAR})) capacity 
+		from dual
+	</select>
+	
+	<select id="selectMonthFGPZ" resultType="java.util.Map">
+		select
+		  sum(ifnull(feng,0)) feng,
+		  sum(ifnull(gu,0)) gu,
+		  sum(ifnull(ping,0)) ping,	
+		  sum(ifnull(zong,0)) zong
+		 from electricity where DATE_FORMAT(time,'%Y-%m')= DATE_FORMAT(now(),'%Y-%m')
+	</select>
+	
+	<select id="selectDayFGPZ" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select
+		  sum(ifnull(feng,0)) feng,
+		  sum(ifnull(gu,0)) gu,
+		  sum(ifnull(ping,0)) ping,	
+		  sum(ifnull(zong,0)) zong
+		 from electricity 
+		 where time &gt;= #{beginTime,jdbcType=VARCHAR} and time &lt;= #{endTime,jdbcType=VARCHAR}
+		 <if test="transCode != null">
+		 	and trans_code = #{transCode,jdbcType=VARCHAR} 
+		 </if>
+	</select>
+	
+	<select id="selectFGPZByDate" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select
+		  sum(ifnull(feng,0)) feng,
+		  sum(ifnull(gu,0)) gu,
+		  sum(ifnull(ping,0)) ping,	
+		  sum(ifnull(zong,0)) zong
+		 from electricity 
+		 where 1=1
+		 <if test="transCode != null">
+		 	and trans_code = #{transCode,jdbcType=VARCHAR} 
+		 </if>
+		 <if test="time !=null">
+		 	and time like CONCAT('%',#{time,jdbcType=VARCHAR},'%' ) 
+		 </if>
+	</select>
+	<select id="selectZong" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultType="java.util.Map">
+			select 
+					(select sum(ifnull(zong,0)) zong from electricity 
+					 where 1 = 1
+					 <if test="transCode != null">
+						 and trans_code = #{transCode,jdbcType=VARCHAR} 
+					 </if>
+					 <if test="time != null">
+						 and date_format(time,'%Y') = #{time}
+					 </if>
+					 ) zong,
+					 
+					(select sum(ifnull(zong,0)) zong from electricity 
+					 where 1 = 1
+					 <if test="transCode != null">
+						 and trans_code = #{transCode,jdbcType=VARCHAR} 
+					 </if>
+					 <if test="time != null">
+						 and date_format(time,'%Y') = #{time}
+					 </if>
+					) zongYear 
+			 from dual
+	</select>
+	
+	<select id="selectUnTransZong" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select sum(ifnull(zong,0)) zong from electricity 
+		 where 1 = 1
+		 and trans_code in (select code from transformer where status!=9 
+		 and (unattend = ${@com.cloudinnov.yun.openapi.common.CommonUtils@TR_NONINTELLIGENT} 
+		   or unattend = ${@com.cloudinnov.yun.openapi.common.CommonUtils@TR_NONINTELLIGENT_}))
+	</select>
+	
+	<select id="selectMonthZong" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select DATE_FORMAT(time,'%Y-%m') time,
+		       sum(ifnull(zong,0)) zong,
+		       sum(ifnull(feng,0)) feng,
+		       sum(ifnull(ping,0)) ping,
+		       sum(ifnull(gu,0)) gu,
+		       sum(ifnull(jian,0)) jian,
+		       avg(ifnull(temp,0)) temp 
+		    from (
+			select * from electricity where date_format(time,'%Y')=date_format(now(),'%Y') and trans_code=#{code,jdbcType=VARCHAR}
+		) ele group by DATE_FORMAT(time,'%Y-%m')
+	</select>
+	
+	<select id="getTheFirstTenDaysAvg" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select (sum(ifnull(feng,0))/
+			(select count(1) from (
+			select 1 from electricity 
+			where trans_code=#{transCode,jdbcType=VARCHAR} group by date_format(time,'%Y-%m-%d') order by date_format(time,'%Y-%m-%d') desc limit 10
+			) count)) feng,
+			(sum(ifnull(gu,0))/
+			(select count(1) from (
+			select 1 from electricity 
+			where trans_code=#{transCode,jdbcType=VARCHAR} group by date_format(time,'%Y-%m-%d') order by date_format(time,'%Y-%m-%d') desc limit 10
+			) count)) gu,
+			(sum(ifnull(ping,0))/
+			(select count(1) from (
+			select 1 from electricity 
+			where trans_code=#{transCode,jdbcType=VARCHAR} group by date_format(time,'%Y-%m-%d') order by date_format(time,'%Y-%m-%d') desc limit 10
+			) count)) ping,
+			(sum(ifnull(zong,0))/
+			(select count(1) from (
+			select 1 from electricity 
+			where trans_code=#{transCode,jdbcType=VARCHAR} group by date_format(time,'%Y-%m-%d') order by date_format(time,'%Y-%m-%d') desc limit 10
+			) count)) zong 
+			from (
+			select sum(ifnull(feng,0)) feng,sum(ifnull(gu,0)) gu,sum(ifnull(ping,0)) ping,sum(ifnull(zong,0)) zong from electricity 
+			where trans_code=#{transCode,jdbcType=VARCHAR}  group by date_format(time,'%Y-%m-%d') order by date_format(time,'%Y-%m-%d') desc limit 10) ele
+	</select>
+	
+	<select id="getTransEle" parameterType="com.cloudinnov.yun.openapi.model.Electricity" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select
+		  sum(IFNULL(jian,0))jian,
+		  sum(ifnull(feng,0)) feng,
+		  sum(ifnull(gu,0)) gu,
+		  sum(ifnull(ping,0)) ping,	
+		  sum(ifnull(zong,0)) zong
+		 from electricity 
+		 where 1=1
+		 <if test="transCode != null">
+		 	and trans_code = #{transCode,jdbcType=VARCHAR} 
+		 </if>
+		 	and date_format(time,'%Y-%m-%d') &gt;= date_format(#{beginTime,jdbcType=VARCHAR},'%Y-%m-%d') 
+		 	and date_format(time,'%Y-%m-%d') &lt;= date_format(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d')
+	</select>
+	
+	<select id="powerCount" resultType="com.cloudinnov.yun.openapi.model.Electricity">
+		select 
+			trans_code transCode,
+			(select short_name from transformer where code=trans_code) transName,
+			truncate(sum(IFNULL(zong,0)),2) zong,
+			truncate(sum(IFNULL(feng,0)),2) feng,  
+			truncate(sum(IFNULL(gu,0)),2) gu,
+			truncate(sum(IFNULL(ping,0)),2) ping,
+			truncate(sum(IFNULL(jian,0)),2) jian  
+			from electricity 
+			where DATE_FORMAT(time,'%Y-%m-%d') = FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y-%m-%d') 
+			group by trans_code
+			order by zong
+	</select>
+</mapper>

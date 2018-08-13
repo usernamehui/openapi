@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.UserSuggestionsDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.UserSuggestions" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="device_id" property="deviceId" jdbcType="VARCHAR" />
+    <result column="device_software_version" property="deviceSoftwareVersion" jdbcType="VARCHAR" />
+    <result column="providers_name" property="providersName" jdbcType="VARCHAR" />
+    <result column="network_type" property="networkType" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR" />
+    <result column="comment" property="comment" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, user_code, phone_number, device_id, device_software_version, providers_name, 
+    network_type, content, create_time, last_update_time, comment
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_suggestions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user_suggestions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.UserSuggestions" >
+    insert into user_suggestions (id, code, user_code, 
+      phone_number, device_id, device_software_version, 
+      providers_name, network_type, content, 
+      create_time, last_update_time, comment
+      )
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{deviceId,jdbcType=VARCHAR}, #{deviceSoftwareVersion,jdbcType=VARCHAR}, 
+      #{providersName,jdbcType=VARCHAR}, #{networkType,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=VARCHAR}, #{lastUpdateTime,jdbcType=VARCHAR}, #{comment,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.UserSuggestions" >
+    insert into user_suggestions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number,
+      </if>
+      <if test="deviceId != null" >
+        device_id,
+      </if>
+      <if test="deviceSoftwareVersion != null" >
+        device_software_version,
+      </if>
+      <if test="providersName != null" >
+        providers_name,
+      </if>
+      <if test="networkType != null" >
+        network_type,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createTime != null">
+		create_time,
+	</if>
+		<if test="lastUpdateTime != null">
+			last_update_time,
+		</if>
+      <if test="comment != null" >
+        comment,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceSoftwareVersion != null" >
+        #{deviceSoftwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="providersName != null" >
+        #{providersName,jdbcType=VARCHAR},
+      </if>
+      <if test="networkType != null" >
+        #{networkType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+			#{createTime,jdbcType=VARCHAR},
+		</if>
+		<if test="lastUpdateTime != null">
+			#{lastUpdateTime,jdbcType=VARCHAR},
+		</if>
+      <if test="comment != null" >
+        #{comment,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.UserSuggestions" >
+    update user_suggestions
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceId != null" >
+        device_id = #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceSoftwareVersion != null" >
+        device_software_version = #{deviceSoftwareVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="providersName != null" >
+        providers_name = #{providersName,jdbcType=VARCHAR},
+      </if>
+      <if test="networkType != null" >
+        network_type = #{networkType,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateTime != null" >
+        last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="comment != null" >
+        comment = #{comment,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.UserSuggestions" >
+    update user_suggestions
+    set code = #{code,jdbcType=VARCHAR},
+      user_code = #{userCode,jdbcType=VARCHAR},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      device_id = #{deviceId,jdbcType=VARCHAR},
+      device_software_version = #{deviceSoftwareVersion,jdbcType=VARCHAR},
+      providers_name = #{providersName,jdbcType=VARCHAR},
+      network_type = #{networkType,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+      comment = #{comment,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectListByCondition" resultMap="BaseResultMap">
+  	select code, user_code,phone_number, device_id, device_software_version, 
+      providers_name, network_type, content,create_time, last_update_time, comment
+    from user_suggestions
+    where 
+    user_code = #{userCode,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

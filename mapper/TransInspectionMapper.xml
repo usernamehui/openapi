@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.TransInspectionDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<!-- 配电室巡检 -->
+	<resultMap type="com.cloudinnov.yun.openapi.model.TransInspection" id="transInspectionMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="weather" property="weather" jdbcType="VARCHAR"/>
+		<result column="run_status" property="runStatus" jdbcType="VARCHAR"/>
+		<result column="patrol_con" property="patrolCon" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="usercode" property="usercode" jdbcType="VARCHAR"/>
+		<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="evaluation" property="evaluation" jdbcType="VARCHAR"/>
+		<result column="plan_date" property="planDate" jdbcType="VARCHAR"/>
+		<result column="inspection_status" property="inspectionStatus" jdbcType="INTEGER"/>
+		<result column="menu" property="menu" jdbcType="VARCHAR"/>
+		<result column="in_code" property="inCode" jdbcType="VARCHAR"/>
+		<result column="in_value" property="inValue" jdbcType="VARCHAR"/>
+		<result column="in_unit" property="inUnit" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.TransInspection" resultMap="transInspectionMap">
+		 select code,trans_code,(select name from transformer t where t.code=tp.trans_code) name,evaluation,
+		        weather,run_status,patrol_con,tp.create_time createTime,
+		        tp.plan_date planDate,inspection_status,
+		        (select name from auth_user_info where code=usercode) userName 
+		 		from trans_inspection tp where tp.status = 1 
+		 <if test="code != null">
+   		 	and tp.code = #{code,jdbcType=VARCHAR}
+   		 </if>
+   		 <if test="transCode != null">
+			and tp.trans_code = #{transCode,jdbcType=VARCHAR}
+   		 </if>
+   		 <if test="usercode != null">
+   		 	and tp.usercode = #{usercode,jdbcType=VARCHAR}
+   		 </if>
+   		  <if test="inspectionStatus != null">
+   		 	and tp.inspection_status = #{inspectionStatus,jdbcType=INTEGER}
+   		 </if>
+   		 <if test="createTime != null">
+   		 	and #{createTime,jdbcType=VARCHAR} &lt;= tp.create_time and tp.create_time &lt; ${@com.cloudinnov.yun.openapi.common.TimeUtils@addOneDayMill(createTime)} 
+   		 </if>
+	</select>
+	
+	<select id="selectEntity" parameterType="com.cloudinnov.yun.openapi.model.TransInspection" resultMap="transInspectionMap">
+		select   tpi.in_code,tpi.in_value,tp.trans_code,tp.code,tp.weather,tp.patrol_con,tp.run_status,
+				 tp.create_time createTime,tp.evaluation,
+				 tp.plan_date planDate,inspection_status,
+				 (select name from auth_user_info where code=usercode) userName,
+				 (select name from items i where i.code=tpi.in_code) inName,
+			     (select menu from items i where i.code=tpi.in_code) menu,
+			     (select name from transformer t where t.code=tp.trans_code) name
+				 from trans_inspection tp inner join trans_inspection_info tpi on tp.code=tpi.code 
+         		 and tp.status=1 
+         		 <if test="code != null">
+         		 	and tp.code = #{code,jdbcType=VARCHAR}
+         		 </if>
+         		 <if test="transCode != null">
+					 and tp.trans_code = #{transCode,jdbcType=VARCHAR}
+         		 </if>
+         		 <if test="usercode != null">
+         		 	and tp.usercode = #{usercode,jdbcType=VARCHAR}
+         		 </if>
+         		 <if test="createTime != null">
+         		 	and #{createTime,jdbcType=VARCHAR} &lt;= tp.create_time and tp.create_time &lt; ${@com.cloudinnov.yun.openapi.common.TimeUtils@addOneDayMill(createTime)} 
+         		 </if>
+	</select>
+	  
+	  
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.TransInspection">
+		insert into trans_inspection 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="weather != null">
+				weather,
+			</if>
+			<if test="runStatus != null">
+				run_status,
+			</if>
+			<if test="patrolCon != null">
+				patrol_con,
+			</if>
+			<if test="usercode != null">
+				usercode,
+			</if>
+			<if test="planDate != null">
+				plan_date,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+				inspection_status,
+				status,
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="weather != null">
+				#{weather,jdbcType=VARCHAR},
+			</if>
+			<if test="runStatus != null">
+				#{runStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="patrolCon != null">
+				#{patrolCon,jdbcType=VARCHAR},
+			</if>
+			<if test="usercode != null">
+				#{usercode,jdbcType=VARCHAR},
+			</if>
+			<if test="planDate != null">
+				#{planDate,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+				0,1
+		</trim>
+	</insert>
+	
+	<insert id="insertInfo" parameterType="String">
+		${_parameter}
+	</insert>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.TransInspection">
+		update trans_inspection 
+		<set>
+			<if test="patrolCon != null">
+				patrol_con = #{patrolCon,jdbcType=VARCHAR},
+			</if>
+			<if test="runStatus != null">
+				run_status = #{runStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="weather != null">
+				weather = #{weather,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluation != null">
+				evaluation = #{evaluation,jdbcType=VARCHAR},
+			</if>
+			<if test="inspectionStatus != null">
+				inspection_status = #{inspectionStatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		<where>
+			code = #{code,jdbcType=VARCHAR}
+		</where>
+	</update>
+</mapper>

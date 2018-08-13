@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AuthUserDao">
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="ReBaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthResource">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="icon" property="icon" jdbcType="VARCHAR" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="grade" property="grade" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		
+	</resultMap>
+
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthUsers">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="default_language" property="defaultLanguage"
+			jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
+		<result column="login_password" property="loginPassword"
+			jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="position" property="position" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="application_code" property="applicationCode"
+			jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="new_user" property="newUser" jdbcType="VARCHAR" />
+		<result column="comname" property="comName" jdbcType="VARCHAR" />
+
+		<result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+		<result column="roleName" property="roleName" jdbcType="VARCHAR" />
+		<result column="roleNames" property="roleNames" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR"/>
+		<result column="appid" property="appid" jdbcType="VARCHAR"/>
+		<result column="appmodel" property="appModel" jdbcType="VARCHAR"/>
+		<result column="function_type" property="functionType" jdbcType="VARCHAR"/>
+		<result column="title_name" property="titleName" jdbcType="VARCHAR"/>
+		<result column="certificat_info" property="certificatInfo" jdbcType="VARCHAR"/>
+		<result column="work_year" property="workYear" jdbcType="VARCHAR"/>
+		<result column="score_count" property="scoreCount" jdbcType="DECIMAL"/>
+		<result column="diploma_photo" property="diplomaPhoto" jdbcType="VARCHAR"/>
+		<collection property="userExtendInfo" resultMap="userExtendMap" />
+	</resultMap>
+	
+	<resultMap id="userExtendMap" type="com.cloudinnov.yun.openapi.model.UserExtendInfo" >
+    <id column="code" property="code" jdbcType="VARCHAR" />
+    <result column="functional_type" property="functionalType" jdbcType="VARCHAR" />
+    <result column="job_title" property="jobTitle" jdbcType="VARCHAR" />
+    <result column="pro_qual" property="proQual" jdbcType="VARCHAR" />
+    <result column="work_year" property="workYear" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="attr6" property="attr6" jdbcType="VARCHAR" />
+    <result column="attr7" property="attr7" jdbcType="VARCHAR" />
+    <result column="attr8" property="attr8" jdbcType="VARCHAR" />
+    <result column="attr9" property="attr9" jdbcType="VARCHAR" />
+  </resultMap>
+	
+	<sql id="Base_Column_List">
+		code, login_name, login_password, name,
+		position,language,logo,
+		phone,
+		email,
+		company_code,
+		status, comment,
+		create_time,
+		last_update_time, application_code
+	</sql>
+
+	<select id="selectByLoginName" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers"
+			resultMap="BaseResultMap">
+			SELECT login_name,phone
+			FROM auth_user
+			WHERE 0=0
+				AND login_name = #{loginName}
+			AND status = 1
+		</select>
+	
+	<select id="selectByPhone" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers"
+		resultMap="BaseResultMap">
+		SELECT login_name,phone,company_code
+		FROM auth_user
+		WHERE 0=0
+		AND phone = #{phone}
+		AND status = 1
+	</select>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		insert into auth_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="loginPassword != null">
+				login_password,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="logo != null">
+				logo,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="defaultLanguage != null">
+				default_language,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime!= null">
+			create_time,
+			</if>
+			<if test="newUser !=null">
+			new_user,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPassword != null">
+				#{loginPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null">
+				#{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultLanguage != null">
+				#{defaultLanguage,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime!= null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="newUser !=null">
+				#{newUser,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		insert into auth_user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				language,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="position != null">
+				position,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				#{position,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="insertUserRole" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		insert into auth_role_user(company_code,role_code,user_code,status,create_time)
+		values(#{companyCode,jdbcType=VARCHAR},#{roleCode,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},1,#{createTime,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user
+		<set>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPassword != null">
+				login_password = #{loginPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null and logo != ''">
+				logo = #{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="companyCode != null">
+				company_code = #{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="newUser !=null">
+				new_user=#{newUser,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	<update id="updateExtendByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user_extend
+		<set>
+			<if test="functionType != null">
+				function_type = #{functionType,jdbcType=VARCHAR},
+			</if>
+			<if test="titleName != null">
+				title_name = #{titleName,jdbcType=VARCHAR},
+			</if>
+			<if test="certificatInfo != null">
+				certificat_info = #{certificatInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="workYear != null">
+				work_year = #{workYear,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="diplomaPhoto != null">
+				diploma_photo = #{diplomaPhoto,jdbcType=VARCHAR},
+			</if>
+			<if test="scoreCount !=null">
+				score_count=#{scoreCount,jdbcType=NUMERIC},
+			</if>
+		</set>
+		where user_code = #{code,jdbcType=VARCHAR}
+	</update>
+	<update id="updateUserInfo" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		UPDATE auth_user
+		<set>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null and phone!=''">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null and logo != ''">
+				logo = #{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultLanguage != null and defaultLanguage != ''">
+				default_language = #{defaultLanguage,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null and email!=''">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPassword != null">
+				login_password = #{loginPassword,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="position != null">
+				position = #{position,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectByNamePwd" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT
+		info.name,info.`language`,info.`comment`,info.position,u.user_type,u.`code`,u.login_password,u.logo,
+		u.email,u.login_name,u.phone, u.sex,
+		(select group_concat(role_code) from auth_role_user ru where ru.user_code = u.code and ru.status=1) role_code,
+		(select group_concat(name) from auth_role_info where code in(select role_code from auth_role_user ru where ru.user_code = u.code)) roleNames,
+		u.company_code,u.user_type,u.default_language,appid,appmodel,u.new_user,
+		(select application_code from company where code=u.company_code and status = 1)applicationCode
+		FROM
+		auth_user u
+		LEFT JOIN
+		auth_user_info info ON info.code = u.code AND
+		u.status != 9 AND info.language = u.default_language
+		WHERE
+		u.status != 9
+		<if test="userType != null and userType != 'null' and userType !=''">
+			AND (u.user_type = #{userType,jdbcType=VARCHAR} or (select FIND_IN_SET(#{roleCode},group_concat(role_code)) from auth_role_user ru where ru.user_code = u.code and ru.status=1))
+		</if>
+		AND
+		(u.login_name = #{loginName,jdbcType=VARCHAR}
+		OR
+		u.phone =
+		#{loginName,jdbcType=VARCHAR})
+		LIMIT 1
+	</select>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT
+			u.code,u.appid,u.appmodel,u.login_name,u.sex,u.logo,u.email,u.phone,u.company_code,u.default_language,
+			info.name,info.position,info.`language`,info.`comment`,ri.name roleNames,
+			(select name from company_info where code=u.company_code) comName,ue.function_type,ue.title_name,ue.certificat_info,ue.work_year
+		FROM
+		auth_user u
+		LEFT JOIN auth_user_info info ON info.code = u.code 
+		LEFT JOIN company c ON u.company_code = c.code
+		LEFT JOIN auth_role_user ru on ru.user_code=u.code
+		LEFT JOIN auth_role_info ri on ri.code=ru.role_code 
+		LEFT JOIN auth_user_extend ue on ue.user_code=u.`code` 
+		WHERE
+		u.status != 9 
+		AND ru.`status` = 1
+		and ru.`status`=1
+		AND u.code = #{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByCondition" resultMap="int"
+		parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT
+		count(*)
+		FROM
+		auth_user
+		WHERE
+		code = #{code,jdbcType=VARCHAR}
+		<if test="loginPassword != null">
+			AND login_password = #{loginPassword,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectByCodeOrPhoneOrLoginName" resultType="com.cloudinnov.yun.openapi.model.AuthUsers"
+		parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT *
+		FROM
+		auth_user 
+		WHERE status != 9 
+		and (phone = #{_parameter,jdbcType=VARCHAR} or code = #{_parameter,jdbcType=VARCHAR} or login_name = #{_parameter,jdbcType=VARCHAR})
+		limit 1
+	</select>
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user
+		set
+		status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectResourcesByCode" resultMap="ReBaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from auth_resources where code in (
+		select resource_code from
+		auth_department_resource where department_code in
+		(
+		SELECT
+		department_code from auth_department_user where
+		user_code=#{code,jdbcType=VARCHAR}
+		AND company_code =
+		#{companyCode,jdbcType=VARCHAR} ));
+	</select>
+
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers"
+		resultMap="BaseResultMap">	
+		SELECT
+			u.`code`,
+			u.sex,
+			u.email,
+			u.logo,
+			u.login_name,
+			u.phone,
+			u.`status`,
+			u.user_type,
+			u.company_code,
+			u.appid,
+			u.appmodel,
+			(select name from company_info where code=u.company_code) comName,
+			info. name,
+			info.`language`,
+			info.`comment`,
+			info.position,
+			ru.role_code,
+			(select name roleNames from auth_role_info where code = ru.role_code) roleNames 
+		FROM
+			auth_user u
+		LEFT JOIN auth_user_info info ON info. CODE = u.`code`
+		LEFT JOIN auth_role_user ru on ru.user_code=u.`code`
+		AND info.LANGUAGE = 'cn'
+		WHERE
+		u.status = 1
+		<if test="loginName != null">
+			AND u.login_name = #{loginName,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null and name != ''">
+			AND (info.name  LIKE concat(concat('%',#{name,jdbcType=VARCHAR}),'%') or u.phone = #{name,jdbcType=VARCHAR})
+		</if>
+		<if test="position != null">
+			AND info.position = #{position,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+			AND u.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="email != null">
+			AND u.email = #{email,jdbcType=VARCHAR}
+		</if>
+		<if test="companyCode != null and companyCode != ''">
+			AND u.company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			AND u.status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="status ==null">
+			and u.status!=9
+		</if>
+		<if test="comment != null">
+			AND info.comment = #{comment,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null and userType!=''">
+			AND u.user_type = #{userType,jdbcType=VARCHAR}
+		</if>
+		<if test="roleCode != null">
+			AND u.code in(select user_code from auth_role_user where role_code in(${roleCode}))
+		</if>
+		GROUP BY u.`code`
+	</select>
+	
+	<select id="getUserMessageList" resultType="com.cloudinnov.yun.openapi.model.Messages"
+		parameterType="java.util.Map">
+		select m.code,mu.code mucode,m.type mtype, wo.type wtype,pil.code patrolCode, m.title,mu.type,m.create_time createTime,
+			 m.context,m.work_code workCode,m.em_group_id emGroupId, m.status  from messages_user mu 
+		LEFT JOIN messages m on mu.mcode=m.`code`
+		LEFT JOIN work_order wo on wo.code=m.work_code
+		LEFT JOIN patrol_inspection_logs pil on pil.pi_code =m.work_code
+		where m.`status` =1
+		<if test="code != null">
+			AND mu.ucode = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND au.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="phone !=null">
+			AND au.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="loginName !=null">
+			AND au.loginName = #{loginName,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			and m.type in (${userType}) 
+		</if>
+		GROUP BY mu.mcode
+		ORDER BY m.create_time DESC
+	</select>
+	
+	<select id="selectOemUserList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		u.code,info.name,info.`language`,info.`comment`,info.position,u.`code`,u.logo,u.email,u.sex,
+		u.login_name,u.phone,u.`status`,cinfo.name as
+		comname,u.company_code,u.default_language,
+		(select
+		group_concat(language SEPARATOR ',') as languages
+		FROM
+		auth_user_info
+		WHERE code = u.code group by code) languages
+		FROM
+		auth_user u
+		LEFT JOIN
+		auth_user_info info ON info.code = u.code AND info.language =
+		#{language,jdbcType=VARCHAR}
+		LEFT JOIN company c ON u.company_code =
+		c.code
+		LEFT JOIN company_info cinfo ON cinfo.code = c.code AND
+		cinfo.language = #{language,jdbcType=VARCHAR}
+		WHERE
+		u.status != 9
+		<if test="type != null">
+			AND c.type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="comCode != null">
+			AND u.company_code = #{comCode,jdbcType=VARCHAR}
+		</if>
+		<if test="oemCode !=null">
+			AND c.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode !=null">
+			AND c.code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY u.create_time DESC
+	</select>
+	
+	<select id="selectCustomerUserList" resultMap="BaseResultMap">
+		SELECT
+		info.name,info.`language`,info.`comment`,info.position,u.`code`,u.logo,u.email,u.sex,
+		u.login_name,u.phone,u.`status`,cinfo.name as comname
+		FROM
+		auth_user u
+		LEFT JOIN auth_user_info info ON info.code = u.code AND
+		info.language =
+		#{language,jdbcType=VARCHAR}
+		LEFT JOIN company c ON
+		u.company_code =
+		c.code
+		LEFT JOIN company_info cinfo ON cinfo.code =
+		c.code AND
+		cinfo.language = #{language,jdbcType=VARCHAR}
+		WHERE u.status != 9
+		AND u.company_code = #{comCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAreaAndPhone" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT code,phone FROM auth_user WHERE status != 9 AND
+		substring_index(phone, '-', - 1) = #{0}
+
+	</select>
+
+	<update id="resetPassword" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user
+		<set>
+			login_password = #{loginPassword,jdbcType=VARCHAR}
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectAuthUserByCode" resultMap="BaseResultMap">
+		SELECT
+			`user`. CODE,info. NAME,USER .logo,`user`.phone,USER .company_code,ru.role_code,function_type,appid,appmodel,
+			USER.login_name,USER.email,USER.company_code,
+			 title_name,certificat_info,work_year,score_count
+		FROM
+		auth_user USER
+		LEFT JOIN auth_user_info info ON `user`.`code` = info.`code`
+		LEFT JOIN auth_user_extend ue ON `user`.`code` = ue.user_code
+		LEFT JOIN auth_role_user ru ON USER . CODE = ru.user_code
+		AND ru. STATUS = 1
+		WHERE
+		`user`.`status` = 1
+		AND (`user`.`code` = #{userCode,jdbcType=VARCHAR} or `user`.`login_name` = #{userCode,jdbcType=VARCHAR})
+		limit 1
+	</select>
+	
+	<update id="updateAppid" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user set appid = #{appid,jdbcType=VARCHAR},appmodel = #{appModel,jdbcType=VARCHAR} where code= #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 创建工单默认将以下人员加入群组：
+		 工单创建人、客户下用户 、经理角色用户、
+		 有该配电室权限的站长和维修人员 用户、
+		 当日该配电室值班人员/当日该配电室巡视专员
+     -->
+	<select id="listWorkOrderUser" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+			select u.*,u.login_name AS loginName,ui.name,u.user_type as userType from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status != 9 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code=#{transCode,jdbcType=VARCHAR} 
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)) or role_code in(${roleBossCodes}))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type as  userType from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND (model.trans_code = #{transCode,jdbcType=VARCHAR} or model.spare = #{transCode,jdbcType=VARCHAR}) 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			        union all
+			select u.*,u.login_name AS loginName,ui.name,u.user_type as  userType from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9 
+					and ((company_code=#{comCode,jdbcType=VARCHAR}  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}')
+					or u.code=#{userCode,jdbcType=VARCHAR}) 
+	</select>
+	
+	<select id="selectAuthUsersByWorkCode" resultMap="BaseResultMap">
+		SELECT users.* from auth_user users 
+		LEFT JOIN alarm_work_user alarms ON alarms.user_code = users.`code` AND alarms.`status` = 1
+		WHERE
+		users.`status` != 9
+		AND alarms.`code` = #{workCode,jdbcType=VARCHAR}
+		AND users.user_type = 'user'
+		
+	</select>
+	
+	
+	<select id="selectAuthUserByCodes" parameterType="java.lang.String" resultMap="BaseResultMap">
+		SELECT `user`.code,`user`.login_name,info.`name`,user.logo,`user`.phone,user.company_code,
+		functional_type, job_title, pro_qual, work_year 
+		FROM auth_user user
+		LEFT JOIN auth_user_info info
+		ON `user`.`code` = info.`code` AND info.`language` = 'cn'
+		LEFT JOIN user_extend_info extend
+		ON `user`.`code` = extend.`code`
+		where 1=1
+		AND `user`.`code` in(${_parameter})
+		AND `user`.`status` != 9
+	</select>
+	
+	<select id="listUserWorkInvite" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select 
+			u.code,u.login_name,u.sex,u.logo,u.phone,ui.name FROM
+			work_order wo join scheduling sche on wo.transformer_code = sche.trans_code 
+          	join auth_user u on sche.user_code=u.code join auth_user_info ui on u.code=ui.code
+			join auth_role_user ru on ru.user_code=u.code
+			where wo.code=#{workCode,jdbcType=VARCHAR} and ru.role_code in(${roleCodes})
+			AND u.`status` != 9 AND ru.`status` = 1
+	</select>
+	
+	<select id="selectAuthUsersByAlarmWorkCode" resultMap="BaseResultMap"
+	parameterType="com.cloudinnov.yun.openapi.model.AlarmWorkUser">
+	SELECT users.*,info.name from alarm_work_user model
+	LEFT JOIN auth_user users on users.`code` = model.user_code 
+	LEFT JOIN auth_user_info info ON info.`code` = users.`code`
+	WHERE
+	model.`status` = 1
+	AND users.`status` != 9
+	AND model.`code` = #{code,jdbcType=VARCHAR}
+		
+	</select>
+	
+	
+	<select id="selectUserByTrans" parameterType="com.cloudinnov.yun.openapi.model.Scheduling" resultMap="BaseResultMap">
+		select 
+			ui.code,ui.name,s.user_type,u.phone  
+			from scheduling s 
+			JOIN auth_user u on s.user_code=u.code 
+			JOIN auth_user_info ui on s.user_code = ui.code
+			where (s.trans_code=#{transCode,jdbcType=VARCHAR} or s.spare=#{transCode,jdbcType=VARCHAR})
+		 		 AND s.status = 1
+		  		 AND ((s.type = 1 
+			     AND (unix_timestamp()*1000) > work_time 	
+				 AND work_off_time > (unix_timestamp()*1000)
+				 ) or (s.type = 3 AND s.user_type=3))
+	</select>
+	
+	<select id="listUserForWork" parameterType="com.cloudinnov.yun.openapi.model.WorkOrder" resultMap="BaseResultMap">
+		select 
+			ui.code,ui.name,user_type 
+			from scheduling s 
+			JOIN auth_user_info ui on s.user_code = ui.code
+			where s.trans_code=(select transformer_code from work_order where code=#{code,jdbcType=VARCHAR})
+		 		 AND s.status = 1
+		  		 AND ((s.type = 1 
+			     AND (unix_timestamp()*1000) > work_time 	
+				 AND work_off_time > (unix_timestamp()*1000)
+				 ) or (s.type = 3 AND s.user_type=3))
+			union all
+				 select u.code,ui.name,0 user_type
+				 from auth_user u 
+				 JOIN auth_user_info ui on u.code=ui.code
+				 JOIN company c on c.code = u.company_code 
+				 JOIN work_order wo on wo.customer_code=c.code 
+				 where user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}' 
+				 and u.status != 9
+				 and wo.code=#{code,jdbcType=VARCHAR} 
+	</select>
+	
+	
+	<select id="getUserMessageLists" resultType="com.cloudinnov.yun.openapi.model.Messages"
+		parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT
+			 m.id, m.code,mu.code mucode,m.type mtype, m.title,mu.type,m.create_time createTime,
+			 m.context, m.create_time,m.work_code workCode,m.em_group_id emGroupId, m.status ,
+			(select case COUNT(ID) when 1 then 3 when 0 then 1 end from work_order where code = m.work_code and padding_by=#{code,jdbcType=VARCHAR}) power 
+			FROM 
+			messages m
+		left join messages_user mu on m.code=mu.mcode and mu.status = 1 
+        left join auth_user au on mu.ucode=au.code
+        LEFT JOIN work_order orders ON orders.`code` = m.work_code 
+		left JOIN point_warn_history pwh on pwh.code=m.work_code and pwh.status !=9
+		WHERE 1 = 1 
+		AND orders.order_status != 16 and orders.`status` = 1
+		<if test="code != null">
+			AND au.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND au.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="phone !=null">
+			AND au.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="loginName !=null">
+			AND au.loginName = #{loginName,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			and m.type in (${userType}) 
+		</if>
+		GROUP BY mu.mcode
+		ORDER BY m.create_time DESC
+	</select>
+	<select id="getMessage" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Messages">
+		SELECT
+			 m.id, m.code,mu.code mucode,m.type mtype, m.title,mu.type,m.create_time createTime,
+			 m.context, m.create_time,m.work_code workCode,m.em_group_id emGroupId, m.status ,pwh.status warnStatus,pwh.point_code pointCode,pwh.code warnHistoryCode,
+			pwh.warn_type pointWarnType,(select case COUNT(ID) when 1 then 3 when 0 then 1 end from work_order where code = m.work_code and padding_by=#{code,jdbcType=VARCHAR}) power 
+			FROM 
+			messages m
+		left join messages_user mu on m.code=mu.mcode and mu.status = 1
+        left join auth_user au on mu.ucode=au.code
+        LEFT JOIN work_order orders ON orders.`code` = m.work_code AND orders.order_status != 3 and orders.`status` = 1
+		left JOIN point_warn_history pwh on pwh.code=m.work_code and pwh.status !=9
+		LEFT JOIN point_warn_info pwi ON pwh.point_code=pwi.point_code
+		WHERE 1 = 1 and m.status!=9
+		<if test="code != null">
+			AND au.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null">
+			AND au.name = #{name,jdbcType=VARCHAR}
+		</if>
+		<if test="phone !=null">
+			AND au.phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="loginName !=null">
+			AND au.loginName = #{loginName,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			and m.type in (${userType}) 
+		</if>
+		<if test="messageTime !=null">
+			AND (FROM_UNIXTIME((m.create_time)/1000,'%Y-%m')=#{messageTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((m.create_time)/1000,'%Y')=#{messageTime,jdbcType=VARCHAR})
+		</if>
+		<if test="checkStatus !=null">
+			AND pwh.status=#{checkStatus,jdbcType=INTEGER}
+		</if>
+		<if test='transCode !=null and transCode!=""'>
+			AND pwh.`trans_code` IN (${transCode})
+		</if>
+		<if test="warnType !=null">
+			AND pwh.`warn_type`=#{warnType,jdbcType=INTEGER}
+		</if>
+		AND pwh.`warn_value` > pwi.`rated_value`
+		GROUP BY mu.mcode
+		ORDER BY m.create_time DESC
+	</select>
+	<select id="getMessageList" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Messages">
+		SELECT
+			 m.id, m.code,m.type mtype, m.title,m.create_time createTime,'MUXSPTM' mucode,
+			 m.context, m.create_time,m.work_code workCode,m.em_group_id emGroupId, m.status ,pwh.status warnStatus,pwh.point_code pointCode,pwh.code warnHistoryCode,pwh.warn_type pointWarnType
+			FROM 
+			messages m
+		LEFT JOIN point_warn_history pwh ON pwh.code=m.work_code AND pwh.status !=9
+		WHERE 1 = 1 AND m.status!=9
+		<if test="code != null">
+			AND mu.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="userType != null">
+			and m.type = #{userType,jdbcType=INTEGER}
+		</if>
+		<if test="messageTime !=null">
+			AND (FROM_UNIXTIME((m.create_time)/1000,'%Y-%m')=#{messageTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((m.create_time)/1000,'%Y')=#{messageTime,jdbcType=VARCHAR})
+		</if>
+		<if test="checkStatus !=null">
+			AND pwh.status=#{checkStatus,jdbcType=INTEGER}
+		</if>
+		<if test="warnLevel !=null">
+			and pwh.warn_level=#{warnLevel,jdbcType=INTEGER}
+		</if>
+		<if test='transCode !=null and transCode!=""'>
+			AND pwh.`trans_code` IN (${transCode})
+		</if>
+		<if test="warnType !=null">
+			AND pwh.`warn_type`=#{warnType,jdbcType=INTEGER}
+		</if>
+		GROUP BY m.code
+		ORDER BY m.create_time DESC
+	</select>
+	<select id="selectUserLogs" parameterType="com.cloudinnov.yun.openapi.model.AuthUserLogs" resultType="int">
+		SELECT
+			count(1)
+		FROM
+			auth_user_logs
+		WHERE STATUS = 1
+		<if test="code !=null">
+		AND CODE = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="assessCode !=null">
+		AND assess_code = #{assessCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime !=null">
+		AND FROM_UNIXTIME((create_time)/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<insert id="insertUserLogs" parameterType="com.cloudinnov.yun.openapi.model.AuthUserLogs">
+		insert into auth_user_logs
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="assessCode != null">
+				assess_code,
+			</if>
+			<if test="assessCount != null">
+				assess_count,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			status
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="assessCode != null">
+				#{assessCode,jdbcType=VARCHAR},
+			</if>
+			<if test="assessCount != null">
+				#{assessCount,jdbcType=DECIMAL},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			1
+		</trim>
+	</insert>
+	<select id="selectAuthUserLogsCount" parameterType="com.cloudinnov.yun.openapi.model.AuthUserLogs" resultType="double">
+					SELECT
+				SUM(assess_count) / count(1) AS count
+			FROM
+				auth_user_logs
+			WHERE STATUS = 1
+				<if test="code !=null">
+					and code=#{code,jdbcType=VARCHAR}
+				</if>
+	</select>
+	<update id="updateUserExtend" parameterType="java.util.Map">
+		update auth_user_extend
+		<set>
+			<if test="logsCount != null">
+				score_count = #{logsCount,jdbcType=INTEGER},
+			</if>
+		</set>
+		where user_code = #{code,jdbcType=VARCHAR}
+	</update>
+	<insert id="insertUserExtend" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		insert into auth_user_extend
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				user_code,
+			</if>
+			<if test="functionType != null">
+				function_type,
+			</if>
+			<if test="titleName != null">
+				title_name,
+			</if>
+			<if test="certificatInfo != null">
+				certificat_info,
+			</if>
+			<if test="workYear !=null">
+				work_year,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="scoreCount !=null">
+				score_count,
+			</if>
+			status
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="functionType != null">
+				#{functionType,jdbcType=VARCHAR},
+			</if>
+			<if test="titleName != null">
+				#{titleName,jdbcType=VARCHAR},
+			</if>
+			<if test="certificatInfo != null">
+				#{certificatInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="workYear !=null">
+				#{workYear,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="scoreCount !=null">
+				#{scoreCount,jdbcType=NUMERIC},
+			</if>
+			1
+		</trim>
+	</insert>
+	<select id="selectUserLogsByCode" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers" resultType="int">
+				SELECT
+			count(1)
+		FROM
+			auth_user_extend
+		WHERE
+			`status` = 1
+			<if test="code !=null">
+				AND user_code =#{code,jdbcType=VARCHAR}
+			</if>
+	</select>
+	<select id="selectUserByCode" parameterType="String" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		SELECT
+			au.code as code,au.phone as phone,user_type userType,(select name from auth_user_info where code=au.code)as name,au.appid as appid,au.appmodel as appModel 
+		FROM
+			auth_user au
+		WHERE
+			au.`status` != 9
+			<if test="_parameter !=null">
+			and au.code =#{_parameter,jdbcType=VARCHAR}
+			</if>
+	</select>
+	<select id="selectListMapByCondition" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select u.*,u.login_name AS loginName,ui.name,u.user_type userType,
+		(select group_concat(ari.code) from auth_role_user aru left join auth_role_info ari on aru.role_code=ari.code where user_code=u.`code`and aru.status=1)as role_code,
+		(select group_concat(ari.name) from auth_role_user aru left join auth_role_info ari on aru.role_code=ari.code where user_code=u.`code`and aru.status=1)as roleNames  
+		from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status != 9 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where status=1
+					<if test="transCode !=null and transCode != ''">
+						and trans_code=#{transCode,jdbcType=VARCHAR} 
+					</if>
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type userType,
+			(select group_concat(ari.code) from auth_role_user aru left join auth_role_info ari on aru.role_code=ari.code where user_code=u.`code`and aru.status=1)as role_code,
+		    (select group_concat(ari.name) from auth_role_user aru left join auth_role_info ari on aru.role_code=ari.code where user_code=u.`code`and aru.status=1)as roleNames 
+			from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					<if test="transCode !=null and transCode != ''">
+						AND model.trans_code = #{transCode,jdbcType=VARCHAR} 
+					</if>
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			        union all
+			select u.*,u.login_name AS loginName,ui.name,u.user_type userType,
+			(select role_code from auth_role_user where user_code=u.`code`and `status`=1)as role_code,
+			(select group_concat(ari.name) from auth_role_user aru left join auth_role_info ari on aru.role_code=ari.code where user_code=u.`code`and aru.status=1)as roleNames  
+			from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status = 1 
+					<if test="comCode !=null and comCode != ''">
+						and company_code=#{comCode,jdbcType=VARCHAR}  
+					</if>
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+	</select>
+	<insert id="insertUser" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		insert into auth_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="loginName != null">
+				login_name,
+			</if>
+			<if test="loginPassword != null">
+				login_password,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="logo != null">
+				logo,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="companyCode != null">
+				company_code,
+			</if>
+			<if test="defaultLanguage != null">
+				default_language,
+			</if>
+			<if test="userType != null">
+				user_type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime!= null">
+			create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="loginName != null">
+				#{loginName,jdbcType=VARCHAR},
+			</if>
+			<if test="loginPassword != null">
+				#{loginPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="logo != null">
+				#{logo,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test="defaultLanguage != null">
+				#{defaultLanguage,jdbcType=VARCHAR},
+			</if>
+			<if test="userType != null">
+				#{userType,jdbcType=VARCHAR},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime!= null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectUserByPhone" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers" resultMap="BaseResultMap">
+		select * from auth_user  where 1=1
+		<if test="phone!=null">
+		and 	phone=#{phone,jdbcType=VARCHAR}
+		</if>
+		ORDER BY create_time DESC LIMIT 1
+	</select>
+	<select id="selectUserByPhoneAndType" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers" resultMap="BaseResultMap">
+		select au.*,(select name from auth_user_info where code=au.code)name from auth_user  au where 1=1
+		<if test="companyCode != null and companyCode != ''">
+			AND company_code = #{companyCode,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			AND status = #{status,jdbcType=INTEGER}
+		</if>
+		<if test="status ==null">
+			and status != 9
+		</if>
+		<if test="userType != null and userType!=''">
+			AND user_type = #{userType,jdbcType=VARCHAR}
+		</if>
+		ORDER BY create_time DESC 
+	</select>
+	<update id="updateUserByPhone" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user
+		<set>
+			<if test="loginPassword != null">
+				login_password = #{loginPassword,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		ORDER BY create_time DESC LIMIT 1
+	</update>
+	<select id="selectUserExtendByCode" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select user_code code,function_type functionType,title_name titleName,work_year workYear,status status,score_count scoreCount from auth_user_extend where status=1
+		<if test="code !=null">
+		and 	user_code=#{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<update id="retrievePass" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		update auth_user
+		<set>
+			<if test="loginPassword !=null">
+				login_password = #{loginPassword,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where status=1 
+		and (login_name=#{phone,jdbcType=VARCHAR} or phone=#{phone,jdbcType=VARCHAR}) 
+	</update>
+	
+	<select id="getUserByRole" parameterType="com.cloudinnov.yun.openapi.model.AuthUsers" resultMap="BaseResultMap">
+		select (select name from auth_user_info where code=u.code) name,
+			    ru.role_code,
+			    (select name from auth_role_info where code=ru.role_code) roleNames,
+			    u.* from 
+				auth_user u left join auth_role_user ru on u.code=ru.user_code and u.status!=9 and ru.status!=9
+				where ru.role_code in(${roleCode})
+	</select>
+	
+	<select id="userCount" resultType="java.util.Map">
+		select count(id) userCount,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') createTime 
+			from auth_user where status = 1 
+			group by FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') 
+			order by create_time 
+	</select>
+	
+	<select id="getPatrolInspectionUsers" resultMap="BaseResultMap">
+		select u.code,ui.name,u.logo from auth_user u left join auth_user_info ui on u.code=ui.code 
+				where u.status !=9 
+				and u.code in(select distinct user_code from scheduling where type=3 and user_type in(1,2) and status !=9 and week =1)
+	</select>
+</mapper>

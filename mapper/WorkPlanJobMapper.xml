@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkPlanJobDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="setting" property="setting" jdbcType="VARCHAR" />
+    <result column="complete_time" property="completeTime" jdbcType="VARCHAR" />
+    <result column="completeTimes" property="completeTimes" jdbcType="VARCHAR" />
+    <result column="executor" property="executor" jdbcType="VARCHAR" />
+    <result column="duration" property="duration" jdbcType="VARCHAR" />
+    <result column="items_code" property="itemsCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, setting, complete_time, executor, duration, items_code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from work_plan_job
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from work_plan_job
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertinfo" parameterType="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+    insert into work_plan_job (id, code, setting, 
+      complete_time, executor, duration, 
+      items_code)
+    values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR}, #{setting,jdbcType=VARCHAR}, 
+      #{completeTime,jdbcType=VARCHAR}, #{executor,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
+      #{itemsCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+    insert into work_plan_job
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="setting != null" >
+        setting,
+      </if>
+      <if test="completeTime != null" >
+        complete_time,
+      </if>
+      <if test="executor != null" >
+        executor,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="setting != null" >
+        #{setting,jdbcType=VARCHAR},
+      </if>
+      <if test="completeTime != null" >
+        #{completeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="executor != null" >
+        #{executor,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+ <insert id="inserWorkItems" parameterType="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+ 	insert into work_plan_items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="workCode != null">
+      	work_code,
+      </if>
+      <if test="itemsCode != null">
+      	items_code,
+      </if>
+      <if test="createTime != null">
+			create_time,
+		</if>
+		<if test="lastUpdateTime != null">
+			last_update_time,
+		</if>
+      	status,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="workCode != null">
+      	#{workCode,jdbcType=VARCHAR},
+      </if>
+      <if test="itemsCode != null">
+      	#{itemsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+		#{createTime,jdbcType=VARCHAR},
+	</if>
+	<if test="lastUpdateTime != null">
+		#{lastUpdateTime,jdbcType=VARCHAR},
+	</if>
+      	1
+    </trim>
+ </insert>
+  
+  <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+    update work_plan_job
+    <set >
+      <if test="setting != null" >
+        setting = #{setting,jdbcType=VARCHAR},
+      </if>
+      <if test="completeTime != null" >
+        complete_time = #{completeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="executor != null" >
+        executor = #{executor,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where code = #{code,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cloudinnov.yun.openapi.model.WorkPlanJob" >
+    update work_plan_job
+    set code = #{code,jdbcType=VARCHAR},
+      setting = #{setting,jdbcType=VARCHAR},
+      complete_time = #{completeTime,jdbcType=VARCHAR},
+      executor = #{executor,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=VARCHAR},
+      items_code = #{itemsCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectWorkPlanJobByCode" resultMap="BaseResultMap">
+  	SELECT 
+	job.complete_time AS completeTimes
+	FROM work_plan_job job 
+	WHERE 
+	job.`code` = #{code,jdbcType=VARCHAR}
+  	
+  </select>
+  
+  <select id="selectList" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultMap="BaseResultMap">
+		select wpj.code,
+    	wo.create_time createTime,
+    	(select order_status from work_order wo where wo.code=wpj.code) status,
+		(select em_group_id from work_order wo where wo.code=wpj.code) emGroupId,
+		(select COUNT(ID) from alarm_work_user where code = wo.code and user_code=#{userCode,jdbcType=VARCHAR} and role = 1 limit 0,1) power ,
+		(select group_concat(name) from items where code in (select items_code from work_plan_items wpi where wpj.code=wpi.work_code and status=1)) content,
+    	wpj.complete_time completeTime
+    	from work_plan_job wpj left join work_order wo on wpj.code = wo.code where wo.status=1 
+    	<if test="transCode != null">
+			and wo.transformer_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		order by wo.create_time
+	</select>
+	
+	
+	<select id="selectListCount" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="java.util.Map">
+		select sum(case when order_status=0 then 1 else 0 end) untreated,
+			   sum(case when order_status=1 then 1 else 0 end) treateding,
+			   sum(case when order_status=2 then 1 else 0 end) treated
+    	from work_plan_job wpj left join work_order wo on wpj.code = wo.code where wo.status=1 
+			   and wo.transformer_code= #{transCode}
+	</select>
+  
+</mapper>

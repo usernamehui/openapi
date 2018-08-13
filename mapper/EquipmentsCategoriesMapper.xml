@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EquipmentsCategoriesDao">
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="parent_id" property="parentId" jdbcType="INTEGER" />
+		<result column="grade" property="grade" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="equipmentsCategoriesInfo" type="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, oem_code, code, name, status, comment, create_time,
+		last_update_time
+	</sql>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		insert into equipments_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="oemCode != null">
+				oem_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="parentId != null">
+				parent_id,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			status,
+			<if test="createTime != null">
+			create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=INTEGER},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=INTEGER},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		insert into equipments_category_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="comment != null">
+				comment
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		update equipments_category
+		<set>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR};
+		update equipments_category_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType=VARCHAR};
+	</update>
+
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		update equipments_category_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType = VARCHAR}
+	</update>
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		update
+		equipments_category
+		set
+		status = 9 where 1=1
+		AND code =
+		#{code,jdbcType=VARCHAR}
+	</update>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories">
+		SELECT
+		ec.*,eci.name,eci.comment,
+		(select
+		group_concat(language SEPARATOR ',') as languages
+		FROM
+		company_info
+		WHERE code = ec.code group by code) languages
+		FROM
+		equipments_category
+		ec
+		join
+		equipments_category_info eci
+		on ec.code
+		=
+		eci.code
+		where ec.status =
+		1
+		<!-- and ec.oem_code = #{oemCode,jdbcType=VARCHAR} -->
+		and eci.language =
+		#{language,jdbcType=VARCHAR}
+		ORDER BY create_time
+	</select>
+
+	<select id="tableList" resultMap="BaseResultMap">
+		SELECT
+		ec.*,eci.name,eci.comment,
+		(select
+		group_concat(language SEPARATOR
+		',') as languages
+		FROM
+		equipments_category_info
+		WHERE code = ec.code
+		group by code)
+		languages
+		FROM
+		equipments_category
+		ec
+		join
+		equipments_category_info eci
+		on
+		ec.code
+		=
+		eci.code
+		where
+		<!-- ec.oem_code =
+		#{oemCode,jdbcType=VARCHAR}
+		and -->
+		eci.language =
+		#{language,jdbcType=VARCHAR}
+		and ec.status = 1
+		AND ec.code
+		IN
+		<foreach item="item" index="index" collection="codes" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.EquipmentsCategories"
+		resultMap="BaseResultMap">
+		SELECT
+		ec.*,eci.name,eci.comment,eci.language
+		from
+		equipments_category ec
+		join
+		equipments_category_info eci
+		on ec.code=
+		eci.code
+		where ec.status = 1
+		and eci.language = 'cn'
+		<if test="code != null">
+			and ec.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null">
+			and ec.type = #{type,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+	<select id="listByCode" parameterType="com.cloudinnov.yun.openapi.model.Equipments"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from equipments_category
+		where status = 1 and oem_code = #{0}
+	</select>
+
+</mapper>

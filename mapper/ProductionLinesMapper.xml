@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProductionLinesDao">
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="string" type="java.lang.String">
+	</resultMap>
+	<resultMap id="ProlineResultMap" type="com.cloudinnov.yun.openapi.model.ProductionLines">
+		<id column="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.ProductionLines">
+		<id column="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="languages" property="languages" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+
+		<collection property="equipments" resultMap="EquResultMap" />
+		<collection property="company" resultMap="CompanyResultMap" />
+		<collection property="points" resultMap="EquPointResultMap" />
+
+	</resultMap>
+
+	<resultMap id="EquResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<result column="equcode" property="code" jdbcType="VARCHAR" />
+		<result column="equname" property="name" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber"
+			jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="place_of_origin" property="placeOfOrigin"
+			jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="production_date" property="productionDate"
+			jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="purchase_date" property="purchaseDate"
+			jdbcType="VARCHAR" />
+		<result column="guarantee_begin_date" property="guaranteeBeginDate"
+			jdbcType="VARCHAR" />
+		<result column="warranty_period" property="warrantyPeriod"
+			jdbcType="INTEGER" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="current_state" property="currentState"
+			jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="CompanyResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="comcode" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="comname" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="comstatus" property="status" jdbcType="INTEGER" />
+		<result column="comcomment" property="comment" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<resultMap id="EquPointResultMap" type="com.cloudinnov.yun.openapi.model.EquipmentPoints">
+		<result column="pointcode" property="code" jdbcType="VARCHAR" />
+		<result column="pointname" property="name" jdbcType="VARCHAR" />
+		<result column="config" property="config" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="viewtype" property="viewType" jdbcType="VARCHAR" />
+		
+		<result column="indextypeunit" property="unit" jdbcType="VARCHAR" />
+	    <result column="data_type" property="dataType" jdbcType="INTEGER" />
+	    <result column="digits" property="digits" jdbcType="INTEGER" />
+	    <result column="chart_type" property="chartType" jdbcType="VARCHAR" />
+	    <result column="monitor_type" property="monitorType" jdbcType="INTEGER" />  
+		<result column="value_type" property="valueType" jdbcType="INTEGER" />
+    	<result column="is_user_customer_report" property="isUserCustomerReport" jdbcType="INTEGER" />
+
+		<result column="language" property="language" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, customer_code, code, name, status, comment,language,
+		create_time,
+		last_update_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from production_line
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		production_line
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		insert into production_line
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="customerCode != null">
+				customer_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			status,
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="customerCode != null">
+				#{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		insert into production_line_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				language,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		update production_line
+		<set>
+			<if test="customerCode != null">
+				customer_code = #{customerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		update production_line_info
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+		and language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		UPDATE
+		production_line
+		SET status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+
+	</update>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT
+		line.id,line.code ,info.name
+		,line.status,info.comment,info.language,
+		equ.code as
+		equcode,eq.image_url,equ.name
+		as equname,
+		com.code as comcode,
+		cominfo.name as comname,
+		cominfo.short_name,
+		com.logo, com.homepage,
+		cominfo.contact,
+		com.telephone,
+		cominfo.country, cominfo.province,
+		cominfo.city,
+		cominfo.address, com.fax, com.service_telephone,
+		com.email, com.oem_code, com.agent_code,
+		com.location, com.status as
+		comstatus
+		FROM production_line line
+		JOIN
+		production_line_equipment
+		equline ON equline.production_line_code =
+		line.code
+		LEFT JOIN
+		production_line_info info ON info.code = line.code
+		AND info.language =
+		#{language,jdbcType=VARCHAR}
+		LEFT JOIN equipment eq
+		on
+		equline.equipment_code = eq.`code`
+		LEFT JOIN equipment_info equ ON
+		equline.equipment_code = equ.`code` AND equ.`language` = info.
+		LANGUAGE
+		LEFT JOIN company_info cominfo ON cominfo.`code` =
+		line.customer_code AND cominfo.`language` = info. LANGUAGE
+		LEFT JOIN
+		company com ON com.`code` = line.customer_code
+
+		WHERE
+		line.status = 1
+		AND
+		line.code = #{code,jdbcType=VARCHAR}
+		AND equline.status = line.status
+		ORDER BY equline.order_id
+	</select>
+
+
+	<select id="selectProLineInfoByCode" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT line.code,info.name,info.language,com.code as
+		comcode, cominfo.name as comname
+		FROM production_line line
+		JOIN
+		production_line_info info ON info.code = line.code
+		JOIN company_info
+		cominfo ON cominfo.code = line.customer_code
+		JOIN company com ON
+		com.code = line.customer_code
+		WHERE line.status = 1
+		AND info.language =
+		#{language,jdbcType=VARCHAR}
+		AND cominfo.language = info.language
+		AND
+		com.status = line.status
+		AND line.customer_code =
+		#{customerCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM production_line
+	</select>
+
+	<select id="listAll" resultMap="int">
+		SELECT count(1) from
+		production_line
+		where status = 1
+	</select>
+
+	<select id="selectProductionLineTotalByCustomerCode" resultMap="int"
+		parameterType="java.lang.String">
+		SELECT
+		count(1) from production_line
+		where status = 1 and
+		customer_code =#{0}
+	</select>
+
+	<select id="selectProLineCodeNameByCustomerCode" resultMap="ProlineResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT line.code,info.name
+		FROM production_line line
+		JOIN
+		production_line_info info ON info.code = line.code
+		WHERE line.status =
+		1
+		AND info.language = #{language,jdbcType=VARCHAR}
+		<if test="customerCode != null">
+			AND line.customer_code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+
+
+
+	<select id="selectProductionLineTotalByOemCode" resultMap="int"
+		parameterType="java.lang.String">
+		SELECT
+		count(1) from production_line pl
+		JOIN company c ON
+		pl.customer_code = c.code
+		WHERE
+		pl.status = 1
+		<if test="oemCode!=null and oemCode!='' ">
+			AND c.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode!=null and agentCode!='' ">
+			AND c.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode!=null and integratorCode!='' ">
+			AND c.integrator_code = #{integratorCode,jdbcType=VARCHAR}
+		</if>
+		AND c.type = 'customer'
+	</select>
+
+	<select id="selectProlineEqusNotExists" resultMap="EquResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.Equipments">
+		SELECT
+		e.code as equcode,info.name as
+		equname,e.image_url,info.brand,info.category_name
+		FROM equipment e
+		LEFT
+		JOIN equipment_info info ON info.code = e.code AND
+		info.language =
+		#{language,jdbcType=VARCHAR}
+		WHERE NOT EXISTS(
+		SELECT
+		equipment_code FROM
+		production_line_equipment lineequ
+		WHERE
+		lineequ.production_line_code =
+		#{code,jdbcType=VARCHAR}
+		AND
+		lineequ.equipment_code = e.code
+		AND
+		lineequ.status = 1 )
+		AND
+		e.customer_code =
+		#{customerCode,jdbcType=VARCHAR}
+		AND e.status = 1
+	</select>
+
+	<select id="selectProlineStates" resultMap="int"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT COUNT(0)
+		FROM
+		production_line_equipment lineequ
+		JOIN equipment equ ON equ.code = lineequ.equipment_code
+		WHERE
+		lineequ.status = 1 AND equ.status =1
+		AND equ.current_state =1 OR
+		equ.current_state=3
+		AND lineequ.production_line_code =
+		#{code,jdbcType=VARCHAR}
+
+	</select>
+
+
+
+
+	<!-- AND point.status = line.status -->
+	<select id="selectListByCondition" resultMap="BaseResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT line.id,line.code ,info.name
+		,line.status,info.comment,info.language,
+		com.code as comcode,
+		cominfo.name as comname,
+		cominfo.short_name,com.logo,cominfo.contact,
+		(select group_concat(language SEPARATOR ',') as languages
+		FROM
+		production_line_info
+		WHERE code = line.code group by code) languages
+		FROM production_line line
+
+		LEFT JOIN production_line_info info ON
+		info.code = line.code AND
+		info.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN company_info cominfo ON cominfo.code = line.customer_code
+		AND
+		info.language = cominfo.language
+		JOIN company com ON com.code =
+		line.customer_code
+		WHERE
+		line.status = 1
+		AND com.status = line.status
+		<if test="oemCode!=null and oemCode!='' ">
+			and com.oem_code = #{oemCode,jdbcType=VARCHAR}
+		</if>
+		<if test="integratorCode!=null and integratorCode!='' ">
+			and com.integrator_code = #{integratorCode,jdbcType=VARCHAR}
+		</if>
+		<if test="customerCode!=null and customerCode!='' ">
+			AND com.code = #{customerCode,jdbcType=VARCHAR}
+		</if>
+		<if test="agentCode != null and agentCode !=''">
+			AND com.agent_code = #{agentCode,jdbcType=VARCHAR}
+		</if>
+		ORDER BY line.create_time desc
+	</select>
+
+
+	<select id="selectEquipmentsByProductCode" resultMap="EquResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT
+		equ.code as equcode,equ.image_url,equinfo.name as
+		equname,equ.current_state
+		FROM production_line line
+
+		JOIN
+		production_line_equipment equline ON equline.production_line_code =
+		line.code
+		LEFT JOIN production_line_info info ON info.code = line.code
+		AND info.language = #{language,jdbcType=VARCHAR}
+		JOIN equipment equ ON
+		equ.code = equline.equipment_code
+		LEFT JOIN equipment_info equinfo ON
+		equinfo.code = equ.code AND equinfo.language = info.language
+
+		WHERE
+		line.status = 1
+		AND equ.status = line.status
+		AND equline.status =
+		line.status
+		AND line.code
+		= #{code,jdbcType=VARCHAR}
+		ORDER BY
+		line.create_time
+		DESC,equline.order_id
+	</select>
+
+	<select id="selectPointsByProductCode" resultMap="EquPointResultMap"
+		parameterType="com.cloudinnov.yun.openapi.model.ProductionLines">
+		SELECT
+		pointinfo.name as pointname,point.code as pointcode,point.config
+		as
+		config,point.type as type,point.view_type as viewtype,
+		indextype.unit AS indextypeunit,indextype.data_type,indextype.digits,indextype.chart_type,indextype.monitor_type,
+			indextype.value_type,indextype.is_user_customer_report
+		FROM
+		production_line line
+		JOIN point point ON point.object_code = line.code
+		LEFT JOIN point_info pointinfo ON pointinfo.code = point.code AND pointinfo.language = #{language,jdbcType=VARCHAR}
+		LEFT JOIN sys_index_type indextype ON indextype.code = point.index_type AND indextype.status = 1 
+		WHERE
+		line.status = 1
+		AND point.status = line.status
+		AND line.code = #{code,jdbcType=VARCHAR}
+		<if test="isCrucial != null and isCrucial!=''">
+			AND point.is_crucial = #{isCrucial,jdbcType=INTEGER}
+		</if>
+	</select>
+
+
+</mapper>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AlarmLogDao" >
+  <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AlarmLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="equipment_code" property="equipmentCode" jdbcType="VARCHAR" />
+    <result column="channel_code" property="channelCode" jdbcType="VARCHAR" />
+    <result column="fault_code" property="faultCode" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="level" property="level" jdbcType="INTEGER" /> 
+    <result column="type" property="type" jdbcType="INTEGER" />
+
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+	<result column="handling_suggestion" property="handingSuggestion" jdbcType="LONGVARCHAR" />
+	<collection property="company" resultMap="ComResultMap" />
+	<collection property="equipment" resultMap="EquResultMap" />
+	
+  </resultMap>
+  
+  <resultMap id="ComResultMap" type="com.cloudinnov.yun.openapi.model.Company">
+		<result column="comcode" property="code" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="comname" property="name" jdbcType="VARCHAR" />
+		<result column="short_name" property="shortName" jdbcType="VARCHAR" />
+		<result column="logo" property="logo" jdbcType="VARCHAR" />
+		<result column="homepage" property="homepage" jdbcType="VARCHAR" />
+		<result column="contact" property="contact" jdbcType="VARCHAR" />
+		<result column="telephone" property="telephone" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="service_telephone" property="serviceTelephone"
+			jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="agent_code" property="agentCode" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<resultMap id="EquResultMap" type="com.cloudinnov.yun.openapi.model.Equipments">
+		<result column="equcode" property="code" jdbcType="VARCHAR" />
+		<result column="equname" property="name" jdbcType="VARCHAR" />
+		<result column="serial_number" property="serialNumber"
+			jdbcType="VARCHAR" />
+		<result column="category_code" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="category_name" property="categoryName"
+			jdbcType="VARCHAR" />
+		<result column="brand" property="brand" jdbcType="VARCHAR" />
+		<result column="model" property="model" jdbcType="VARCHAR" />
+		<result column="place_of_origin" property="placeOfOrigin"
+			jdbcType="VARCHAR" />
+		<result column="image_url" property="imageUrl" jdbcType="VARCHAR" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="oem_name" property="oemName" jdbcType="VARCHAR" />
+		<result column="production_date" property="productionDate"
+			jdbcType="VARCHAR" />
+		<result column="supplier_code" property="supplierCode"
+			jdbcType="VARCHAR" />
+		<result column="supplier_name" property="supplierName"
+			jdbcType="VARCHAR" />
+		<result column="purchase_date" property="purchaseDate"
+			jdbcType="VARCHAR" />
+		<result column="guarantee_begin_date" property="guaranteeBeginDate"
+			jdbcType="VARCHAR" />
+		<result column="warranty_period" property="warrantyPeriod"
+			jdbcType="INTEGER" />
+		<result column="oem_person" property="oemPerson" jdbcType="VARCHAR" />
+		<result column="supplier_person" property="supplierPerson"
+			jdbcType="VARCHAR" />
+		<result column="customer_person" property="customerPerson"
+			jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="location" property="location" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+
+	</resultMap>
+  <sql id="Base_Column_List" >
+    id, equipment_code, channel_code, fault_code, status, create_time
+  </sql>
+  <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AlarmLog" >
+    insert into alarm_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="equipmentCode != null" >
+        equipment_code,
+      </if>
+      <if test="channelCode != null" >
+        channel_code,
+      </if>
+      <if test="faultCode != null" >
+        fault_code,
+      </if>
+        status,
+      <if test="createTime != null" >
+       create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+
+      <if test="equipmentCode != null" >
+        #{equipmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="faultCode != null" >
+        #{faultCode,jdbcType=VARCHAR},
+      </if>
+      1,
+      <if test="createTime != null" >
+      	#{createTime,jdbcType=VARCHAR}
+     </if>
+    </trim>
+  </insert>
+  <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AlarmLog" >
+    update alarm_log
+    <set >
+      <if test="equipmentCode != null" >
+        equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelCode != null" >
+        channel_code = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="faultCode != null" >
+        fault_code = #{faultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="search" resultMap="BaseResultMap">
+		SELECT
+			model.id,model.fault_code,  model.equipment_code, model.channel_code,model.create_time,
+			faultinfo.description, faultinfo.handling_suggestion,
+			fault.level, fault.type,
+			equ.code AS equcode ,equinfo.name AS equname, equ.image_url,
+			cominfo.name AS comname, com.code AS comcode
+		FROM
+		alarm_log model
+		JOIN equipment equ ON equ.code = model.equipment_code 
+		LEFT JOIN equipment_info equinfo ON equinfo.code = equ.code AND equinfo.language = #{language,jdbcType=VARCHAR}
+		JOIN company com ON com.code = equ.customer_code
+		LEFT JOIN company_info cominfo ON cominfo.code = com.code AND cominfo.language = #{language,jdbcType=VARCHAR}
+		JOIN fault_code fault ON fault.fault_code = model.fault_code
+		LEFT JOIN fault_code_info faultinfo ON faultinfo.code = fault.code  AND faultinfo.language = #{language,jdbcType=VARCHAR}
+		
+		WHERE 
+			1=1
+		AND 
+			equ.status = 1
+		AND 
+			com.status = 1
+		AND 
+			fault.status = 1
+		<if test="comCode != null and comCode !=''">
+			AND com.code = #{comCode,jdbcType=VARCHAR}
+		</if>
+		<if test="equipmentCode != null">
+			AND equ.code IN
+			<foreach item="item" index="index" collection="equipmentCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="country != null and country !=''">
+			AND cominfo.country = #{country,jdbcType=VARCHAR}
+		</if>
+		<if test="province != null and province!=''">
+			AND cominfo.province = #{province,jdbcType=VARCHAR}
+		</if>
+		<if test="city != null and city != ''">
+			AND cominfo.city = #{city,jdbcType=VARCHAR}
+		</if>
+		<if test="level != null">
+			AND fault.level = #{level,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			AND fault.type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND
+			CONCAT(fault.fault_code,'',equinfo.name,'',cominfo.name) LIKE
+			CONCAT('%',#{keyword,jdbcType=VARCHAR},'%' )
+		</if>
+		ORDER BY
+		model.create_time desc
+		
+	</select>
+</mapper>

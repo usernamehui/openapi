@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.PatrolInspectionDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.PatrolInspection" id="patrolInspectionMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+	 	<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+	 	<result column="type" property="patrolType" jdbcType="INTEGER"/>
+	 	<result column="company" property="company" jdbcType="VARCHAR"/>
+	 	<result column="weather" property="weather" jdbcType="VARCHAR"/>
+	 	<result column="user_code" property="userCode" jdbcType="INTEGER"/>
+	 	<result column="other_warn" property="otherWarn" jdbcType="VARCHAR"/>
+	 	<result column="content" property="content" jdbcType="VARCHAR"/>
+	 	<result column="customer" property="customer" jdbcType="VARCHAR"/>
+	 	<result column="evaluate" property="evaluate" jdbcType="VARCHAR"/>
+	 	<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+	 	<result column="last_update_time" property="lastUpdateTime" jdbcType="VARCHAR"/>
+	 	<result column="status" property="status" jdbcType="INTEGER"/>
+	 	<result column="genre" property="genre" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+		insert into patrol_inspection 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="patrolType != null">
+				type,
+			</if>
+			<if test="company != null">
+				company,
+			</if>
+			<if test="weather != null">
+				weather,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="otherWarn != null">
+				other_Warn,
+			</if>
+			<if test="content != null">
+				content,
+			</if>
+			<if test="customer != null">
+				customer,
+			</if>
+			<if test="evaluate != null">
+				evaluate,
+			</if>
+				create_time,
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+				status,genre,
+			<if test="versionNumber !=null">
+				version_number
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="patrolType != null">
+				#{patrolType,jdbcType=INTEGER},
+			</if>
+			<if test="company != null">
+				#{company,jdbcType=VARCHAR},
+			</if>
+			<if test="weather != null">
+				#{weather,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="otherWarn != null">
+				#{other_Warn,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="customer != null">
+				#{customer,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluate != null">
+				#{evaluate,jdbcType=VARCHAR},
+			</if>
+				UNIX_TIMESTAMP()*1000,
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			0,#{genre,jdbcType=VARCHAR},
+			<if test="versionNumber !=null">
+				#{versionNumber,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="patrolInspectionMap">
+		SELECT (SELECT NAME FROM transformer WHERE CODE = pi.`trans_code`)as  transformerName,
+			(SELECT address FROM transformer WHERE CODE = pi.`trans_code`)as  transAddress,
+			(SELECT NAME FROM auth_user_info au WHERE au. CODE = pi.user_code)as  patrolName,
+			(select count(1) from patrol_inspection_info pii where pii.pi_code=pi.`code`) as count,
+			(select status from patrol_inspection_logs pil where pil.pi_code=pi.`code`) as patrolStatus,
+			(select code from patrol_inspection_logs pil where pil.pi_code=pi.`code`) as patrolCode,
+			pi.concrete_position as concretePosition,pi.user_position as userPosition,
+			pi.genre,pi. CODE,pi.user_code,pi.type ,pi.weather,pi.other_warn,pi.content,pi.customer,pi.evaluate,pi.trans_code,
+			pi.create_time AS beginTime,
+			pi.last_update_time,pi.STATUS,FROM_UNIXTIME((pi.create_time) / 1000,'%Y-%m-%d') AS createTime
+		FROM
+			patrol_inspection pi
+		where pi.status !=9
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="transCode != null">
+					 AND pi.`trans_code` in(${transCode})
+				</if>
+				<if test="patrolType !=null">
+					and type=#{patrolType,jdbcType=INTEGER}
+				</if>
+				<if test="userCode != null">
+					and user_code = #{userCode,jdbcType=VARCHAR}
+				</if> 
+				<if test="patrolStatus !=null">
+					and (select status from patrol_inspection_logs pil where pil.pi_code=pi.`code`)=#{patrolStatus,jdbcType=INTEGER}
+				</if>
+				<if test="createTime != null">
+					and  (FROM_UNIXTIME((pi.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR} or FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR})
+				</if> 
+				<if test="status != null">
+					and status = #{status,jdbcType=INTEGER}
+				</if>
+				<if test="genre != null">
+					and genre = #{genre,jdbcType=VARCHAR}
+				</if>
+				<if test="assignCode !=null">
+					and (select assign_code from patrol_inspection_logs where pi_code=pi.code)=#{assignCode,jdbcType=VARCHAR}
+				</if>
+				<!-- <if test="genre == null">
+					and genre != 2 
+				</if> -->
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+		update patrol_inspection 
+		<set>
+			<if test="transCode != null">
+				trans_Code = #{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="patrolType != null">
+				type = #{patrolType,jdbcType=INTEGER},
+			</if>
+			<if test="company != null">
+				company = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="weather != null">
+				weather = #{weather,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				user_Code = #{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="otherWarn != null">
+				other_Warn = #{otherWarn,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="customer != null">
+				customer = #{customer,jdbcType=VARCHAR},
+			</if>
+			<if test="evaluate != null">
+				evaluate = #{evaluate,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_Time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime !=null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="genre != null">
+				genre = #{genre,jdbcType=VARCHAR},
+			</if>
+			<if test="userPosition !=null">
+				user_position=#{userPosition,jdbcType=VARCHAR},
+			</if>
+			<if test="concretePosition !=null">
+				concrete_position=#{concretePosition,jdbcType=VARCHAR},
+			</if>
+			<if test="versionNumber !=null">
+				version_number=#{versionNumber,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultMap="patrolInspectionMap">
+		select  (select name from auth_user_info where code=pi.user_code) patrolName,
+				(select name from auth_user_info where code=pi.customer) customer,
+				(select name from company_info where code=pi.`company`) company,
+				(select name from transformer where code=pi.`trans_code`) transformerName,
+				(select code from patrol_inspection_logs where pi_code=pi.code) patrolLogsCode,
+				pi.version_number versionNumber,pi.user_position userPosition,pi.concrete_position concretePosition,pi.code,pi.trans_code,pi.type,pi.weather,pi.user_code,pi.other_warn,pi.content,pi.customer,pi.evaluate,pi.create_time,pi.last_update_time,pi.status,pi.genre  
+			    from patrol_inspection  pi 
+				where status != 9
+				<if test="code != null">
+					and code = #{code,jdbcType=VARCHAR}
+				</if>
+				<if test="transCode != null">
+					and trans_code = #{transCode,jdbcType=VARCHAR}
+				</if>
+				<if test="userCode != null">
+					and user_code = #{userCode,jdbcType=VARCHAR}
+				</if> 
+				<if test="status != null">
+					and status = #{status,jdbcType=INTEGER}
+				</if>
+				<if test="genre != null">
+					and genre = #{genre,jdbcType=VARCHAR}
+				</if>
+				<!-- <if test="genre == null">
+					and genre != 2 
+				</if> -->
+				order by create_time desc
+				limit 1
+	</select>
+	
+	<insert id="saveOrUpdateInfo" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspectionInfo">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select count(1) id from patrol_inspection_info where pi_code=#{piCode,jdbcType=VARCHAR} and item_code = #{itemCode,jdbcType=VARCHAR}
+		</selectKey>
+		<if test="id == 0">
+			insert into patrol_inspection_info 
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					code,
+				</if>
+				<if test="piCode != null">
+					pi_code,
+				</if>
+				<if test="itemCode != null">
+					item_code,
+				</if>
+					create_time,
+				<if test="lastUpdateTime != null">
+					last_Update_Time,
+				</if>
+				<if test="status != null">
+					status,
+				</if>
+			</trim>
+			<trim prefix="values(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					#{code,jdbcType=VARCHAR},
+				</if>
+				<if test="piCode != null">
+					#{piCode,jdbcType=VARCHAR},
+				</if>
+				<if test="itemCode != null">
+					#{itemCode,jdbcType=VARCHAR},
+				</if>
+					UNIX_TIMESTAMP()*1000,
+				<if test="lastUpdateTime != null">
+					#{lastUpdateTime,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					#{status,jdbcType=INTEGER},
+				</if>
+			</trim>
+		</if>
+		<if test="id > 0">
+			update patrol_inspection_info 
+			<set>
+				<if test="piCode != null">
+					pi_code = #{piCode},
+				</if>
+				<if test="itemCode != null">
+					item_code = #{itemCode},
+				</if>
+				<if test="lastUpdateTime != null">
+					last_Update_Time = #{lastUpdateTime,jdbcType=VARCHAR},
+				</if>
+				<if test="status != null">
+					status = #{status},
+				</if>
+			</set>
+			<where>
+				<if test="piCode != null">
+					pi_code = #{piCode,jdbcType=VARCHAR} 
+				</if>
+				<if test="itemCode != null">
+					and item_code = #{itemCode,jdbcType=VARCHAR} 
+				</if>
+			</where>
+		</if>
+	</insert>
+	<insert id="savePatrolInfoLog" parameterType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs">
+		insert into patrol_inspection_logs
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					code,
+				</if>
+				<if test="piCode != null">
+					pi_code,
+				</if>
+				<if test="assignCode != null">
+					assign_code,
+				</if>
+				<if test="abnormalPhoto !=null">
+					abnormal_photo,
+				</if>
+				<if test="expectTime != null">
+					expect_time,
+				</if>
+				<if test="createTime !=null">
+					create_time,
+				</if>
+					status
+			</trim>
+			<trim prefix="values(" suffix=")" suffixOverrides=",">
+				<if test="code != null">
+					#{code,jdbcType=VARCHAR},
+				</if>
+				<if test="piCode != null">
+					#{piCode,jdbcType=VARCHAR},
+				</if>
+				<if test="assignCode != null">
+					#{assignCode,jdbcType=VARCHAR},
+				</if>
+				<if test="abnormalPhoto !=null">
+					#{abnormalPhoto,jdbcType=VARCHAR},
+				</if>
+				<if test="expectTime != null">
+					#{expectTime,jdbcType=VARCHAR},
+				</if>
+				<if test="createTime !=null">
+					#{createTime,jdbcType=VARCHAR},
+				</if>
+					1
+			</trim>
+	</insert>
+	<update id="updatePatrolInfoLogs" parameterType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs">
+	update patrol_inspection_logs
+		<set>
+			<if test="checkUser != null">
+				check_user = #{checkUser,jdbcType=VARCHAR},
+			</if>
+			<if test="status !=null">
+				status=#{status,jdbcType=INTEGER},
+			</if>
+			<if test="checkDescription != null">
+				check_description = #{checkDescription,jdbcType=INTEGER},
+			</if>
+			<if test="checkPhoto != null and checkPhoto !='' ">
+				check_photo = #{checkPhoto,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_Time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+	<select id="selectManageByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name AS loginName,ui.name,u.user_type userType  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where trans_code=#{transCode,jdbcType=VARCHAR} 
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type userType from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					AND model.trans_code = #{transCode,jdbcType=VARCHAR} 
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+			        union all
+			select u.*,u.login_name AS loginName,ui.name,u.user_type userType from auth_user u join auth_user_info ui on u.code=ui.code 
+					where status != 9 
+					and company_code=#{comCode,jdbcType=VARCHAR}  
+					and user_type='${@com.cloudinnov.yun.openapi.common.CommonUtils@LOGIN_APP_TYPE}'
+	</select>
+	<select id="selectPatrolInfo" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="java.util.Map">
+		select COUNT(1) as zongCount,
+		(select  COUNT(distinct pi.code) from patrol_inspection pi join patrol_inspection_info pii on pi.code=pii.pi_code
+		where
+		<if test="createTime != null">
+			 (FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pi.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		<if test="transCode !=null">
+			 AND pi.`trans_code` in(${transCode})
+		</if>
+		) as noNormalCount,
+		(select count(1) from patrol_inspection_logs pil join patrol_inspection pi on pi.code=pil.pi_code 
+		where
+		<if test="createTime != null">
+			 (FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pi.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		<if test="transCode !=null">
+			 AND pi.`trans_code` in(${transCode})
+		</if>
+		) as noNormalTrackCount
+		from patrol_inspection pi where 
+		<if test="createTime != null">
+		 (FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pi.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		<if test="transCode !=null">
+			 AND pi.`trans_code` in(${transCode})
+		</if>
+	</select>
+	<select id="selecPatrolContent" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="String">
+		select content from patrol_inspection where  
+		<if test="code !=null">
+			code=#{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="findPatroTrackLogs" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs">
+		SELECT
+			pil.assign_code as assignCode,
+			au. NAME as assignName,
+			i. NAME as itemsName,
+			FROM_UNIXTIME((pii.create_time)/1000,'%Y-%m-%d %H:%i:%s')as createTime,
+			pil. CODE as code,pi.genre,
+			pil. STATUS as status
+		FROM
+			patrol_inspection_info pii
+		JOIN patrol_inspection pi ON pi. CODE = pii.pi_code
+		JOIN patrol_inspection_logs pil ON pil.pi_code = pi. CODE
+		JOIN items i ON i. CODE = pii.item_code
+		JOIN auth_user_info au ON au. CODE = pil.assign_code
+			where 
+			<if  test="transCode !=null">
+				pi.trans_code in (${transCode})
+			</if>
+			<if test="createTime !=null">
+				and (FROM_UNIXTIME((pil.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pil.create_time)/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+			</if>
+			<if test="status !=null">
+				and pil.status =#{status,jdbcType=INTEGER}
+			</if>
+			group by pil.code
+	</select>
+	<select id="selectPatrolLogsByCode" parameterType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs" resultType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs">
+		SELECT
+			pil.code as code,
+			pil.pi_code as piCode,
+			au.`name` as patrolName,
+			t.`name` as transName,
+			pil.assign_code as assignCode,
+			FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m-%d %H:%i:%s')as patrolTime,
+			(select logo from auth_user a where a.code=pi.user_code) as patrolLogo,
+			aui. NAME as assignName,
+			(select logo from auth_user a where a.code=pil.assign_code) as assignLogo,
+			FROM_UNIXTIME((pil.expect_time)/1000,'%Y-%m-%d %H:%i:%s')as expectTime,
+			FROM_UNIXTIME((pil.last_update_time)/1000,'%Y-%m-%d %H:%i:%s')as lastUpdateTime,
+			pi.content as content ,
+			pil.check_description as checkDescription ,
+			pil.abnormal_photo as abnormalPhoto,
+			pil.check_photo as checkPhoto
+		FROM
+			patrol_inspection_logs pil
+		LEFT JOIN patrol_inspection pi ON pi. CODE = pil.pi_code
+		LEFT JOIN auth_user_info au ON au. CODE = pi.user_code
+		LEFT JOIN auth_user_info aui ON aui. CODE = pil.assign_code
+		LEFT JOIN transformer t on t.code=pi.trans_code
+		where
+		<if test="code !=null">
+		pil. CODE=#{code,jdbcType=VARCHAR}
+		</if>
+		ORDER BY pil.create_time DESC
+	</select>
+	<select id="selectAssignByCode" parameterType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs" resultType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs">
+		select assign_code as assignCode from patrol_inspection_logs  where 
+		<if test="code !=null">
+		code=#{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectTrasCodeByPiCode" parameterType="com.cloudinnov.yun.openapi.model.PatrolInfoLogs" resultType="String">
+		select (select name from transformer where code=pi.trans_code)as transName from patrol_inspection pi
+		where 
+		<if test="piCode !=null">
+			pi.code=#{piCode,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectPatrolInspection" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+			SELECT
+			pi. CODE as code, pi.genre,
+			pi.trans_code as transCode,
+			(select address from transformer where code=pi.trans_code)transAddress,
+			pi.genre as genre,
+			(select `name` from transformer WHERE code =pi.trans_code)as transformerName,
+			(case pi.type when 1 then '有异常' when 2 then '无异常' end) type,
+			pi.weather as weather,
+			pi.content as content,
+			pi.version_number versionNumber,
+			FROM_UNIXTIME(pi.create_time/1000,'%Y-%m-%d') createTime,
+			(select name from auth_user_info where code=pi.user_code) as patrolName
+		FROM
+			patrol_inspection pi
+		LEFT JOIN patrol_inspection_info pii ON pi. CODE = pii.pi_code
+		where 1=1
+		<if test="transCode !=null">
+			and pi.trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime !=null">
+			and (FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((pi.create_time)/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		 <if test="beginTime !=null">
+  	 	and FROM_UNIXTIME(pi.create_time/1000,'%Y-%m-%d') &gt;=#{beginTime,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="endTime !=null">
+	  	 	and FROM_UNIXTIME(pi.create_time/1000,'%Y-%m-%d') &lt;=#{endTime,jdbcType=VARCHAR}
+	  	 </if>
+		group by pi.code
+		order by pi.create_time desc 
+	</select>
+	<select id="selectPatrolLogByPatrolCode" parameterType="String" resultType="int">
+		select count(1) from patrol_inspection_logs where 1=1 
+		<if test="_parameter !=null">
+			and pi_code=#{_parameter,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectPatrolByCode" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+		select (select name from transformer where `code`=pi.trans_code)transName,
+		(select name from auth_user_info where code=pi.user_code)userName,
+		FROM_UNIXTIME(pi.create_time/1000,'%H:%i:%s')createTime,
+		pi.user_position userPosition,pi.concrete_position concretePosition,pi.type as patrolType,
+		pi.content as content,pl.status patrolStatus,
+		(select name from auth_user_info where code=pl.assign_code)checkName,
+		(select phone from auth_user where code=pl.assign_code)phone,
+		FROM_UNIXTIME(pl.expect_time/1000,'%Y-%m-%d %H:%i:%s')expectTime,
+		FROM_UNIXTIME(pl.last_update_time/1000,'%Y-%m-%d %H:%i:%s')lastUpdateTime
+		from patrol_inspection pi  
+		LEFT JOIN patrol_inspection_logs pl on pi.code=pl.pi_code 
+		where pi.code=#{code,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getCountByTrans" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="java.util.Map">
+		select (select count(1)  from patrol_inspection where trans_code in(${transCode}) ) allPatrolCount,
+				count(1) curPatrolCount,create_time from patrol_inspection where 
+				status != 9 
+				and trans_code in (${transCode}) 
+				and create_time &gt;= #{beginTime} 
+				and create_time &lt;= #{endTime} 
+	</select>
+	
+	
+	<select id="getTotalCount" parameterType="com.cloudinnov.yun.openapi.model.Transformer" resultType="java.util.Map">
+		select * from (
+			(select count(1) normal from patrol_inspection pi where status = 2 
+			<if test="code != null">
+			and trans_code=#{code,jdbcType=VARCHAR}
+			</if>) normal,
+			(select count(1) undone from patrol_inspection_logs where status = 1 
+			and pi_code in(select code from patrol_inspection pi where type = 1
+			 <if test="code != null"> 
+			 and trans_code=#{code,jdbcType=VARCHAR}
+			 </if>
+			 <if test="usercode != null">
+			 and assign_code=#{usercode,jdbcType=VARCHAR}
+			 </if>
+			 )) undone,    
+			(select count(1) done from patrol_inspection_logs where status = 2 
+			and pi_code in(select code from patrol_inspection pi where type = 1 
+			<if test="code != null"> 
+			and trans_code=#{code,jdbcType=VARCHAR}
+			</if>)) done    
+		)
+	</select>
+	
+	<select id="get" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+		select * from patrol_inspection where status != 9 
+					  and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') = FROM_UNIXTIME(#{createTime,jdbcType=VARCHAR}/1000,'%Y-%m-%d') 
+					  and trans_code = #{transCode,jdbcType=VARCHAR} 
+					  and FIND_IN_SET(user_code,#{userCode,jdbcType=VARCHAR}) 
+					  limit 1 
+	</select>
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 生产排程表 -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ProductionProcessScheduleDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="process_code" jdbcType="VARCHAR" property="processCode" />
+        <result column="schedule_id" jdbcType="VARCHAR" property="scheduleId" />
+        <result column="process_code" jdbcType="VARCHAR" property="processCode" />
+        <result column="production_code" jdbcType="VARCHAR" property="productionLineCode" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, process_code, schedule_id, status, create_time, production_code
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule">
+        INSERT INTO production_process_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			        <if test="processCode != null">
+            process_code,
+        </if>
+        <if test="scheduleId != null">
+            schedule_id,
+        </if>
+         <if test="productionLineCode != null">
+            production_code,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createTime != null">
+            create_time,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			        <if test="processCode != null">
+            #{processCode,jdbcType=VARCHAR},
+        </if>
+        <if test="scheduleId != null">
+            #{scheduleId,jdbcType=VARCHAR},
+        </if>
+         <if test="productionLineCode != null">
+            #{productionLineCode,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule">
+        UPDATE production_process_schedule
+        <set>
+		        <if test="processCode != null">
+            process_code = #{processCode,jdbcType=VARCHAR},
+        </if>
+        <if test="scheduleId != null">
+            schedule_id = #{scheduleId,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=VARCHAR},
+        </if>
+ 
+        </set>
+        WHERE production_code = #{productionLineCode,jdbcType=INTEGER}
+    </update>
+    
+    <update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule">
+		UPDATE production_process_schedule
+		SET
+		status = 9
+		WHERE production_code = #{productionLineCode,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM production_process_schedule
+        WHERE status = 1
+    </select>
+    
+    <select id="selectEntityByProductLineCode" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM production_process_schedule
+        WHERE production_code = #{productionLineCode,jdbcType=VARCHAR}
+        AND status = 1
+    </select>
+    
+    
+     <select id="selectEntityByProcessCode" parameterType="com.cloudinnov.yun.openapi.model.ProductionProcessSchedule" resultMap="BaseResultMap">
+        SELECT 
+        process.code, model.schedule_id, model.create_time, model.production_code
+        FROM production_process_schedule model
+        JOIN production_process process ON process.production_code = model.production_code
+        WHERE process.code = #{processCode,jdbcType=VARCHAR}
+        AND model.status = 1
+        AND process.status = 1
+    </select>
+    
+    
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into production_process_schedule (
+                        process_code, schedule_id, status, create_time
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.processCode,jdbcType=VARCHAR}, 
+        #{item.scheduleId,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=VARCHAR}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM production_process_schedule WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+ 
+</mapper>

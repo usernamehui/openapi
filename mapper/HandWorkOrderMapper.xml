@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.HandWorkOrderDao">
+	<resultMap id="BaseResultMap"
+		type="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="reservation" property="reservation" jdbcType="INTEGER" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="reservation_time" property="reservationTime"
+			jdbcType="VARCHAR" />
+		<result column="transformer_code" property="transformerCode"
+			jdbcType="VARCHAR" />
+		<result column="fault_type" property="faultType" jdbcType="VARCHAR" />
+		<result column="expect_time" property="expectTime" jdbcType="VARCHAR" />
+		<result column="arrive_time" property="arriveTime" jdbcType="VARCHAR" />
+		<result column="place" property="place" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.cloudinnov.yun.openapi.model.HandWorkOrder" extends="BaseResultMap">
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, CODE, equipment_code, reservation, STATUS, creat_time,
+		last_update_time,reservation_time,transformer_code,fault_type
+	</sql>
+	<sql id="Blob_Column_List">
+		description
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from hand_work_order
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from hand_work_order
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insertSelective" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		insert into hand_work_order (id, CODE, equipment_code,
+		reservation, STATUS, creat_time,
+		last_update_time, description)
+		values (#{id,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR},
+		#{equipmentCode,jdbcType=VARCHAR},
+		#{reservation,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR},
+		#{lastUpdateTime,jdbcType=VARCHAR},
+		#{description,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		insert into hand_work_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				CODE,
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code,
+			</if>
+			<if test="reservation != null">
+				reservation,
+			</if>
+			STATUS,
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="reservationTime != null">
+				reservation_time,
+			</if>
+			<if test="transformerCode != null">
+				transformer_code,
+			</if>
+			<if test="faultType != null">
+				fault_type,
+			</if>
+			<if test="expectTime != null">
+				expect_time,
+			</if>
+			<if test="place != null">
+				place,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				#{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="reservation != null">
+				#{reservation,jdbcType=INTEGER},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="reservationTime != null">
+				#{reservationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="transformerCode != null">
+				#{transformerCode,jdbcType=VARCHAR},
+			</if>
+			<if test="faultType != null">
+				#{faultType,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				#{expectTime,jdbcType=VARCHAR},
+			</if>
+			<if test="place != null">
+				#{place,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		update hand_work_order
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="reservation != null">
+				reservation = #{reservation,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER} 
+	</update> 
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		update hand_work_order
+		set CODE = #{code,jdbcType=VARCHAR},
+		equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+		reservation = #{reservation,jdbcType=INTEGER},
+		STATUS = #{status,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=VARCHAR},
+		last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+		description = #{description,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.HandWorkOrder">
+		UPDATE hand_work_order
+		<set>
+			<if test="equipmentCode != null">
+				equipment_code = #{equipmentCode,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="reservation != null">
+				reservation = #{reservation,jdbcType=INTEGER},
+			</if>
+			<if test="reservationTime != null">
+				reservation_time = #{reservationTime,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expectTime != null">
+				expect_time = #{expectTime,jdbcType=VARCHAR},
+			</if>
+			<if test="arriveTime != null">
+				arrive_time = #{arriveTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE code = #{code,jdbcType=INTEGER}
+	</update>
+	
+	
+	<select id="selectHanWorkOrderByExpectTime" resultMap="BaseResultMap">
+	
+	SELECT model.code,model.expect_time FROM hand_work_order model
+	WHERE model.code = #{code,jdbcType=VARCHAR}
+		
+	
+	</select>
+	
+</mapper>

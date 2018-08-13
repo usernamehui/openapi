@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.PlanDao">
+	
+	<resultMap type="com.cloudinnov.yun.openapi.model.Plan" id="planMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="INTEGER"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="transName" property="transName" jdbcType="VARCHAR"/>
+		<result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+		<result column="createUserName" property="createUserName" jdbcType="VARCHAR"/>
+		<result column="execute_user" property="executeUser" jdbcType="VARCHAR"/>
+		<result column="executeUserName" property="executeUserName" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="start_time" property="startTime" jdbcType="VARCHAR"/>
+		<result column="close_time" property="closeTime" jdbcType="VARCHAR"/>
+		<result column="real_finish_time" property="realFinishTime" jdbcType="VARCHAR"/>
+		<result column="workorder_code" property="workorderCode" jdbcType="VARCHAR"/>
+		<result column="groupId" property="groupId" jdbcType="VARCHAR"/>
+		<result column="orderStatus" property="orderStatus" jdbcType="VARCHAR"/>
+		<result column="common" property="common" jdbcType="VARCHAR"/>
+		<result column="befores" property="befores" jdbcType="VARCHAR"/>
+		<result column="last_update_user" property="lastUpdateUser" jdbcType="VARCHAR"/>
+		<result column="plan_img" property="planImg" jdbcType="VARCHAR"/>
+		<result column="finish_common" property="finishCommon" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="workorderType" property="workorderType" jdbcType="VARCHAR"/>
+		<result column="workorderLocation" property="workorderLocation" jdbcType="VARCHAR"/>
+		<result column="workorderAddress" property="workorderAddress" jdbcType="VARCHAR"/>
+		<result column="workorderRtTime" property="workorderRtTime" jdbcType="VARCHAR"/>
+		<result column="workorderCommon" property="workorderCommon" jdbcType="VARCHAR"/>
+		<result column="workorderTransName" property="workorderTransName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectListByCondition" resultMap="planMap" parameterType="com.cloudinnov.yun.openapi.model.Plan">
+		select 
+			   code,type,trans_code,create_user,execute_user,plan_img,finish_common,
+			   from_unixtime(create_time/1000,'%Y-%m-%d %H:%i:%s') create_time,
+			   from_unixtime(start_time/1000,'%Y-%m-%d %H:%i') start_time,
+			   from_unixtime(close_time/1000,'%Y-%m-%d %H:%i') close_time,
+			   from_unixtime(real_finish_time/1000,'%Y-%m-%d %H:%i') real_finish_time,
+			   workorder_code,
+			   if(type=4,(select em_group_id from work_order where code=workorder_code),null) groupId,
+			   if(type=4,(select order_status from work_order where code=workorder_code),null) orderStatus,
+			   common,last_update_user,status,
+			   ifnull((select short_name from transformer where code = p.trans_code),(select title from work_order where code=workorder_code)) transName,
+			   (select name from auth_user_info where code=p.create_user) createUserName,
+			   (select name from auth_user_info where code=p.execute_user) executeUserName
+			 from plan p where status != 9 
+						 <if test="startTime != null and format != null">
+						    and from_unixtime(start_time/1000,#{format,jdbcType=VARCHAR}) = #{startTime,jdbcType=VARCHAR}
+						 </if>
+						 and if(type = 4,
+						 (select count(1) from alarm_work_user where code = p.workorder_code <if test="executeUser != null"> and user_code = #{executeUser,jdbcType=VARCHAR}</if>) > 0,
+						 (<!-- <if test="executeUser != null">
+						 	execute_user is not null and (create_user = #{executeUser,jdbcType=VARCHAR} or find_in_set(#{executeUser,jdbcType=VARCHAR},execute_user))
+						 </if>
+						 <if test="executeUser == null">
+						 	1 = 1 
+						 </if> -->
+						 1 = 1
+						 <if test="type != null">
+						     and type in (${type}) 
+						 </if>
+						 <if test="transCode != null">
+						     and trans_code in (${transCode})
+						 </if>
+						 <if test="status != null">
+						    and status = #{status}
+						 </if>)) 
+						 order by start_time asc
+	</select>
+	
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Plan" resultMap="planMap">
+		select 
+			   code,type,trans_code,create_user,execute_user,plan_img,finish_common,
+			   from_unixtime(create_time/1000,'%Y-%m-%d %H:%i:%s') create_time,
+			   from_unixtime(start_time/1000,'%Y-%m-%d %H:%i') start_time,
+			   from_unixtime(close_time/1000,'%Y-%m-%d %H:%i') close_time,
+			   from_unixtime(real_finish_time/1000,'%Y-%m-%d %H:%i') real_finish_time,
+			   workorder_code,
+			   if(type=4,(select em_group_id from work_order where code=workorder_code),null) groupId,
+			   if(type=4,(select order_status from work_order where code=workorder_code),null) orderStatus,
+			   if(type=4,(select type from work_order where code=workorder_code),null) workorderType,
+			   if(type=4,(select location from work_order where code=workorder_code),null) workorderLocation,
+			   if(type=4,(select address from work_order where code=workorder_code),null) workorderAddress,
+			   if(type=4,(select reservation_time from hand_work_order where code=workorder_code),null) workorderRtTime,
+			   if(type=4,(select content from work_order where code=workorder_code),null) workorderCommon,
+			   if(type=4,(select if(type=6,(select name from transformer where code=transformer_code),if(type=9,comment,null)) from work_order where code=workorder_code),null) workorderTransName,
+			   common,last_update_user,status,
+			   ifnull((select short_name from transformer where code = p.trans_code),(select title from work_order where code=workorder_code)) transName,
+			   (select name from auth_user_info where code=p.create_user) createUserName,
+			   (select name from auth_user_info where code=p.execute_user) executeUserName
+			 from plan p where status != 9 
+					 		   and code = #{code,jdbcType=VARCHAR} 
+					 		   limit 1 
+	</select>
+	
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Plan">
+		insert into plan 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="executeUser != null">
+				execute_user,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+			<if test="closeTime != null">
+				close_time,
+			</if>
+			<if test="realFinishTime != null">
+				real_finish_time,
+			</if>
+			<if test="workorderCode != null">
+				workorder_code,
+			</if>
+			<if test="common != null">
+				common,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="executeUser != null">
+				#{executeUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				#{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="closeTime != null">
+				#{closeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="realFinishTime != null">
+				#{realFinishTime,jdbcType=VARCHAR},
+			</if>
+			<if test="workorderCode != null">
+				#{workorderCode,jdbcType=VARCHAR},
+			</if>
+			<if test="common != null">
+				#{common,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Plan">
+		update plan  
+		<set>
+			<if test="transCode != null">
+				trans_code = #{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="executeUser != null">
+				execute_user = #{executeUser,jdbcType=VARCHAR},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime,jdbcType=VARCHAR},
+			</if>
+			<if test="closeTime != null">
+				close_time = #{closeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="common != null">
+				common = #{common,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateUser != null">
+				last_update_user = #{lastUpdateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="planImg != null">
+				plan_img = #{planImg,jdbcType=VARCHAR},
+			</if>
+			<if test="realFinishTime != null">
+				real_Finish_Time = #{realFinishTime,jdbcType=VARCHAR},
+			</if>
+			<if test="finishCommon != null">
+				finish_common = #{finishCommon,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		<where>
+			code = #{code,jdbcType=VARCHAR} 
+		</where>
+	</update>
+	
+	<select id="getBeforeOrAfter" parameterType="com.cloudinnov.yun.openapi.model.Plan" resultMap="planMap">
+		select code,type,trans_code,workorder_code,
+			   from_unixtime(create_time/1000,'%Y-%m-%d %H:%i:%s') create_time,
+			   <!-- from_unixtime(start_time/1000,'%H:%i')  -->start_time,
+			   <!-- from_unixtime(close_time/1000,'%H:%i')  -->close_time,
+			   from_unixtime(real_finish_time/1000,'%Y-%m-%d %H:%i') real_finish_time,
+			   if(type=4,(select em_group_id from work_order where code=workorder_code),null) groupId,
+			   if(type=4,(select order_status from work_order where code=workorder_code),null) orderStatus,
+			   common,last_update_user,status,
+			   ifnull((select short_name from transformer where code = p.trans_code),(select title from work_order where code=workorder_code)) transName,
+			   (select name from auth_user_info where code=p.create_user) createUserName,
+			   (select name from auth_user_info where code=p.execute_user) executeUserName,
+			   (((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &lt;= 5) and ((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &gt;=0)) befores,
+			   (select concat(appid,';',appmodel,";",user_type) from auth_user where code = create_user) create_user,
+			   (select group_concat(concat(appid,';',appmodel,";",user_type)) from auth_user where FIND_IN_SET(code,execute_user)) execute_user 
+				
+			   from plan p where status = 0 and 
+			   (((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &lt;= 5 and (start_time - UNIX_TIMESTAMP()*1000)/1000/60 &gt;=0) or 
+			    ((UNIX_TIMESTAMP()*1000 - close_time)/1000/60 &lt;= 5 and (UNIX_TIMESTAMP()*1000 - close_time)/1000/60 &gt;=0))
+	</select>
+	
+	
+	<select id="list" parameterType="com.cloudinnov.yun.openapi.model.Plan" resultType="com.cloudinnov.yun.openapi.model.Plan">
+		select * from plan where status in (0,2) and type in (1,4)
+							     and from_unixtime(close_time/1000,'%Y-%m-%d') = #{closeTime,jdbcType=VARCHAR} 
+	</select>
+	
+	<select id="listMonth" parameterType="com.cloudinnov.yun.openapi.model.Plan" resultType="com.cloudinnov.yun.openapi.model.Plan">
+		select  FROM_UNIXTIME(start_Time/1000,'%Y-%m-%d') startTime,
+				if(FIND_IN_SET('0',group_concat(status)),0,if(FIND_IN_SET('2',group_concat(status)),0,1)) status 
+				from plan where 
+				status != 9 
+				AND FROM_UNIXTIME(start_time/1000,'%Y-%m') = #{createTime,jdbcType=VARCHAR} 
+				group by FROM_UNIXTIME(start_time/1000,'%Y-%m-%d')
+	</select>
+</mapper>

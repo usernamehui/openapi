@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AttendanceDao">
+	<resultMap type="java.lang.Integer" id="int"></resultMap>
+	<resultMap type="com.cloudinnov.yun.openapi.model.Attendance" id="attendanceMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR"/>
+		<result column="trans_code" property="transCode" jdbcType="VARCHAR"/>
+		<result column="user_code" property="userCode" jdbcType="VARCHAR"/>
+		<result column="checkin_time" property="checkinTime" jdbcType="VARCHAR"/>
+		<result column="checkin_type" property="checkinType" jdbcType="INTEGER"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+		<result column="work_duration" property="workDuration" jdbcType="VARCHAR"/>
+		<result column="address" property="address" jdbcType="VARCHAR"/>
+		<result column="location" property="location" jdbcType="VARCHAR"/>
+		<result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+		<result column="late" property="late" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<sql id="result">
+		code,company_code,trans_code,user_code,location,
+		(select name from transformer where code=trans_code)transName,
+		 (select name from auth_user_info where code=user_code) userName,checkin_time,
+	    checkin_type,work_duration,address,img_url,late,location
+	</sql>
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Attendance">
+		insert into attendance 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test = "id != null">
+				id,
+			</if>
+			<if test = "code != null">
+				code,
+			</if>
+			<if test = "companyCode != null">
+				company_code,
+			</if>
+			<if test = "transCode != null">
+				trans_code,
+			</if>
+			<if test = "userCode != null">
+				user_code,
+			</if>
+			<if test = "checkinTime != null">
+				checkin_time,
+			</if>
+			<if test = "checkinType != null">
+				checkin_type,
+			</if>
+			<if test = "status != null">
+				status,
+			</if>
+			<if test = "workDuration != null">
+				work_duration,
+			</if>
+			<if test = "address != null">
+				address,
+			</if>
+			<if test="location !=null">
+				location,
+			</if>
+			<if test = "imgUrl != null">
+				img_url,
+			</if>
+			<if test = "late != null">
+				late,
+			</if>
+			<if test="phoneVersion !=null">
+				phone_version,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test = "id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test = "code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test = "companyCode != null">
+				#{companyCode,jdbcType=VARCHAR},
+			</if>
+			<if test = "transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test = "userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test = "checkinTime != null"> 
+				#{checkinTime,jdbcType=VARCHAR},
+			</if>
+			<if test = "checkinType != null">
+				#{checkinType,jdbcType=INTEGER},
+			</if>
+			<if test = "status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test = "workDuration != null">
+				#{workDuration,jdbcType=VARCHAR},
+			</if>
+			<if test = "address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test = "imgUrl != null">
+				#{imgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="location !=null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test = "late != null">
+				#{late,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneVersion !=null">
+				#{phoneVersion,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="attendanceMap">
+		select 
+		 <include refid="result"></include>
+		 from attendance where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null">
+			and trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			and user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType != null">
+			and checkin_type = #{checkinType,jdbcType=INTEGER}
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and #{beginTime,jdbcType=VARCHAR} &lt;= checkin_time and checkin_time &lt; #{endTime,jdbcType=VARCHAR} 
+		</if>
+		limit 0,1
+	</select>
+	
+	<select id="selectEntityByTrans" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="attendanceMap">
+		select 
+		 <include refid="result"></include>
+		 from attendance where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null">
+			and trans_code in (${transCode})
+		</if>
+		<if test="userCode != null">
+			and user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType != null">
+			and checkin_type = #{checkinType,jdbcType=INTEGER}
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and #{beginTime,jdbcType=VARCHAR} &lt;= checkin_time and checkin_time &lt; #{endTime,jdbcType=VARCHAR} 
+		</if>
+		limit 0,1
+	</select>
+	
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="attendanceMap">
+		select 
+		 <include refid="result"></include>
+		 from attendance where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null">
+			and trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			and user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType != null">
+			and checkin_type = #{checkinType,jdbcType=INTEGER}
+		</if>
+		<if test="checkinTime != null">
+			and from_unixtime(checkin_time/1000,'%Y-%m') = from_unixtime(#{checkinTime,jdbcType=VARCHAR}/1000,'%Y-%m') 
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and checkin_time &gt;= #{beginTime} and checkin_time &lt;= #{endTime}
+		</if>
+		order by checkin_time asc
+	</select>
+	
+	<select id="getCount" parameterType="String" resultType="int">
+		select count(id) from attendance where trans_code=#{_parameter,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectLast" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="attendanceMap">
+		select 
+		 <include refid="result"></include>
+		 from attendance where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null">
+			and trans_code = #{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode != null">
+			and user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType != null">
+			and checkin_type = #{checkinType,jdbcType=INTEGER}
+		</if>
+		<!-- <if test="beginTime != null and endTime != null">
+			and checkin_time &gt; #{beginTime} and checkin_time &lt; #{endTime}
+		</if> -->
+		<if test="checkinTime != null">
+			and from_unixtime(checkin_time/1000,'%Y-%m') = from_unixtime(#{checkinTime,jdbcType=VARCHAR}/1000,'%Y-%m') 
+		</if>
+		order by checkin_time desc
+		limit 1
+	</select>
+	
+	<select id="selectParams" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultMap="attendanceMap">
+		select (select name from auth_user_info where code=a.user_code) userName,
+       			FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d') createTime,
+				FROM_UNIXTIME(checkin_time/1000,'%H:%i:%s') checkinTime,
+				(case checkin_type when 1 then '上班打卡' when 2 then '下班打卡' end) checkinType,
+				address 
+				from attendance a where trans_code=#{transCode} 
+				and FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d') &gt;= #{beginTime} 
+				and FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d') &lt;= #{endTime}
+				order by checkin_time
+	</select> 
+	<select id="selectParam" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+			select user_code as userCode,trans_code as transCode,(select name from auth_user_info where code=a.user_code) userName,
+       			FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d') createTime,
+       			(case checkin_type when 1 then '上班打卡' when 2 then '下班打卡' end) checkinType,
+				FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d %H:%i:%s') checkinTime,
+				(SELECT SUM(assess_count) / count(1) AS count FROM auth_user_logs WHERE STATUS = 1 and code=a.user_code and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') &gt;=#{beginAccessTime} and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') &lt;=#{endAccessTime})scoreCount,
+				address 
+				from attendance a where checkin_type=1 and  trans_code=#{transCode,jdbcType=VARCHAR}
+				and checkin_time &gt;= #{beginTime,jdbcType=VARCHAR}
+				and checkin_time &lt;= #{endTime,jdbcType=VARCHAR}
+				GROUP BY a.user_code,FROM_UNIXTIME(checkin_time / 1000,'%Y-%m-%d')
+	</select>
+	<select id="selectWorkOffTime" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+				SELECT
+			FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d %H:%i:%s')workoffTime
+		FROM
+			attendance a 
+		WHERE
+			checkin_type=2
+		and	trans_code = #{transCode}
+		AND user_code = #{userCode}
+		AND checkin_time BETWEEN #{beginTime}
+		AND #{endTime}
+		ORDER BY checkin_time desc limit 1
+	</select>
+	<select id="selectWorkToTime" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		SELECT
+			FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d %H:%i:%s')worktoTime
+		FROM
+			attendance a 
+		WHERE
+			checkin_type=1
+		and	trans_code = #{transCode}
+		AND user_code = #{userCode}
+		AND checkin_time BETWEEN #{beginTime}
+		AND #{endTime}
+		ORDER BY checkin_time asc limit 1
+	</select>
+	<insert id="insertRecord" parameterType="com.cloudinnov.yun.openapi.model.Attendance">
+		insert into attendance_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test = "code != null">
+				code,
+			</if>
+			<if test = "userCode != null">
+				user_code,
+			</if>
+			<if test = "transCode != null">
+				trans_code,
+			</if>
+			<if test = "record != null">
+				record,
+			</if>
+				status,
+			<if test = "type != null">
+				type,
+			</if>
+			<if test="connectTime !=null">
+				connect_time,
+			</if>
+			<if test = "createTime != null">
+				create_time,
+			</if>
+			<if test = "lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="jiaoPerson !=null">
+				jiao_person,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test = "code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test = "userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test = "transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test = "record != null">
+				#{record,jdbcType=VARCHAR},
+			</if>
+				1,
+			<if test = "type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="connectTime !=null">
+				#{connectTime,jdbcType=VARCHAR},
+			</if>
+			<if test = "createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test = "lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="jiaoPerson !=null">
+				#{jiaoPerson,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectHanvorsTemplete" parameterType="int" resultType="com.cloudinnov.yun.openapi.model.TransTemplete"> 
+		select code as code,name as name , genre as genre,orders as orders, photo as photo,status as status,type as type from trans_templete where 1=1 
+			and type=#{hanvorsType}
+	</select>
+	<insert id="insertHanvors" parameterType="com.cloudinnov.yun.openapi.model.Items">
+		insert into annual_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemsCode != null">
+				items_code,
+			</if>
+			<if test="userTime != null">
+				use_time,
+			</if>
+			<if test="nowAnnualTime != null">
+				now_annual_time,
+			</if>
+			<if test="nextAnnualTime != null">
+				next_annual_time,
+			</if>
+			<if test="annualPerson != null">
+				annual_person,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="itemsPhoto !=null">
+				items_photo,
+			</if>
+				status
+		</trim>
+		<trim prefix="values(" suffix=");"  suffixOverrides=",">
+			<if test="itemsCode != null">
+				#{itemsCode,jdbcType=VARCHAR},
+			</if>
+			<if test="userTime != null">
+				#{useTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nowAnnualTime != null">
+				#{nowAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="nextAnnualTime != null">
+				#{nextAnnualTime,jdbcType=VARCHAR},
+			</if>
+			<if test="annualPerson != null">
+				#{annualPerson,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="itemsPhoto !=null">
+				#{itemsPhoto,jdbcType=VARCHAR},
+			</if>
+				1
+		</trim>
+		insert into items 
+	  	<trim prefix="(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			code,
+	  		</if>
+	  		<if test="transCode != null">
+	  			trans_code,
+	  		</if>
+	  		<if test="type != null">
+	  			type,
+	  		</if>
+	  		<if test="name != null">
+	  			name,
+	  		</if>
+	  		<if test="menu !=null">
+	  			menu,
+	  		</if>
+	  		<if test="unit != null">
+	  			unit,
+	  		</if>
+	  		<if test="columnCode != null">
+	  			column_code,
+	  		</if>
+	  	</trim>
+	  	<trim prefix="values(" suffix=")" suffixOverrides=",">
+	  		<if test="code != null">
+	  			#{code,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="transCode != null">
+	  			#{transCode,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="type != null">
+	  			#{type,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="name != null">
+	  			#{name,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="menu !=null">
+	  			#{menu,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="unit != null">
+	  			#{unit,jdbcType=VARCHAR},
+	  		</if>
+	  		<if test="columnCode != null">
+	  			#{columnCode,jdbcType=VARCHAR}
+	  		</if>
+	  	</trim>
+	</insert>
+	<select id="selectUserParam" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.UserMessage">
+			select user_code as userCode,trans_code as transCode,FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d')createTime,
+				(select name from transformer where code=a.trans_code)transName,
+				(select name from auth_user_info where code=a.user_code) 
+				userName,
+       			FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d') createTime,
+				(select count(1) from workplan where user_code=a.user_code and trans_code=#{transCode,jdbcType=VARCHAR}
+				and settime &gt;= #{beginTime,jdbcType=VARCHAR} 
+				and settime &lt;= #{endTime,jdbcType=VARCHAR}
+				)workplanCount,
+				(select count(1) from workplan where user_code=a.user_code and trans_code=#{transCode,jdbcType=VARCHAR}
+				and settime &gt;= #{beginTime,jdbcType=VARCHAR} 
+				and settime &lt;= #{endTime,jdbcType=VARCHAR} 
+				and (last_update_time-settime)&lt;300000
+				)workplanTimeCount,
+				(select count(1) from point_warn_history where check_user=a.user_code and trans_code=#{transCode,jdbcType=VARCHAR}
+				and last_update_time &gt;= #{beginTime,jdbcType=VARCHAR} 
+				and last_update_time &lt;= #{endTime,jdbcType=VARCHAR}
+				)checkWarnCount,
+				(SELECT SUM(assess_count) / count(1) AS count FROM auth_user_logs WHERE STATUS = 1 and code=a.user_code 
+				and create_time &gt;=#{beginTime,jdbcType=VARCHAR}  
+				and create_time &lt;=#{endTime,jdbcType=VARCHAR}
+				)assessStar,
+				address 
+				from attendance a where checkin_type=1 and  trans_code=#{transCode,jdbcType=VARCHAR}
+				<if test="userName !=null">
+					and (select name from auth_user_info where code=a.user_code)  LIKE concat(concat('%',#{userName,jdbcType=VARCHAR}),'%')
+				</if>
+				and checkin_time &gt;= #{beginTime,jdbcType=VARCHAR}
+				and checkin_time &lt;= #{endTime,jdbcType=VARCHAR}
+				GROUP BY a.user_code,FROM_UNIXTIME(checkin_time / 1000,'%Y-%m-%d')
+				<if test="orderType ==2">
+					ORDER BY	FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d')
+				</if>
+	</select>
+	<select id="selectRecode" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+			SELECT
+			CODE CODE,
+			FROM_UNIXTIME(create_time / 1000,'%Y-%m-%d') createTime,
+			FROM_UNIXTIME(connect_time / 1000,'%Y-%m-%d %H:%i:%s') connectTime,
+			ar.trans_code transCode,
+			(SELECT NAME FROM transformer WHERE CODE = ar.trans_code) transName,
+			jiao_person jiaoPerson
+		FROM
+			attendance_record ar 
+		where 1=1
+		<if test="transCode !=null">
+		and ar.trans_code in (${transCode}) 
+		</if>
+		<if test="createTime !=null">
+		and (FROM_UNIXTIME(create_time/1000,'%Y-%m')=#{createTime,jdbcType=VARCHAR}  or FROM_UNIXTIME(create_time/1000,'%Y')=#{createTime,jdbcType=VARCHAR})
+		</if>
+		order by create_time DESC
+	</select>
+	<select id="selectRecordByCode" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+			select 
+		CODE ,
+		FROM_UNIXTIME(create_time/1000,'%Y-%m-%d %H:%i:%s')connectTime,
+		FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')createTime,
+		record record ,
+		trans_code as transCode,
+		jiao_person jiaoPerson
+		from attendance_record ar where 1=1
+		<if test="code !=null">
+			and code=#{code,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="findRecordByTransAndTime" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">		
+			SELECT
+				CODE as code,
+				record as record,
+				trans_code as transCode,
+				(select name from auth_user_info where code=ar.user_code)userName,
+				(select name from transformer where code=ar.trans_code)transName,
+				FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') createTime
+			FROM
+				attendance_record ar
+			where STATUS=1 
+			<if test="transCode !=null">
+				and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') &gt;=#{beginTime,jdbcType=VARCHAR}
+			and FROM_UNIXTIME(create_time/1000,'%Y-%m-%d') &lt;=#{endTime,jdbcType=VARCHAR}
+	</select>
+	<select id="selectUserByTimeAndType" parameterType="java.util.Map" resultType="String">
+		select GROUP_CONCAT(name) from (select aui.name from attendance a
+		join auth_user_info aui on a.user_code=aui.code 
+		where 1=1
+			<if test="transCode !=null">
+				 and  trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime !=null">
+				and FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+			</if>
+			<if test="checkinType !=null">
+				and checkin_type=#{checkinType,jdbcType=VARCHAR}
+			</if>
+		  GROUP BY a.user_code)name
+	</select>
+	<select id="selectUserByTime" parameterType="java.util.Map" resultType="String">
+		select GROUP_CONCAT(userName) from (SELECT
+				(select name from auth_user_info where code=a.user_code)userName
+			FROM
+				attendance a
+			where STATUS=1 
+			<if test="transCode !=null">
+				and trans_code=#{transCode,jdbcType=VARCHAR}
+			</if>
+			and checkin_type=1
+			and checkin_time &gt;=#{beginTime,jdbcType=VARCHAR}
+			and checkin_time &lt;=#{endTime,jdbcType=VARCHAR}
+			GROUP BY a.user_code)userName 
+	</select>
+	<select id="selectAttendanceByTimeAndCode" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		select FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d %H:%i:%s') worktoTime,address toWorkAddress,location toWorkLocation from attendance 
+		where  1=1
+		<if test="transCode !=null">
+			and trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			and checkin_time &gt;=#{beginTime,jdbcType=VARCHAR} 
+			and checkin_time &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		 and checkin_type=1 ORDER BY checkin_time ASC limit 1  
+	</select>
+	<select id="selectAttendanceByTimeAndType" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		select FROM_UNIXTIME(checkin_time/1000,'%Y-%m-%d %H:%i:%s') workoffTime,address offWorkAddress,location offWorkLocation from attendance 
+		where  1=1
+		<if test="transCode !=null">
+			and trans_code=#{transCode,jdbcType=VARCHAR}
+		</if>
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			and checkin_time &gt;=#{beginTime,jdbcType=VARCHAR} 
+			and checkin_time &lt;=#{endTime,jdbcType=VARCHAR}
+		</if>
+		 and checkin_type=2 ORDER BY checkin_time DESC limit 1  
+	</select>
+	
+	<select id="getStatusCount" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="java.util.Map">
+		select count(1) recordCount,create_time from attendance_record where 
+			status !=9 
+			and trans_code in(${transCode}) 
+			and user_code = #{userCode}
+			and create_time BETWEEN #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Attendance">
+		update attendance 
+		<set>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</set>
+		<where>
+			code = #{code,jdbcType=VARCHAR}
+		</where>
+	</update>
+</mapper>

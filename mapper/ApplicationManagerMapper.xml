@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.ApplicationManagerDao">
+	<resultMap id="BaseResultMap"
+		type="com.cloudinnov.yun.openapi.model.ApplicationManager">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="industry" property="industry" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+
+		<result column="client_id" property="clientId" jdbcType="VARCHAR" />
+		<result column="client_secret" property="clientSecret"
+			jdbcType="VARCHAR" />
+		<result column="effect_time" property="effectTime" jdbcType="VARCHAR" />
+		<result column="expire_time" property="expireTime" jdbcType="VARCHAR" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, code, name, industry, description, status, create_time,
+		last_update_time, comment, client_id, client_secret
+		,effect_time, expire_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from application_manager
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectClientIdAndSecret" resultMap="BaseResultMap">
+		SELECT
+		model.code, model.name, model.industry, model.description,
+		model.comment, oauth.client_id, oauth.client_secret,
+		model.effect_time, model.expire_time
+		FROM application_manager model
+		JOIN application_manager_oauth manager_oauth ON model.code =
+		manager_oauth.application_code
+		JOIN oauth_client_details oauth ON oauth.client_id =
+		manager_oauth.client_id
+		WHERE model.status = 1
+		AND manager_oauth.status = 1
+		AND model.code = #{code,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectEntityByCompanyCode" resultMap="BaseResultMap">
+		SELECT
+		model.code, model.name, model.industry, model.description,
+		model.comment, model.effect_time, model.expire_time
+		FROM application_manager model
+		JOIN company company ON company.application_code =
+		model.code
+		WHERE model.status = 1
+		AND company.status = 1
+		AND company.code = #{customerCode,jdbcType=VARCHAR}
+	</select>
+
+	<update id="deleteByCondition" parameterType="java.lang.String">
+		UPDATE
+		application_manager
+		SET status = 9
+		WHERE code =
+		#{code,jdbcType=VARCHAR};
+
+		UPDATE
+		application_manager_oauth
+		SET status = 9
+		WHERE application_code =
+		#{code,jdbcType=VARCHAR};
+	</update>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.ApplicationManager">
+		insert into application_manager
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="industry != null">
+				industry,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="effectTime != null">
+				effect_time,
+			</if>
+			<if test="expireTime != null">
+				expire_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="industry != null">
+				#{industry,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="effectTime != null">
+				#{effectTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expireTime != null">
+				#{expireTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.ApplicationManager">
+		update application_manager
+		<set>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="industry != null">
+				industry = #{industry,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="effectTime != null">
+				effect_time = #{effectTime,jdbcType=VARCHAR},
+			</if>
+			<if test="expireTime != null">
+				expire_time = #{expireTime,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+</mapper>

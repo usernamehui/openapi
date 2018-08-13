@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.FaultsDao">
+	<cache type="org.mybatis.caches.ehcache.LoggingEhcache">
+		<property name="timeToIdleSeconds" value="3600" /><!--1 hour -->
+		<property name="timeToLiveSeconds" value="3600" /><!--1 hour -->
+		<property name="maxEntriesLocalHeap" value="1000" />
+		<property name="maxEntriesLocalDisk" value="10000000" />
+		<property name="memoryStoreEvictionPolicy" value="LRU" />
+	</cache>
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.Faults">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="oem_code" property="oemCode" jdbcType="VARCHAR" />
+		<result column="library_code" property="libraryCode" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="language" property="language" jdbcType="VARCHAR" />
+		<result column="fault_code" property="faultCode" jdbcType="VARCHAR" />		
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="is_create_order" property="isCreateOrder" jdbcType="INTEGER" />
+		<result column="level" property="level" jdbcType="INTEGER" />		
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_update_time" property="lastUpdateTime"
+			jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="LONGVARCHAR" />
+		<result column="handling_suggestion" property="handlingSuggestion"
+			jdbcType="LONGVARCHAR" />
+		<result column="languages" property="languages" />
+	</resultMap>
+
+
+	<resultMap id="FaultStatBaseResultMap" type="com.cloudinnov.yun.openapi.model.FaultStat">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="customer_code" property="customerCode"
+			jdbcType="VARCHAR" />
+		<result column="production_line_code" property="productionLineCode"
+			jdbcType="VARCHAR" />
+		<result column="equipment_code" property="equipmentCode"
+			jdbcType="VARCHAR" />
+		<result column="fault_code" property="faultCode" jdbcType="VARCHAR" />
+		<result column="failure_time" property="failureTime" jdbcType="VARCHAR" />
+		<result column="recovery_time" property="recoveryTime"
+			jdbcType="VARCHAR" />
+		<result column="duration" property="duration" jdbcType="DECIMAL" />
+		<result column="user_code" property="userCode" jdbcType="VARCHAR" />
+			<result column="alarmcode" property="alarm.code"
+			jdbcType="VARCHAR" />
+		<result column="description" property="alarm.description"
+			jdbcType="LONGVARCHAR" />
+		<!-- <result column="handling_suggestion" property="alarm.handlingSuggestion"
+			jdbcType="LONGVARCHAR" /> -->
+		<result column="first_time" property="alarm.firstTime"
+			jdbcType="VARCHAR" />
+			
+		<result column="alarm_work_code" property="alarmWorkCode"
+			jdbcType="VARCHAR" />
+
+
+		<result column="equipmentname" property="equipment.name"
+			jdbcType="VARCHAR" />
+		<result column="customername" property="company.name" jdbcType="VARCHAR" />
+		<result column="prolinename" property="proline.name" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, oem_code, library_code, code, fault_code, status,
+		comment,
+		create_time, last_update_time,description, handling_suggestion,
+		type,is_create_order,level
+	</sql>
+	<select id="selectFaultCodeCount" resultType="java.lang.Integer"
+		parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		SELECT
+		COUNT(*) from fault_translation_library model
+		JOIN
+		fault_translation_library_info info ON info.code = model.code
+		JOIN
+		fault_code fault ON fault.library_code = model.code
+		WHERE
+		fault.fault_code = #{faultCode}
+		AND fault.status = 1
+		AND model.code =
+		#{libraryCode}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		fault_code
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		insert into fault_code
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="oemCode != null">
+				oem_code,
+			</if>
+			<if test="libraryCode != null">
+				library_code,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="faultCode != null">
+				fault_code,
+			</if>
+			
+			<if test="type != null">
+				type,
+			</if>
+			<if test="isCreateOrder != null">
+				is_create_order,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			
+			status,
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="oemCode != null">
+				#{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="libraryCode != null">
+				#{libraryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="faultCode != null">
+				#{faultCode,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="isCreateOrder != null">
+				#{isCreateOrder,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=INTEGER},
+			</if>
+			1,
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertInfo" parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		insert into fault_code_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				language,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="handlingSuggestion != null">
+				handling_suggestion,
+			</if>
+			<if test="comment != null">
+				comment
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="handlingSuggestion != null">
+				#{handlingSuggestion,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		update fault_code
+		<set>
+			<if test="oemCode != null">
+				oem_code = #{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="libraryCode != null">
+				library_code = #{libraryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="faultCode != null">
+				fault_code = #{faultCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="isCreateOrder != null">
+				is_create_order = #{isCreateOrder,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="lastUpdateTime != null">
+			last_update_time = #{lastUpdateTime,jdbcType=INTEGER},
+			</if>
+		</set>
+		where code = #{code,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateInfoByCondition" parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		update fault_code_info
+		<set>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="handlingSuggestion != null">
+				handling_suggestion =
+				#{handlingSuggestion,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where code = #{code,jdbcType=INTEGER}
+		AND language =
+		#{language,jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.Faults">
+		update fault_code
+		set
+		status = 9
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="selectFaultsListWhere" parameterType="com.cloudinnov.yun.openapi.model.Faults"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		from fault_code
+		<where>
+			<if test="oemCode != null">
+				AND oem_code = #{oemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="libraryCode != null">
+				AND library_code = #{libraryCode,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				AND code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="faultCode != null">
+				AND fault_code = #{faultCode,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				AND status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="comment != null">
+				AND comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				AND create_time = #{createTime,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateTime != null">
+				AND last_update_time =
+				#{lastUpdateTime,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				AND description = #{description,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="handlingSuggestion != null">
+				AND handling_suggestion =
+				#{handlingSuggestion,jdbcType=LONGVARCHAR},
+			</if>
+		</where>
+	</select>
+
+	<select id="selectListByCondition" resultMap="BaseResultMap">
+		SELECT
+		model.code,model.fault_code,model.create_time,
+		model.last_update_time,info.description,info.handling_suggestion,
+		model.type,model.is_create_order,model.level,
+		(select group_concat(language SEPARATOR ',') as languages
+		FROM
+		fault_code_info
+		WHERE code = model.code group by code) languages
+		FROM
+		fault_code model
+		JOIN fault_code_info info ON info.code = model.code
+		WHERE status = 1 and library_code={0}
+	</select>
+
+	<select id="listByLibCode" resultMap="BaseResultMap">
+		SELECT
+		fault.oem_code,fault.library_code, fault.code, fault.fault_code,
+		fault.status,info.language,
+		info.comment,fault.create_time,
+		fault.last_update_time,info.description, info.handling_suggestion,
+		fault.type,fault.is_create_order,fault.level,
+		(select group_concat(language SEPARATOR ',') as languages
+		FROM
+		fault_code_info
+		WHERE code = fault.code group by code) languages
+		FROM
+		fault_code fault
+		left JOIN fault_code_info info ON info.code = fault.code and info.language = #{2}
+		WHERE fault.status = 1
+		AND fault.oem_code = #{1}
+		AND fault.library_code=
+		#{0}
+		ORDER BY fault.create_time DESC
+	</select>
+
+	<select id="selectEntityByCondition" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		model.code,model.fault_code,info.description,info.handling_suggestion,info.comment,
+		model.type,model.is_create_order,model.level
+		FROM fault_code model
+		JOIN fault_code_info info ON model.code =
+		info.code
+		WHERE model.code = #{code,jdbcType=VARCHAR}
+		AND status = 1
+		AND
+		info.language = #{language,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAlarmOrderInfoUseInsert" resultType="java.util.Map">
+		select
+		equ.code as equcode,equ.oem_code,equ.customer_code,channel.code as
+		channelcode,fault.description,fault.handling_suggestion from
+		equipment_fault_channel as channel
+		LEFT JOIN
+		fault_translation_library
+		as lib on lib.code =
+		channel.library_code
+		LEFT JOIN faults as fault on
+		fault.library_code =
+		lib.code
+		LEFT JOIN
+		equipments as equ on equ.code =
+		channel.equipment_code
+		where
+		channel.code = #{0} and
+		fault.fault_code=#{1}
+	</select>
+
+	<insert id="insertFaultStat" parameterType="java.util.Map">
+		INSERT INTO
+			fault_stat
+			(customer_code,production_line_code,equipment_code,fault_channel_code,alarm_order_code,fault_code,failure_time,recovery_time,duration,user_code)
+			SELECT
+			alarm.customer_code,lineequ.production_line_code,alarm.equipment_code,alarm.fault_channel_code,alarm.code,alarm.fault_code,alarm.first_time,alarm.last_update_time,
+			convert((alarm.last_update_time-alarm.first_time)/1000/3600,decimal)
+			as duration,alarm.padding_by
+		FROM alarm_work_order alarm
+		JOIN production_line_equipment lineequ ON lineequ.equipment_code = alarm.equipment_code AND lineequ.status = 1
+		JOIN production_line proline ON proline.code = lineequ.production_line_code AND proline.status = 1
+		WHERE alarm.first_time &gt;= #{start} AND
+		alarm.first_time &lt; #{end}
+	</insert>
+	
+	<select id="selectFaultStatByCondition" parameterType="com.cloudinnov.yun.openapi.model.FaultStat"
+		resultMap="FaultStatBaseResultMap">
+		
+		SELECT * FROM fault_stat WHERE alarm_work_code = #{alarmWorkCode,jdbcType=VARCHAR}
+	
+	</select>
+	
+	<update id="updateFaultStatByCondition" parameterType="com.cloudinnov.yun.openapi.model.FaultStat">
+		update fault_stat
+		<set>
+			<if test="recoveryTime != null">
+				recovery_time = #{recoveryTime,jdbcType=VARCHAR},
+			</if>
+			<if test="duration != null">
+				duration = #{duration,jdbcType=VARCHAR}
+			</if>
+		</set>
+		WHERE alarm_work_code = #{alarmWorkCode,jdbcType=VARCHAR}
+	</update>
+	
+
+	<select id="selectFaultStatsDetailByCondition" parameterType="java.util.Map"
+		resultMap="FaultStatBaseResultMap">
+
+		SELECT
+		fs.fault_code,fs.failure_time,fs.recovery_time,fs.duration,alarminfo.code as alarmcode,
+		equinfo.name as equipmentname,cominfo.name as customername,
+		lineinfo.name as
+		prolinename,alarminfo.description,alarminfo.handing_suggestion,alarm.first_time
+		FROM
+		fault_stat fs
+		JOIN equipment_info equinfo ON equinfo.code =
+		fs.equipment_code
+		JOIN company_info cominfo ON cominfo.code =
+		fs.customer_code
+		JOIN production_line_info lineinfo ON lineinfo.code =
+		fs.production_line_code
+		JOIN alarm_work_order alarm ON
+		alarm.fault_channel_code =
+		fs.fault_channel_code
+		JOIN
+		alarm_work_order_info alarminfo ON alarminfo.code = alarm.code
+		WHERE
+		alarm.fault_code = fs.fault_code
+		<if test="customerCode != null">
+			AND cominfo.code IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="lineCode != null">
+			AND lineinfo.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="equCode != null">
+			AND equinfo.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		AND alarminfo.language = #{language}
+		AND equinfo.language = alarminfo.language
+		AND cominfo.language = alarminfo.language
+		AND lineinfo.language = alarminfo.language
+		AND
+		FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+		AND
+		FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d') &lt;= #{endTime}
+	</select>
+
+	<select id="selectFaultStatsDayByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.FaultStat">
+
+		<if test="customerCode == null and lineCode==null and equCode == null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d')
+			`day`, '' serieName, count(0) faultCount
+			FROM fault_stat fs
+			WHERE
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d') &gt;= #{startTime}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d')
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d')
+			`day`,
+			ci.name serieName, count(fs.customer_code) faultCount
+			FROM
+			fault_stat
+			fs
+			JOIN company_info ci ON fs.customer_code = ci.`code`
+			WHERE ci.`code`
+			IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time /
+			1000,
+			'%Y-%m-%d'),fs.customer_code
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d')
+			`day`,
+			pli.name serieName, count(fs.production_line_code) faultCount
+			FROM
+			fault_stat fs
+			JOIN production_line_info pli ON
+			fs.production_line_code
+			= pli.`code`
+			WHERE pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y-%m-%d'),fs.production_line_code
+		</if>
+		<if test="equCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y-%m-%d')
+			`day`,
+			ei.name serieName, count(fs.production_line_code) faultCount
+			FROM
+			fault_stat fs
+			JOIN equipment_info ei ON fs.equipment_code =
+			ei.`code`
+			WHERE ei.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			AND ei.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y-%m-%d') &gt;=
+			#{startTime}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y-%m-%d') &lt;= #{endTime}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time /
+			1000,
+			'%Y-%m-%d'),fs.equipment_code
+		</if>
+	</select>
+	<select id="selectFaultStatsWeekByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.FaultStat">
+
+		<if test="customerCode == null and lineCode==null and equCode == null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) `week`, '' serieName,
+			COUNT(0) faultCount
+			FROM fault_stat fs
+			WHERE
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &gt;= #{startYear} and
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) &gt;= #{startWeek} and
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) `week`, ci.name
+			serieName,
+			COUNT(0) faultCount
+			FROM fault_stat fs
+			JOIN company_info ci
+			ON
+			fs.customer_code = ci.`code`
+			WHERE ci.`code` IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear} and
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+			&gt;= #{startWeek} and
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+			&lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y'),
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) `week`, pli.name
+			serieName,
+			COUNT(0) faultCount
+			FROM fault_stat fs
+			JOIN
+			production_line_info pli
+			ON
+			fs.production_line_code
+			WHERE
+			pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &gt;= #{startYear} and
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(fs.failure_time /
+			1000)) &gt;= #{startWeek} and
+			WEEK(FROM_UNIXTIME(fs.failure_time /
+			1000)) &lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y'),
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="equCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000)) `week`, ei.name
+			serieName,
+			COUNT(0) faultCount
+			FROM fault_stat fs
+			JOIN equipment_info
+			ei
+			ON
+			fs.equipment_code =
+			ei.`code`
+			WHERE ei.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			AND ei.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear} and
+			FROM_UNIXTIME(fs.failure_time /
+			1000,
+			'%Y') &lt;= #{endYear}
+			AND
+			WEEK(FROM_UNIXTIME(fs.failure_time /
+			1000))
+			&gt;= #{startWeek} and
+			WEEK(FROM_UNIXTIME(fs.failure_time /
+			1000))
+			&lt;= #{endWeek}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y'),
+			WEEK(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+	</select>
+
+	<select id="selectFaultStatsMonthByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.FaultStat">
+
+		<if test="customerCode == null and lineCode==null and equCode == null">
+			SELECT
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(fs.failure_time / 1000)) `month`,'' serieName,
+			count(0) faultCount
+			FROM fault_stat fs
+			WHERE
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time / 1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time / 1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y'),MONTH
+			(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="customerCode != null">
+			SELECT
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(fs.failure_time / 1000)) `month`,ci.name
+			serieName,
+			count(0) faultCount
+			FROM fault_stat fs
+			JOIN company_info ci
+			ON
+			fs.customer_code = ci.`code`
+			WHERE ci.`code` IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y'),MONTH
+			(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="lineCode != null">
+			SELECT
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(fs.failure_time / 1000)) `month`,pli.name
+			serieName,
+			count(0) faultCount
+			FROM fault_stat fs
+			JOIN
+			production_line_info pli
+			ON
+			fs.production_line_code = pli.`code`
+			WHERE
+			pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y'),MONTH
+			(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+		<if test="equCode != null">
+			SELECT
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			MONTH(
+			FROM_UNIXTIME(fs.failure_time / 1000)) `month`,ei.name
+			serieName,
+			count(0) faultCount
+			FROM fault_stat fs
+			JOIN equipment_info
+			ei ON
+			fs.equipment_code =
+			ei.`code`
+			WHERE ei.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			AND ei.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &lt;= #{endYear}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &gt;= #{startMonth}
+			AND MONTH
+			(
+			FROM_UNIXTIME(fs.failure_time /
+			1000)) &lt;= #{endMonth}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y'),MONTH
+			(FROM_UNIXTIME(fs.failure_time / 1000))
+		</if>
+	</select>
+
+	<select id="selectFaultStatsYearByCondition" parameterType="java.util.Map"
+		resultType="com.cloudinnov.yun.openapi.model.FaultStat">
+
+		<if test="customerCode == null and lineCode==null and equCode == null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			'' serieName, count(0) faultCount
+			FROM fault_stat fs
+			WHERE
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000, '%Y')
+		</if>
+		<if test="customerCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			ci.name
+			serieName, count(0) faultCount
+			FROM fault_stat fs
+			JOIN
+			company_info ci
+			ON
+			fs.customer_code = ci.`code`
+			WHERE ci.`code` IN
+			<foreach item="item" index="index" collection="customerCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND ci.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y')
+		</if>
+		<if test="lineCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			pli.name
+			serieName, count(0) faultCount
+			FROM fault_stat fs
+			JOIN
+			production_line_info pli
+			ON
+			fs.production_line_code = pli.`code`
+			WHERE
+			pli.code IN
+			<foreach item="item" index="index" collection="lineCode"
+				open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			AND pli.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time /
+			1000, '%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time /
+			1000,
+			'%Y')
+		</if>
+		<if test="equCode != null">
+			SELECT FROM_UNIXTIME(fs.failure_time / 1000, '%Y') `year`,
+			ei.name
+			serieName, count(0) faultCount
+			FROM fault_stat fs
+			JOIN
+			equipment_info ei
+			ON fs.equipment_code = ei.`code`
+			WHERE ei.code IN
+			<foreach item="item" index="index" collection="equCode" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			AND ei.language = #{language}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &gt;= #{startYear}
+			AND
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y') &lt;= #{endYear}
+			GROUP BY
+			FROM_UNIXTIME(fs.failure_time / 1000,
+			'%Y')
+		</if>
+	</select>
+</mapper>

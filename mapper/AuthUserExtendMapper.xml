@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 用户扩展属性表 -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AuthUserExtendDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AuthUserExtend">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+        <result column="industry_code" jdbcType="VARCHAR" property="industryCode" />
+        <result column="custom_tag" jdbcType="VARCHAR" property="customTag" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="value" jdbcType="VARCHAR" property="value" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="last_update_time" jdbcType="VARCHAR" property="lastUpdateTime" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, user_code, industry_code, custom_tag, name, value, status, create_time, last_update_time
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AuthUserExtend">
+        INSERT INTO auth_user_extend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			        <if test="userCode != null">
+            user_code,
+        </if>
+        <if test="industryCode != null">
+            industry_code,
+        </if>
+        <if test="customTag != null">
+            custom_tag,
+        </if>
+        <if test="name != null">
+            name,
+        </if>
+        <if test="value != null">
+            value,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+        <if test="createTime != null">
+            create_time,
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			        <if test="userCode != null">
+            #{userCode,jdbcType=VARCHAR},
+        </if>
+        <if test="industryCode != null">
+            #{industryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="customTag != null">
+            #{customTag,jdbcType=VARCHAR},
+        </if>
+        <if test="name != null">
+            #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="value != null">
+            #{value,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUserExtend">
+        UPDATE auth_user_extend
+        <set>
+		        <if test="userCode != null">
+            user_code = #{userCode,jdbcType=VARCHAR},
+        </if>
+        <if test="industryCode != null">
+            industry_code = #{industryCode,jdbcType=VARCHAR},
+        </if>
+        <if test="customTag != null">
+            custom_tag = #{customTag,jdbcType=VARCHAR},
+        </if>
+        <if test="name != null">
+            name = #{name,jdbcType=VARCHAR},
+        </if>
+        <if test="value != null">
+            value = #{value,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time = #{lastUpdateTime,jdbcType=VARCHAR},
+        </if>
+
+        </set>
+        WHERE code = #{code,jdbcType=INTEGER}
+    </update>
+    
+    <update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUserExtend">
+		UPDATE auth_user_extend
+		SET
+		status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUserExtend" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM auth_user_extend
+        WHERE status = 1
+    </select>
+    
+    <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.AuthUserExtend" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM auth_user_extend
+        WHERE  code = #{code,jdbcType=VARCHAR}
+        AND status = 1
+    </select>
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into auth_user_extend (
+                        user_code, industry_code, custom_tag, name, value, status, create_time, last_update_time
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.userCode,jdbcType=VARCHAR}, 
+        #{item.industryCode,jdbcType=VARCHAR}, 
+        #{item.customTag,jdbcType=VARCHAR}, 
+        #{item.name,jdbcType=VARCHAR}, 
+        #{item.value,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}, 
+        #{item.createTime,jdbcType=VARCHAR}, 
+        #{item.lastUpdateTime,jdbcType=VARCHAR}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM auth_user_extend WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+ 
+</mapper>

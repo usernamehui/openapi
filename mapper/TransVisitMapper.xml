@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.TransVisitDao">
+	<insert id="saveVisit" parameterType="com.cloudinnov.yun.openapi.model.TransVisit">
+		insert into trans_visit 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="visitName != null">
+				visit_name,
+			</if>
+			<if test="visitCompany != null">
+				visit_company,
+			</if>
+			<if test="visitPurpose != null">
+				visit_purpose,
+			</if>
+			<if test="visitPhone !=null">
+				visit_phone,
+			</if>
+			<if test="visitCount !=null">
+				visit_count,
+			</if>
+			<if test="visitTime !=null">
+				visit_time,
+			</if>
+			<if test="visitComeTime != null">
+				visit_come_time,
+			</if>
+			<if test="visitGoTime != null">
+				visit_go_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			status
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="visitName != null">
+				#{visitName,jdbcType=VARCHAR},
+			</if>
+			<if test="visitCompany != null">
+				#{visitCompany,jdbcType=VARCHAR},
+			</if>
+			<if test="visitPurpose != null">
+				#{visitPurpose,jdbcType=VARCHAR},
+			</if>
+			<if test="visitPhone !=null">
+				#{visitPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="visitCount !=null">
+				#{visitCount,jdbcType=VARCHAR},
+			</if>
+			<if test="visitTime !=null">
+				#{visitTime,jdbcType=DECIMAL},
+			</if>
+			<if test="visitComeTime != null">
+				#{visitComeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="visitGoTime != null">
+				#{visitGoTime,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			1
+		</trim>
+	</insert>
+	<select id="listVisit" parameterType="com.cloudinnov.yun.openapi.model.TransVisit" resultType="com.cloudinnov.yun.openapi.model.TransVisit">
+		select
+			v.code  as code,
+			v.visit_company as visitCompany,
+			v.visit_name as visitName,
+			v.visit_phone as visitPhone,
+			v.visit_count as visitCount,
+			v.visit_purpose as visitPurpose,
+			FROM_UNIXTIME((v.visit_come_time)/1000,'%H:%i')	as visitComeTime,
+			FROM_UNIXTIME((v.visit_go_time)/1000,'%H:%i') as visitGoTime,
+			v.create_time as createTime
+			from trans_visit v where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="visitComeTime != null">
+			  AND (FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m-%d')=#{visitComeTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m')=#{visitComeTime,jdbcType=VARCHAR}) 
+		</if>
+		 <if test="beginTime !=null">
+  	 	and FROM_UNIXTIME(v.visit_come_time/1000,'%Y-%m-%d') &gt;=#{beginTime,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="endTime !=null">
+	  	 	and FROM_UNIXTIME(v.visit_come_time/1000,'%Y-%m-%d') &lt;=#{endTime,jdbcType=VARCHAR}
+	  	 </if>
+		order by v.create_time DESC
+	</select>
+	
+	<select id="selectVisitToWeb" parameterType="com.cloudinnov.yun.openapi.model.TransVisit" resultType="com.cloudinnov.yun.openapi.model.TransVisit">
+		select
+			v.code  as code,
+			v.visit_company as visitCompany,
+			v.visit_name as visitName,
+			v.visit_phone as visitPhone,
+			v.visit_count as visitCount,
+			v.visit_purpose as visitPurpose,
+			FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m-%d %H:%i')	as visitComeTime,
+			FROM_UNIXTIME((v.visit_go_time)/1000,'%Y-%m-%d %H:%i') as visitGoTime,
+			v.create_time as createTime
+			from trans_visit v where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="visitComeTime != null">
+			  AND (FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m-%d')=#{visitComeTime,jdbcType=VARCHAR}  or FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m')=#{visitComeTime,jdbcType=VARCHAR}) 
+		</if>
+		 <if test="beginTime !=null">
+  	 		and FROM_UNIXTIME(v.visit_come_time/1000,'%Y-%m-%d') &gt;=#{beginTime,jdbcType=VARCHAR}
+	  	 </if>
+	  	 <if test="endTime !=null">
+	  	 	and FROM_UNIXTIME(v.visit_come_time/1000,'%Y-%m-%d') &lt;=#{endTime,jdbcType=VARCHAR}
+	  	 </if>
+		order by v.create_time DESC
+	</select>
+	<select id="selectTransByCode" parameterType="com.cloudinnov.yun.openapi.model.TransVisit" resultType="string">
+		SELECT t.`name` FROM transformer t WHERE t.code=#{code,jdbcType=VARCHAR}
+	</select>
+	
+		
+	
+	<select id="selectUpWeek" parameterType="com.cloudinnov.yun.openapi.model.TransVisit" resultType="com.cloudinnov.yun.openapi.model.TransVisit">
+		select 
+			v.code  as code,
+			v.visit_company as visitCompany,
+			v.visit_name as visitName,
+			v.visit_phone as visitPhone,
+			v.visit_time as visitTime,
+			v.visit_count as visitCount,
+			v.visit_purpose as visitPurpose,
+			FROM_UNIXTIME((v.visit_come_time)/1000,'%Y-%m-%d %H:%i:%s')	as visitComeTime,
+			FROM_UNIXTIME((v.visit_go_time)/1000,'%Y-%m-%d %H:%i:%s') as visitGoTime,
+			v.create_time as createTime
+				 from trans_visit v where status = 1 
+				 <if test="code != null">
+				 and code = #{code,jdbcType=VARCHAR} 
+				</if> 
+				 and FROM_UNIXTIME(visit_come_time/1000,'%Y-%m-%d') &gt;= DATE_ADD(CURDATE(),INTERVAL -7 DAY)  
+				 and FROM_UNIXTIME(visit_come_time/1000,'%Y-%m-%d') &lt;  CURDATE()
+				 order by visit_come_time asc
+	</select>
+</mapper>

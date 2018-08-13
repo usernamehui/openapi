@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.AppVersionDao">
+	<resultMap id="int" type="java.lang.Integer">
+	</resultMap>
+	<resultMap id="string" type="java.lang.String">
+	</resultMap>
+	<resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.AppVersion">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="code" property="code" jdbcType="VARCHAR"/>
+		<result column="version" property="version" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="VARCHAR"/>
+		<result column="produce" property="produce" jdbcType="INTEGER"/>
+		<result column="need" property="need" jdbcType="INTEGER"/>
+		<result column="download_url" property="downloadUrl" jdbcType="VARCHAR"/>
+		<result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+		<result column="status" property="status" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.AppVersion" resultMap="BaseResultMap">
+		select * from appversion where status = 1 
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="version != null">
+			and version like concat('%',#{version,jdbcType=VARCHAR},'%')
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="createTime != null">
+			and date_format(createTime,'%Y-%m-%d') = #{createTime,jdbcType=INTEGER}
+		</if>
+		order by create_time desc
+	</select>
+	
+	
+	<insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.AppVersion">
+		insert into appversion 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="version != null">
+				version,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="produce != null">
+				produce,
+			</if>
+			<if test="need != null">
+				need,
+			</if>
+			<if test="downloadUrl != null">
+				download_url,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			status,
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="version != null">
+				#{version,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="produce != null">
+				#{produce,jdbcType=INTEGER},
+			</if>
+			<if test="need != null">
+				#{need,jdbcType=INTEGER},
+			</if>
+			<if test="downloadUrl != null">
+				#{downloadUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+			1,
+		</trim>
+	</insert>
+	
+	<select id="selectDesc" parameterType="com.cloudinnov.yun.openapi.model.AppVersion" resultMap="BaseResultMap">
+		select * from appversion where status = 1 and type = #{type,jdbcType=INTEGER} order by create_time desc limit 1
+	</select>
+	
+	<update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.AppVersion">
+		update appversion 
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		<where>
+			code = #{code,jdbcType=VARCHAR}
+		</where>
+	</update>
+	
+</mapper>

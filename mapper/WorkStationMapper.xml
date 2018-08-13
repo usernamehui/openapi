@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloudinnov.yun.openapi.dao.WorkStationDao">
+	<select id="selectUserByTransCode" parameterType="java.util.Map" resultType="com.cloudinnov.yun.openapi.model.AuthUsers">
+		select u.*,u.login_name AS loginName,ui.name,u.user_type userType,'' transCode,'' transName  from auth_role_user ru,auth_user u ,auth_user_info ui
+					where ru.user_code=u.code 
+					and u.code=ui.code 
+					and ru.status = 1 
+					and u.status = 1 
+					<if test="userName !=null">
+						and ui.name like CONCAT('%',#{userName},'%') 
+					</if>
+					and ((role_code in(${roleCodes})
+					and u.code in(select user_code from scheduling 
+					where 1=1 
+					<if test="transCode !=null">
+						and trans_code in (${transCode})
+					</if>
+					and type='${@com.cloudinnov.yun.openapi.common.CommonUtils@TRANS}' 
+					and status=1)))
+			   	    union all
+			select  u.*,u.login_name AS loginName,ui.name,u.user_type userType,IF((model.spare is null or model.spare=''),model.trans_code,concat(model.trans_code,',',model.spare))  transCode,(select name from transformer where code in(model.trans_code)) transName from scheduling model join auth_user u on model.user_code=u.code 
+			        join auth_user_info ui on u.code=ui.code 
+					where 1=1
+					<if test="transCode !=null">
+						AND (model.trans_code in (${transCode}) or model.spare in (${transCode}))
+					</if>
+					<if test="userName !=null">
+						and ui.name like CONCAT('%',#{userName},'%')
+					</if>
+					AND model.`status` = 1
+					AND model.type = 1
+					AND #{workTime,jdbcType=VARCHAR} &gt;= model.work_time 
+					and model.work_off_time &gt;= #{workTime,jdbcType=VARCHAR} 
+	</select>
+	<insert id="insertWorkStation" parameterType="com.cloudinnov.yun.openapi.model.WorkStation">
+		insert into trans_work_station 
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="userCode != null">
+				user_code,
+			</if>
+			<if test="transCode != null">
+				trans_code,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="count !=null">
+				count,
+			</if>
+			<if test="menu !=null">
+				menu,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="userCode != null">
+				#{userCode,jdbcType=VARCHAR},
+			</if>
+			<if test="transCode != null">
+				#{transCode,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="count !=null">
+				#{count,jdbcType=INTEGER},
+			</if>
+			<if test="menu !=null">
+				#{menu,jdbcType=INTEGER},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertWorkStationInfo" parameterType="com.cloudinnov.yun.openapi.model.WorkStation">
+		insert into trans_work_station_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				code,
+			</if>
+			<if test="workStationCode != null">
+				work_station_code,
+			</if>
+			<if test="workNode != null">
+				work_node,
+			</if>
+			<if test="workContent != null">
+				work_content,
+			</if>
+			<if test="orders != null">
+				orders,
+			</if>
+			<if test="type !=null">
+				type,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="workStationCode != null">
+				#{workStationCode,jdbcType=VARCHAR},
+			</if>
+			<if test="workNode != null">
+				#{workNode,jdbcType=VARCHAR},
+			</if>
+			<if test="workContent != null">
+				#{workContent,jdbcType=VARCHAR},
+			</if>
+			<if test="orders != null">
+				#{orders,jdbcType=INTEGER},
+			</if>
+			<if test="type !=null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="status !=null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectSuperviseWork" parameterType="com.cloudinnov.yun.openapi.model.WorkStation" resultType="com.cloudinnov.yun.openapi.model.WorkStation">
+		select (select name from auth_user_info where code=ws.user_code)userName,
+		(select logo from auth_user where code=ws.user_code)userLogo,
+		FROM_UNIXTIME(wi.work_content/1000,'%H:%i:%s')workContent,
+		wi.work_node workNode from trans_work_station  ws
+		join trans_work_station_info wi on ws.code=wi.work_station_code
+		where ws.status=1
+			<if test="userCode !=null">
+				and ws.user_code =#{userCode,jdbcType=VARCHAR}
+			</if>
+			<if test="createTime !=null">
+				and FROM_UNIXTIME(ws.create_time/1000,'%Y-%m-%d')=#{createTime,jdbcType=VARCHAR}
+			</if>
+		ORDER BY work_content
+	</select>
+	<select id="selectWorkStation" parameterType="com.cloudinnov.yun.openapi.model.WorkStation" resultType="com.cloudinnov.yun.openapi.model.WorkStation">
+		SELECT
+			code  code,trans_code transCode,user_code userCode,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')
+		FROM
+			trans_work_station
+		WHERE
+			`status` = 1
+		<if test="userCode !=null">
+			AND user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="createTime !=null">
+			AND FROM_UNIXTIME(create_time / 1000,'%Y-%m-%d') = #{createTime,jdbcType=VARCHAR}
+		</if>
+		ORDER BY create_time DESC LIMIT 1
+	</select>
+	<select id="selectWorkStationInfo" parameterType="com.cloudinnov.yun.openapi.model.WorkStation" resultType="com.cloudinnov.yun.openapi.model.WorkStation">
+		select code as code,work_station_code workStationCode,work_node workNode,orders orders,type type,
+		work_content workContent,FROM_UNIXTIME(create_time/1000,'%Y-%m-%d')createTime
+		from trans_work_station_info where status =1 
+		<if test="workStationCode !=null">
+		and work_station_code=#{workStationCode,jdbcType=VARCHAR}
+		</if>
+		<if test="orders =='order'">
+			ORDER BY orders desc limit 1 
+		</if>
+	</select>
+	<select id="selectAttendanceByUser" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		select  * from attendance where status=1 
+		<if test="userCode !=null">
+			and user_code='USERSHUI'
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			and checkin_time BETWEEN #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType !=null">
+			 and checkin_type=#{checkinType,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<select id="selectAttendance" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		select 
+			 code,trans_code transCode,user_code userCode,location,
+			 (select name from transformer where code=trans_code) transName,
+			 (select name from auth_user_info where code=user_code) userName,checkin_time checkinTime,address 
+	     from attendance a 
+		  where a.status = 1 
+		<if test="code != null">
+			and a.code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode != null">
+			and a.trans_code in(${transCode})
+		</if>
+		<if test="userCode != null">
+			and a.user_code = #{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="checkinType != null">
+			and a.checkin_type = #{checkinType,jdbcType=INTEGER}
+		</if>
+		<if test="checkinTime != null">
+			and from_unixtime(checkin_time/1000,'%Y-%m') = from_unixtime(#{checkinTime,jdbcType=VARCHAR}/1000,'%Y-%m') 
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and a.checkin_time &gt;= #{beginTime} and checkin_time &lt;= #{endTime}
+		</if>
+		group by a.trans_code 
+	</select>
+	<select id="selectPatrolInspection" parameterType="com.cloudinnov.yun.openapi.model.PatrolInspection" resultType="com.cloudinnov.yun.openapi.model.PatrolInspection">
+		select 
+		pi.code code,
+		(select name from auth_user_info where code=pi.user_code)userName,
+		(select name from transformer where code=pi.trans_code)transName,
+		pi.concrete_position concretePosition,pi.user_position userPosition,
+		pi.type patrolType,pi.content content,version_number versionNumber,
+		pi.genre genre,pi.trans_code transCode,
+		FROM_UNIXTIME(pi.create_time/1000,'%Y-%m-%d %H:%i:%s')createTime,
+		(select name from auth_user_info where code=pil.assign_code)checkName
+		from patrol_inspection pi 
+		LEFT JOIN patrol_inspection_logs pil on pi.code=pil.pi_code
+		where 1=1
+		<if test="transCode !=null">
+			and pi.trans_code in (${transCode})
+		</if>
+		<if test="userCode !=null">
+			and pi.user_Code = #{userCode}
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			 and pi.create_time BETWEEN #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectTransWarn" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+		select  
+		m.title title,m.context context,pwh.point_url pointUrl,
+		pwh.create_time createTime,pwh.point_explain pointExplain,pwh.experts_recommend expertsRecommend,pwh.last_update_time lastUpdateTime,
+		(select name from auth_user_info where code=pwh.check_user) checkUser ,pwh.status 
+		from point_warn_history  pwh
+		LEFT JOIN messages m on m.work_code=pwh.code
+		where pwh.status!=9
+		 <if test="transCode !=null">
+		 and trans_code in (${transCode})
+		 </if>
+		 <if test="beginTime !=null and endTime !=null">
+		 and pwh.create_time BETWEEN #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+		 </if>
+		 <if test="status !=null">
+		 and pwh.status=#{status,jdbcType=INTEGER}
+		 </if>
+	</select>
+	<select id="selectWorkplan" parameterType="com.cloudinnov.yun.openapi.model.Workplan" resultType="com.cloudinnov.yun.openapi.model.Workplan">
+		select code code,trans_code transCode,type type,settime settime,common common,user_code userCode,
+		(select name from auth_user_info where code=w.user_code)userName,
+		FROM_UNIXTIME(w.create_time/1000 ,'%H:%i')createTime,
+		status status,settime  beginTime,last_update_time endTime,
+		(select unattend from transformer t where t.code=w.trans_code) unattend, 
+		(select name from transformer where code=trans_code) transName  
+		from workplan w where w.status !=9 
+		<if test="transCode !=null">
+			and w.trans_code in (${transCode})
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			and create_time between #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+		</if>
+		 ORDER BY trans_code,create_time
+	</select>
+	<select id="selectAttendanceRecord" parameterType="com.cloudinnov.yun.openapi.model.Attendance" resultType="com.cloudinnov.yun.openapi.model.Attendance">
+		select (select name from transformer where code=ar.trans_code)transName,
+		FROM_UNIXTIME(connect_time/1000,'%Y-%m-%d %H:%i:%s')connectTime,
+		jiao_person jiaoPerson,record record
+		from attendance_record ar where status=1
+		<if test="userCode !=null">
+			and user_code=#{userCode,jdbcType=VARCHAR}
+		</if>
+		<if test="transCode !=null">
+			and trans_code in (${transCode})
+		</if>
+		<if test="beginTime !=null and endTime !=null">
+			 and create_time BETWEEN #{beginTime,jdbcType=VARCHAR} and #{endTime,jdbcType=VARCHAR}
+		</if>
+	</select>
+</mapper>

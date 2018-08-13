@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--  -->
+<mapper namespace="com.cloudinnov.yun.openapi.dao.EmchatWorkOrderDao">
+    <resultMap id="BaseResultMap" type="com.cloudinnov.yun.openapi.model.EmchatWorkOrder">
+        <id column="id" jdbcType="INTEGER" property="id" />
+		        <result column="work_order_code" jdbcType="VARCHAR" property="workOrderCode" />
+        <result column="em_group_id" jdbcType="VARCHAR" property="emGroupId" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id, work_order_code, em_group_id, status
+
+    </sql>
+    
+    <insert id="insert" parameterType="com.cloudinnov.yun.openapi.model.EmchatWorkOrder">
+        INSERT INTO emchat_work_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+			        <if test="workOrderCode != null">
+            work_order_code,
+        </if>
+        <if test="emGroupId != null">
+            em_group_id,
+        </if>
+        <if test="status != null">
+            status,
+        </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			        <if test="workOrderCode != null">
+            #{workOrderCode,jdbcType=VARCHAR},
+        </if>
+        <if test="emGroupId != null">
+            #{emGroupId,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            #{status,jdbcType=INTEGER},
+        </if>
+
+        </trim>
+    </insert>
+    
+    <update id="updateByCondition" parameterType="com.cloudinnov.yun.openapi.model.EmchatWorkOrder">
+        UPDATE emchat_work_order
+        <set>
+		<if test="workOrderCode != null">
+            work_order_code = #{workOrderCode,jdbcType=VARCHAR},
+        </if>
+        <if test="emGroupId != null">
+            em_group_id = #{emGroupId,jdbcType=VARCHAR},
+        </if>
+        <if test="status != null">
+            status = #{status,jdbcType=INTEGER},
+        </if>
+
+        </set>
+        WHERE code = #{code,jdbcType=INTEGER}
+    </update>
+    
+    <update id="deleteByCondition" parameterType="com.cloudinnov.yun.openapi.model.EmchatWorkOrder">
+		UPDATE emchat_work_order
+		SET
+		status = 9
+		WHERE code = #{code,jdbcType=VARCHAR}
+	</update>
+    
+    <select id="selectListByCondition" parameterType="com.cloudinnov.yun.openapi.model.EmchatWorkOrder" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM emchat_work_order
+        WHERE status = 1
+    </select>
+    
+    <select id="selectEntityByCondition" parameterType="com.cloudinnov.yun.openapi.model.EmchatWorkOrder" resultMap="BaseResultMap">
+        SELECT 
+        <include refid="Base_Column_List" />
+        FROM emchat_work_order
+        WHERE  
+       		 1=1
+        <if test="workOrderCode != null">
+            work_order_code = #{workOrderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="emGroupId != null">
+            em_group_id = #{emGroupId,jdbcType=VARCHAR}
+        </if>
+        AND status = 1
+    </select>
+    
+    <insert id="insertBatch" parameterType="java.util.List">  
+        insert into emchat_work_order (
+                        work_order_code, em_group_id, status
+
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+        (
+		        #{item.workOrderCode,jdbcType=VARCHAR}, 
+        #{item.emGroupId,jdbcType=VARCHAR}, 
+        #{item.status,jdbcType=INTEGER}
+
+        )
+        </foreach>
+    </insert>
+  
+    <delete id="deleteBatch" parameterType="java.util.List"> 
+        DELETE FROM emchat_work_order WHERE code IN 
+        <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
+            #{item}  
+        </foreach> 
+    </delete>
+ 
+</mapper>
