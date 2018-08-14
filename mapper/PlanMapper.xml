@@ -46,7 +46,7 @@
 			   common,last_update_user,status,
 			   ifnull((select short_name from transformer where code = p.trans_code),(select title from work_order where code=workorder_code)) transName,
 			   (select name from auth_user_info where code=p.create_user) createUserName,
-			   (select name from auth_user_info where code=p.execute_user) executeUserName
+			   (select GROUP_CONCAT(name) from auth_user_info where FIND_IN_SET(code,p.execute_user)) executeUserName
 			 from plan p where status != 9 
 						 <if test="startTime != null and format != null">
 						    and from_unixtime(start_time/1000,#{format,jdbcType=VARCHAR}) = #{startTime,jdbcType=VARCHAR}
@@ -80,6 +80,7 @@
 			   from_unixtime(start_time/1000,'%Y-%m-%d %H:%i') start_time,
 			   from_unixtime(close_time/1000,'%Y-%m-%d %H:%i') close_time,
 			   from_unixtime(real_finish_time/1000,'%Y-%m-%d %H:%i') real_finish_time,
+			   (select GROUP_CONCAT(name) from auth_user_info where FIND_IN_SET(code,p.execute_user)) executeUserName,
 			   workorder_code,
 			   if(type=4,(select em_group_id from work_order where code=workorder_code),null) groupId,
 			   if(type=4,(select order_status from work_order where code=workorder_code),null) orderStatus,
@@ -224,8 +225,8 @@
 	<select id="getBeforeOrAfter" parameterType="com.cloudinnov.yun.openapi.model.Plan" resultMap="planMap">
 		select code,type,trans_code,workorder_code,
 			   from_unixtime(create_time/1000,'%Y-%m-%d %H:%i:%s') create_time,
-			   <!-- from_unixtime(start_time/1000,'%H:%i')  -->start_time,
-			   <!-- from_unixtime(close_time/1000,'%H:%i')  -->close_time,
+			   start_time,
+			   close_time,
 			   from_unixtime(real_finish_time/1000,'%Y-%m-%d %H:%i') real_finish_time,
 			   if(type=4,(select em_group_id from work_order where code=workorder_code),null) groupId,
 			   if(type=4,(select order_status from work_order where code=workorder_code),null) orderStatus,
@@ -233,13 +234,13 @@
 			   ifnull((select short_name from transformer where code = p.trans_code),(select title from work_order where code=workorder_code)) transName,
 			   (select name from auth_user_info where code=p.create_user) createUserName,
 			   (select name from auth_user_info where code=p.execute_user) executeUserName,
-			   (((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &lt;= 5) and ((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &gt;=0)) befores,
+			   (((start_time - UNIX_TIMESTAMP()*1000)/1000 &lt;= 300) and ((start_time - UNIX_TIMESTAMP()*1000)/1000 &gt;=0)) befores,
 			   (select concat(appid,';',appmodel,";",user_type) from auth_user where code = create_user) create_user,
 			   (select group_concat(concat(appid,';',appmodel,";",user_type)) from auth_user where FIND_IN_SET(code,execute_user)) execute_user 
 				
-			   from plan p where status = 0 and 
-			   (((start_time - UNIX_TIMESTAMP()*1000)/1000/60 &lt;= 5 and (start_time - UNIX_TIMESTAMP()*1000)/1000/60 &gt;=0) or 
-			    ((UNIX_TIMESTAMP()*1000 - close_time)/1000/60 &lt;= 5 and (UNIX_TIMESTAMP()*1000 - close_time)/1000/60 &gt;=0))
+			   from plan p where status = 0 and type != 4 and 
+			   (((start_time - UNIX_TIMESTAMP()*1000)/1000 &lt;= 300 and (start_time - UNIX_TIMESTAMP()*1000)/1000 &gt;=0) or 
+			    ((UNIX_TIMESTAMP()*1000 - close_time)/1000 &lt;= 300 and (UNIX_TIMESTAMP()*1000 - close_time)/1000 &gt;=0))
 	</select>
 	
 	

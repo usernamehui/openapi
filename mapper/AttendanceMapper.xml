@@ -594,4 +594,13 @@
 			code = #{code,jdbcType=VARCHAR}
 		</where>
 	</update>
+	<update id="updateAttenRecord" parameterType="com.cloudinnov.yun.openapi.model.Attendance">
+		update attendance_record
+		<set>
+			<if test="connectTime != null">
+				connect_time = #{connectTime,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where code = #{code,jdbcType=VARCHAR}
+	</update>
 </mapper>

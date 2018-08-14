@@ -574,4 +574,8 @@
 			and equipment_code=#{equipmentCode,jdbcType=VARCHAR}
 		</if>
 	</select>
+	<select id="selectWarnByTime" parameterType="com.cloudinnov.yun.openapi.model.PointWarn" resultType="com.cloudinnov.yun.openapi.model.PointWarn">
+	 select code,point_code pointCode,warn_type warnType,trans_name transName,equipment_name equipmentName,bom_name bomName,point_name pointName
+	 from point_warn_history where `status`=1 and (UNIX_TIMESTAMP()*1000-create_time)/60000&lt;=5
+	</select>	
 </mapper>

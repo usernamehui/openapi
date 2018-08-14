@@ -158,6 +158,6 @@
 		<if test="type !=null">
 		and type=#{type,jdbcType=VARCHAR}
 		</if>
-		 limit 5
+		order by orders limit 5
 	</select>
 </mapper>
