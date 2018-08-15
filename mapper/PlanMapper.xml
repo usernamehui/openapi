@@ -235,8 +235,7 @@
 			   (select name from auth_user_info where code=p.create_user) createUserName,
 			   (select name from auth_user_info where code=p.execute_user) executeUserName,
 			   (((start_time - UNIX_TIMESTAMP()*1000)/1000 &lt;= 300) and ((start_time - UNIX_TIMESTAMP()*1000)/1000 &gt;=0)) befores,
-			   (select concat(appid,';',appmodel,";",user_type) from auth_user where code = create_user) create_user,
-			   (select group_concat(concat(appid,';',appmodel,";",user_type)) from auth_user where FIND_IN_SET(code,execute_user)) execute_user 
+			   create_user,execute_user  
 				
 			   from plan p where status = 0 and type != 4 and 
 			   (((start_time - UNIX_TIMESTAMP()*1000)/1000 &lt;= 300 and (start_time - UNIX_TIMESTAMP()*1000)/1000 &gt;=0) or 
@@ -255,6 +254,14 @@
 				from plan where 
 				status != 9 
 				AND FROM_UNIXTIME(start_time/1000,'%Y-%m') = #{createTime,jdbcType=VARCHAR} 
+				and trans_code in (${transCode})
+				<if test="type != null and type != ''">
+					and type=#{type,jdbcType=VARCHAR}
+				</if>
 				group by FROM_UNIXTIME(start_time/1000,'%Y-%m-%d')
 	</select>
+	
+	<update id="updateByWorkOrderCode" parameterType="java.lang.String">
+		update plan set status = 1 where workorder_code = #{_parameter} 
+	</update>
 </mapper>

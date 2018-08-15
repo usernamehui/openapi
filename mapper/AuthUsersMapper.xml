@@ -594,7 +594,7 @@
 	
 	<select id="selectAuthUserByCode" resultMap="BaseResultMap">
 		SELECT
-			`user`. CODE,info. NAME,USER .logo,`user`.phone,USER .company_code,ru.role_code,function_type,appid,appmodel,
+			`user`. CODE,info. NAME,USER .logo,`user`.phone,USER .company_code,ru.role_code,function_type,appid,appmodel,user_type,
 			USER.login_name,USER.email,USER.company_code,
 			 title_name,certificat_info,work_year,score_count
 		FROM
