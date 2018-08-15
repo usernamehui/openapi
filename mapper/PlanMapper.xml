@@ -262,6 +262,6 @@
 	</select>
 	
 	<update id="updateByWorkOrderCode" parameterType="java.lang.String">
-		update plan set status = 1 where workorder_code = #{_parameter} 
+		update plan set status = 1,real_finish_time = unix_timestamp()*1000 where workorder_code = #{_parameter} 
 	</update>
 </mapper>
